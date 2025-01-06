@@ -2,7 +2,11 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { MenuOutlined } from "@ant-design/icons";
 
+
 export const HeaderSection = styled("header")`
+  display: flex; /* Ensure children are flex items */
+  align-items: center;
+  justify-content: space-between; /* Space between logo and navigation links */
   padding: 1rem 0.5rem;
 
   .ant-row-space-between {
@@ -11,6 +15,8 @@ export const HeaderSection = styled("header")`
   }
 `;
 
+
+
 export const LogoContainer = styled(Link)`
   display: flex;
 `;
@@ -18,6 +24,8 @@ export const LogoContainer = styled(Link)`
 export const NavLink = styled("div")`
   display: inline-block;
   text-align: center;
+  padding-left: 5px;
+  padding-right: 5px;
 `;
 
 export const CustomNavLink = styled("div")`
@@ -45,7 +53,14 @@ export const Burger = styled("div")`
   }
 `;
 
+
+
 export const NotHidden = styled("div")`
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  gap: 1rem;
+
   @media only screen and (max-width: 890px) {
     display: none;
   }
@@ -91,5 +106,64 @@ export const Span = styled("span")`
     color: rgb(255, 130, 92);
     text-underline-position: under;
     text-decoration: rgb(255, 130, 92) wavy underline;
+  }
+`;
+
+export const DrawerNavWrapper = styled("div")`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 1rem;
+
+  a {
+    font-size: 1.2rem;
+    color: #18216d;
+    margin: 1rem 0;
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: rgb(255, 130, 92);
+    }
+  }
+`;
+
+
+export const ActiveNavLink = styled(Link)`
+  color: rgb(255, 130, 92);
+  font-weight: bold;
+
+  &:hover {
+    color: rgb(255, 80, 50);
+  }
+`;
+
+
+export const StyledButton = styled.button`
+  padding: 4px 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+
+  &:first-child {
+    background-color: white;
+    color: #0066ff;
+  }
+
+  &:last-child {
+    background-color: #111a91;
+    color: white;
+    border: 2px solid white;
+  }
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &.active {
+    background-color: orange;
+    color: white;
   }
 `;

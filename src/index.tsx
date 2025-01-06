@@ -5,13 +5,11 @@ import "antd/dist/antd.css";
 
 import Router from "./router";
 import i18n from "./translation";
-import Home from "./components/home/home";
 
 const App = () => (
   <BrowserRouter>
     <I18nextProvider i18n={i18n}>
       <Router />
-      {/* <Home/> */}
     </I18nextProvider>
   </BrowserRouter>
 );
