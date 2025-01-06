@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from 'styled-components';
 import background from "../../assets/bg-hero.png";
 
 export const SectionContainer = styled("div")`
@@ -27,6 +27,7 @@ export const TextContainer = styled("div")`
     font-weight: 700;
     margin-bottom: 1rem;
     line-height: 1.2;
+    color: white;
   }
 
   p {
@@ -76,4 +77,101 @@ export const ImageContainer = styled("div")`
     font-size: 1.2rem;
     align-self: baseline; /* Align text baseline with the image */
   }
+`;
+
+
+
+// // Keyframes for left-to-right animation
+// const slideIn = keyframes`
+//     from {
+//         transform: translateX(-100%);
+//         opacity: 0;
+//     }
+//     to {
+//         transform: translateX(0);
+//         opacity: 1;
+//     }
+// `;
+
+// export const PdaasContainer = styled.div`
+//     display: grid;
+//     grid-template-columns: 1fr 1fr; /* Two equal-width columns */
+//     gap: 5px; /* Space between columns */
+//     align-items: center; /* Align items vertically */
+//     padding: 60px; /* Optional padding for the container */
+// `;
+
+// export const PdaasImage = styled.img`
+//     width: 90%;
+//     height: auto;
+//     max-width: 800px;
+//     margin-left: auto;
+//     margin-right: 10px;
+
+//     /* Apply left-to-right animation */
+//     animation: ${slideIn} 1s ease-out;
+// `;
+
+// export const PdaasContent = styled.div`
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: center;
+//     font-size: 20px;
+//     line-height: 1.5;
+//     color: #333; 
+
+//     h1 {
+//         color: blue; /* Set h1 tag color to blue */
+//     }
+// `;
+
+const slideIn = keyframes`
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+`;
+
+export const PdaasContainer = styled.div`
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal-width columns */
+    gap: 5px; /* Space between columns */
+    align-items: center; /* Align items vertically */
+    padding: 60px; /* Optional padding for the container */
+`;
+
+export const AnimatedImage = styled.img`
+    width: 90%;
+    height: auto;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: 10px;
+
+    /* Default state (hidden) */
+    opacity: 0;
+    transform: translateX(-100%);
+    transition: transform 1s ease-out, opacity 1s ease-out;
+
+    /* Animate when the class 'animate' is applied */
+    &.animate {
+        opacity: 1;
+        transform: translateX(0);
+    }
+`;
+
+export const PdaasContent = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 20px;
+    line-height: 1.5;
+    color: #333;
+
+    h1 {
+        color: blue; /* Set h1 tag color to blue */
+    }
 `;
