@@ -2,19 +2,19 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { Drawer } from "antd";
 import { SvgIcon } from "../../common/SvgIcon";
-import { Button } from "../../common/Button";
 import {
   HeaderSection,
   LogoContainer,
   Burger,
   NotHidden,
-  CustomNavLinkSmall,
-  Outline,
   DrawerNavWrapper,
+  StyledButton,
+  Outline,
 } from "./styles";
 
 const Header = () => {
   const [visible, setVisibility] = useState(false);
+  const [activeLink, setActiveLink] = useState("/");
 
   const toggleDrawer = () => {
     setVisibility(!visible);
@@ -28,15 +28,25 @@ const Header = () => {
     { path: "/contact", label: "Contact" },
   ];
 
+  const handleLinkClick = (path: string) => {
+    setActiveLink(path);
+  };
+
   return (
     <HeaderSection>
       <LogoContainer to="/" aria-label="homepage">
-        <SvgIcon src="logo.svg" width="101px" height="64px" />
+        <SvgIcon src="logo.svg" width="300px" height="60px" />
       </LogoContainer>
       <NotHidden>
         {navigationLinks.map((link) => (
-          <NavLink key={link.path} to={link.path}>
-            <Button>{link.label}</Button>
+          <NavLink
+            key={link.path}
+            to={link.path}
+            onClick={() => handleLinkClick(link.path)} // Set active link on click
+          >
+            <StyledButton className={activeLink === link.path ? "active" : ""}>
+              {link.label}
+            </StyledButton>
           </NavLink>
         ))}
       </NotHidden>
@@ -51,16 +61,23 @@ const Header = () => {
       >
         <DrawerNavWrapper>
           {navigationLinks.map((link) => (
-            <NavLink key={link.path} to={link.path} onClick={toggleDrawer}>
-              {link.label}
+            <NavLink
+              key={link.path}
+              to={link.path}
+              onClick={() => {
+                handleLinkClick(link.path);
+                toggleDrawer();
+              }}
+            >
+              <StyledButton className={activeLink === link.path ? "active" : ""}>
+                {link.label}
+              </StyledButton>
             </NavLink>
           ))}
         </DrawerNavWrapper>
       </Drawer>
-
     </HeaderSection>
   );
 };
 
 export default Header;
-
