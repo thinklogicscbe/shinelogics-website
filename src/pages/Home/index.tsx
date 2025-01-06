@@ -6,16 +6,19 @@ import MissionContent from "../../content/MissionContent.json";
 import ProductContent from "../../content/ProductContent.json";
 import ContactContent from "../../content/ContactContent.json";
 
+const Home = lazy(() => import("../../components/home/home"));
 const Contact = lazy(() => import("../../components/ContactForm"));
 const MiddleBlock = lazy(() => import("../../components/MiddleBlock"));
 const Container = lazy(() => import("../../common/Container"));
 const ScrollToTop = lazy(() => import("../../common/ScrollToTop"));
 const ContentBlock = lazy(() => import("../../components/ContentBlock"));
 
-const Home = () => {
+const Main = () => {
   return (
     <Container>
       <ScrollToTop />
+      <Home/>
+
       <ContentBlock
         direction="right"
         title={IntroContent.title}
@@ -60,4 +63,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Main;

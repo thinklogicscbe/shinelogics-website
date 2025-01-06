@@ -1,14 +1,3 @@
-// const routes = [
-//   {
-//     path: ["/", "/home"],
-//     exact: true,
-//     component: "Home",
-//   },
-// ];
-
-// export default routes;
-
-
 const routes = [
   { path: "/", exact: true, component: "Home" },
   { path: "/about", exact: true, component: "About" },
