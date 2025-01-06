@@ -1,6 +1,6 @@
 import { lazy } from "react";
 
-const Homes = lazy(() => import("../../components/home/home"));
+const Homes = lazy(() => import("../../components/HomeCompo/home"));
 
 const Home = () => {
   return (

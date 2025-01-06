@@ -1,7 +1,11 @@
-import React from "react";
+import { lazy } from "react";
+
+const Contacts = lazy(() => import("../../components/ContactCompo/contact"));
 
 const Contact = () => {
-  return <div>Welcome to the Contact Page!</div>;
+  return (
+    <Contacts />
+  );
 };
 
 export default Contact;

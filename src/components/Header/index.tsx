@@ -23,7 +23,7 @@ const Header = () => {
   const navigationLinks = [
     { path: "/", label: "Home" },
     { path: "/about", label: "About" },
-    { path: "/mission", label: "Mission" },
+    { path: "/service", label: "Service" },
     { path: "/product", label: "Product" },
     { path: "/contact", label: "Contact" },
   ];

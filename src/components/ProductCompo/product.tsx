@@ -1,18 +1,13 @@
 import React from "react";
 import Ai from "../../assets/hero-img.png";
-import {
-  SectionContainer,
-  TextContainer,
-  ImageContainer,
-} from "./style";
+import {SectionContainer} from './style';
 
-const Home = () => {
+const Product = () => {
   return (
     <SectionContainer>
-      <TextContainer>
         <div>
           <span>AI.Tech</span>
-          <h1>Artificial Intelligence for Your Business</h1>
+          <h1>Artificial Intelligence for Yours Business PRODUCT PAGE</h1>
           <p>
             Tempor rebun no at dolore lorem clita rebun ipsum rebun stet dolor
             sed justo kasd. Ut dolor sed magna dolor sea diam. Sit diam sit.
@@ -22,12 +17,8 @@ const Home = () => {
             <button>Contact Us</button>
           </div>
         </div>
-      </TextContainer>
-      <ImageContainer>
-        <img src={Ai} alt="AI Illustration" />
-      </ImageContainer>
     </SectionContainer>
   );
 };
 
-export default Home;
+export default Product;

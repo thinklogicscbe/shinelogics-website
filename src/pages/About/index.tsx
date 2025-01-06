@@ -1,7 +1,11 @@
-import React from "react";
+import { lazy } from "react";
+
+const Abouts = lazy(() => import("../../components/AboutCompo/about"));
 
 const About = () => {
-  return <div>Welcome to the About Page!</div>;
+  return (
+    <Abouts />
+  );
 };
 
 export default About;

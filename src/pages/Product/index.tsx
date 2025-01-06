@@ -1,7 +1,11 @@
-import React from "react";
+import { lazy } from "react";
+
+const Products = lazy(() => import("../../components/ProductCompo/product"));
 
 const Product = () => {
-  return <div>Welcome to the Product Page!</div>;
+  return (
+    <Products />
+  );
 };
 
 export default Product;
