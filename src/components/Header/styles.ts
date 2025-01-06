@@ -141,7 +141,7 @@ export const ActiveNavLink = styled(Link)`
 
 
 export const StyledButton = styled.button`
-  padding: 4px 10px;
+  //padding: 4px 10px;
   border: none;
   border-radius: 5px;
   font-size: 1rem;
@@ -153,8 +153,9 @@ export const StyledButton = styled.button`
   }
 
   &:last-child {
-    background-color: #111a91;
-    color: white;
+    //background-color: #111a91;
+    color: #111a91;
+    font-weight: bold;
     border: 2px solid white;
   }
 
