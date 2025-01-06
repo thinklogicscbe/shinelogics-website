@@ -93,3 +93,33 @@ export const Span = styled("span")`
     text-decoration: rgb(255, 130, 92) wavy underline;
   }
 `;
+
+export const DrawerNavWrapper = styled("div")`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 1rem;
+
+  a {
+    font-size: 1.2rem;
+    color: #18216d;
+    margin: 1rem 0;
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: rgb(255, 130, 92);
+    }
+  }
+`;
+
+
+export const ActiveNavLink = styled(Link)`
+  color: rgb(255, 130, 92);
+  font-weight: bold;
+
+  &:hover {
+    color: rgb(255, 80, 50);
+  }
+`;
