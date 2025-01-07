@@ -1,6 +1,8 @@
 import styled, { keyframes } from 'styled-components';
 import background from "../../assets/bg-hero.png";
 
+//BELOW GIVEN CSS CODE WAS [ HOME ] PAGE STYLE CSS 
+
 export const SectionContainer = styled("div")`
   display: flex;
   justify-content: space-between;
@@ -79,51 +81,7 @@ export const ImageContainer = styled("div")`
   }
 `;
 
-
-
-// // Keyframes for left-to-right animation
-// const slideIn = keyframes`
-//     from {
-//         transform: translateX(-100%);
-//         opacity: 0;
-//     }
-//     to {
-//         transform: translateX(0);
-//         opacity: 1;
-//     }
-// `;
-
-// export const PdaasContainer = styled.div`
-//     display: grid;
-//     grid-template-columns: 1fr 1fr; /* Two equal-width columns */
-//     gap: 5px; /* Space between columns */
-//     align-items: center; /* Align items vertically */
-//     padding: 60px; /* Optional padding for the container */
-// `;
-
-// export const PdaasImage = styled.img`
-//     width: 90%;
-//     height: auto;
-//     max-width: 800px;
-//     margin-left: auto;
-//     margin-right: 10px;
-
-//     /* Apply left-to-right animation */
-//     animation: ${slideIn} 1s ease-out;
-// `;
-
-// export const PdaasContent = styled.div`
-//     display: flex;
-//     flex-direction: column;
-//     justify-content: center;
-//     font-size: 20px;
-//     line-height: 1.5;
-//     color: #333; 
-
-//     h1 {
-//         color: blue; /* Set h1 tag color to blue */
-//     }
-// `;
+//BELOW GIVEN CSS CODE WAS [ PDAAS ] PAGE STYLE CSS 
 
 const slideIn = keyframes`
     from {
