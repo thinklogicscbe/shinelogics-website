@@ -1,5 +1,5 @@
 import React from "react";
-import Ai from "../../assets/hero-img.png";
+
 import {SectionContainer} from './style';
 
 const Contact = () => {
