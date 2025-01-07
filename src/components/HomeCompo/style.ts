@@ -231,3 +231,87 @@ export const ServiceCard = styled.div`
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   }
 `;
+
+
+//BELOW GIVEN CSS CODE FOR [ OUR PRODUCT ] PAGE STYLE
+
+
+export const ProductContainer = styled.div`
+  text-align: center;
+  padding: 60px;
+  background-color: white;
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 40px;
+
+    /* Media query for tablets */
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Media query for mobile phones */
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr; 
+    }
+  }
+`;
+
+export const ProductTitle = styled.h1`
+  font-size: 28px;
+  font-weight: bold;
+  color: #003366;
+  margin-bottom: 20px;
+`;
+
+export const ProductCard = styled.div`
+  background-color: #e8f4fc;
+  padding: 0px;
+  border-radius: 8px;
+  text-align: center;
+  position: relative; /* This is needed to position the overlay text */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+
+  .icon {
+    font-size: 30px;
+    color: #007bff;
+    margin-bottom: 15px;
+  }
+
+  h5 {
+    font-size: 18px;
+    color: #fff; /* White text to contrast over video */
+    position: absolute; /* Position the text over the video */
+    bottom: 20px; /* Adjust bottom position */
+    left: 50%;
+    transform: translateX(-50%); /* Center the text horizontally */
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black background for contrast */
+    border-radius: 5px;
+  }
+
+  p {
+    font-size: 14px;
+    color: #666;
+  }
+
+  &:hover {
+   transform: scale(1.05);
+   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+`;
+
+export const Video = styled.video`
+  width: 100%;
+  border-radius: 8px;
+  pointer-events: none; /* Disable all interactions */
+  display: block; /* Ensures the video fills the container */
+
+  /* Media query to adjust video size on mobile */
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
