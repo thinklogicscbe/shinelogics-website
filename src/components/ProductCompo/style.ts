@@ -16,8 +16,7 @@ export const SectionContainer = styled("div")`
 
 export const DivisionContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  flex-direction: column;
   gap: 20px;
   margin-top: 20px;
 
@@ -25,23 +24,32 @@ export const DivisionContainer = styled.div`
     display: flex;
     width: 100%;
     gap: 20px;
-    opacity: 0;
-    animation: rowAnimation 1s ease forwards;
+    align-items: center; /* Align image and content vertically */
+    position: relative;
 
-    /* Stagger the row animation */
     &.row-1 {
-      animation-delay: 0s;
+      flex-direction: row; /* Image on the left */
     }
+
     &.row-2 {
-      animation-delay: 0.5s;
+      flex-direction: row-reverse; /* Image on the right */
     }
-    &.row-3 {
-      animation-delay: 1s;
+
+    & > div:first-child {
+      flex: 0 0 30%; /* Image takes 30% of the row */
+      max-width: 30%;
+      animation: slideFromSide 1s ease forwards;
+    }
+
+    & > div:last-child {
+      flex: 0 0 70%; /* Content takes 70% of the row */
+      max-width: 70%;
+      animation: slideFromBottom 1s ease forwards;
+      text-align: left; /* Align text to the left */
     }
 
     & img {
-      width: 100%;
-      max-width: 300px;
+      width: 100%; /* Ensure the image takes full width of its container */
       height: auto;
       border-radius: 8px;
     }
@@ -52,10 +60,22 @@ export const DivisionContainer = styled.div`
     }
   }
 
-  @keyframes rowAnimation {
+  /* Animations */
+  @keyframes slideFromSide {
     0% {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateX(-50%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes slideFromBottom {
+    0% {
+      opacity: 0;
+      transform: translateY(50%);
     }
     100% {
       opacity: 1;
