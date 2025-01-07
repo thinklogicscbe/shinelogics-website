@@ -50,10 +50,10 @@ const Pdaas = () => {
 
     return (
         <PdaasContainer ref={containerRef}>
-            <AnimatedImage 
-                src={pdaasimg} 
-                alt="PDaaS Image" 
-                className={isVisible ? 'animate' : ''} 
+            <AnimatedImage
+                src={pdaasimg}
+                alt="PDaaS Image"
+                className={isVisible ? 'animate' : ''}
             />
             <PdaasContent>
                 <h1>Our Process</h1>
@@ -62,6 +62,8 @@ const Pdaas = () => {
                 from design to deployment. Shinelogics aims to provide top-quality products using the PDaaS model.
                 Discover our range of products designed to streamline business operations, enhance productivity, and
                 provide exceptional service to our clients.
+                <br /><br />
+                We take pride in our diverse portfolio of software products that cater to various industries. From Human Resource Management and Hospital Management Systems to School and College Management Systems, our products are designed to optimize operations and improve productivity.
             </PdaasContent>
         </PdaasContainer>
     );

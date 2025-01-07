@@ -150,6 +150,7 @@ export const AnimatedImage = styled.img`
     max-width: 800px;
     margin-left: auto;
     margin-right: 10px;
+    border-radius: 5px;
 
     /* Default state (hidden) */
     opacity: 0;
