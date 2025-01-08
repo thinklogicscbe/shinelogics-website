@@ -1,170 +1,128 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { MenuOutlined } from "@ant-design/icons";
+import { NavLink } from "react-router-dom";
 
-
-export const HeaderSection = styled("header")`
-  display: flex; /* Ensure children are flex items */
-  align-items: center;
-  justify-content: space-between; /* Space between logo and navigation links */
-  padding: 1rem 0.5rem;
-
-  .ant-row-space-between {
-    align-items: center;
-    text-align: center;
-  }
-`;
-
-
-
-export const LogoContainer = styled(Link)`
+export const HeaderSection = styled.header`
   display: flex;
-`;
+  justify-content: space-between;
+  align-items: left;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 
-export const NavLink = styled("div")`
-  display: inline-block;
-  text-align: center;
-  padding-left: 5px;
-  padding-right: 5px;
-`;
-
-export const CustomNavLink = styled("div")`
-  width: 203px;
-  display: inline-block;
-
-  @media only screen and (max-width: 411px) {
-    width: 150px;
+  @media (max-width: 768px) {
+    flex-direction: column; 
+    padding: 15px; 
+    text-align: left; 
   }
-
-  @media only screen and (max-width: 320px) {
-    width: 118px;
+  
+  @media (max-width: 480px) {
+    padding: 10px; 
   }
 `;
+export const LogoContainer = styled(NavLink)`
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+`;
 
-export const Burger = styled("div")`
-  @media only screen and (max-width: 890px) {
-    display: block;
-  }
-
+export const Burger = styled.div`
+  cursor: pointer;
   display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25px;
+  height: 18px;
 
-  svg {
-    fill: #2e186a;
+  div {
+    background-color: #333;
+    width: 100%;
+    height: 3px;
+    border-radius: 2px;
+  }
+
+  @media (max-width: 932px) {
+    display: flex; 
+    position: absolute;
+    right: 25px; 
+    top: 30px; 
   }
 `;
 
-
-
-export const NotHidden = styled("div")`
+export const NavLinks = styled.div`
   display: flex;
   align-items: center;
-  margin-left: auto;
-  gap: 1rem;
 
-  @media only screen and (max-width: 890px) {
+  @media (max-width: 768px) {
     display: none;
   }
 `;
 
-export const Menu = styled("h5")`
-  font-size: 1.5rem;
-  font-weight: 600;
-  text-align: center;
-`;
-
-export const CustomNavLinkSmall = styled(NavLink)`
-  font-size: 1.2rem;
-  color: #18216d;
-  transition: color 0.2s ease-in;
-  margin: 0.5rem 2rem;
-
-  @media only screen and (max-width: 768px) {
-    margin: 1.25rem 2rem;
-  }
-`;
-
-export const Label = styled("span")`
-  font-weight: 500;
-  color: #404041;
-  text-align: right;
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-`;
-
-export const Outline = styled(MenuOutlined)`
-  font-size: 22px;
-`;
-
-export const Span = styled("span")`
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-
-  &:hover,
-  &:active,
-  &:focus {
-    color: rgb(255, 130, 92);
-    text-underline-position: under;
-    text-decoration: rgb(255, 130, 92) wavy underline;
-  }
-`;
-
-export const DrawerNavWrapper = styled("div")`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  padding: 1rem;
-
-  a {
-    font-size: 1.2rem;
-    color: #18216d;
-    margin: 1rem 0;
-    text-decoration: none;
-    transition: color 0.3s ease;
-
-    &:hover {
-      color: rgb(255, 130, 92);
-    }
-  }
-`;
-
-
-export const ActiveNavLink = styled(Link)`
-  color: rgb(255, 130, 92);
-  font-weight: bold;
-
-  &:hover {
-    color: rgb(255, 80, 50);
-  }
-`;
-
-
 export const StyledButton = styled.button`
-  //padding: 4px 10px;
+  background: none;
   border: none;
-  border-radius: 5px;
-  font-size: 1rem;
+  padding: 10px 15px;
   cursor: pointer;
-
-  &:first-child {
-    background-color: white;
-    color: #0066ff;
-  }
-
-  &:last-child {
-    //background-color: #111a91;
-    color: #111a91;
-    font-weight: bold;
-    border: 2px solid white;
-  }
-
-  &:hover {
-    opacity: 0.9;
-  }
+  font-size: 16px;
+  color: #333;
+  position: relative;
+  transition: all 0.3s ease;
 
   &.active {
-    background-color: orange;
-    color: white;
+    font-weight: bold;
+    color: #007bff;
   }
 `;
+
+export const DropdownWrapper = styled.div`
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  width: 200px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  z-index: 1;
+
+  &.visible {
+    display: block;
+  }
+`;
+export const DropdownWrapperMobile = styled.div`
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  width: 100%;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  z-index: 1;
+
+  &.visible {
+    display: block;
+  }
+`;
+
+export const DropdownArrow = styled.div`
+  position: absolute;
+  top: -6px;
+  left: 20px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #fff;
+`;
+
+export const DropdownContent = styled.div`
+  padding: 12px 20px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f1f1f1;
+  }
+`;
+
