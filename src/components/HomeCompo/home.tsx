@@ -7,12 +7,7 @@ const Home = () => {
     <SectionContainer>
       <TextContainer>
         <div>
-          <span>AI.Tech</span>
-          <h1>Artificial Intelligence for Your Business</h1>
-          <p>
-            Tempor rebun no at dolore lorem clita rebun ipsum rebun stet dolor
-            sed justo kasd. Ut dolor sed magna dolor sea diam. Sit diam sit.
-          </p>
+          <h1>WE'RE AN AI-DRIVEN PRODUCT DEVELOPMENT COMPANY</h1>
           <div className="button-group">
             <button>Read More</button>
             <button>Contact Us</button>
