@@ -1,21 +1,36 @@
-import React from "react";
-import {SectionContainer} from './style';
+import React, { useEffect } from 'react';
+import { SectionContainer, DivisionContainer } from './style';
+import about1 from "../../assets/about-image/about.png";
 
-const About = () => {
+const About: React.FC = () => {
+  useEffect(() => {
+    const lines = document.querySelectorAll('.line');
+    lines.forEach((line, index) => {
+      (line as HTMLElement).style.animationDelay = `${index * 0.2}s`;
+    });
+  }, []);
+
+  const getAnimatedText = (text: string) => {
+    return text.split('. ').map((sentence, index) => (
+      <span key={index} className="line">
+        {sentence}.
+      </span>
+    ));
+  };
+
   return (
     <SectionContainer>
-        <div>
-          <span>AI.Tech</span>
-          <h1>Artificial Intelligence for Your Business ABOUT PAGE</h1>
-          <p>
-            Tempor rebun no at dolore lorem clita rebun ipsum rebun stet dolor
-            sed justo kasd. Ut dolor sed magna dolor sea diam. Sit diam sit.
-          </p>
-          <div className="button-group">
-            <button>Read More</button>
-            <button>Contact Us</button>
+      <DivisionContainer>
+        {/* Row 1 */}
+        <div className="row row-1">
+          <div>
+            <img src={about1} alt="ERP" />
+          </div>
+          <div>
+            <p>{getAnimatedText("At Shinelogics, we pride ourselves on being a pioneering Product Development as a Service (PDaaS) company. With a strong commitment to innovation and excellence, we specialize in delivering cutting-edge solutions that combine the power of technology and creativity to transform businesses.")}</p>
           </div>
         </div>
+      </DivisionContainer>
     </SectionContainer>
   );
 };

@@ -1,170 +1,160 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 
-export const FooterSection = styled("footer")`
-  background: rgb(241, 242, 243);
-  padding: 2.5rem 0;
-`;
+export const FooterSection = styled.footer`
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  color: #f0f0f0;
+  padding: 4rem 2rem;
+  box-sizing: border-box;
 
-export const Title = styled("h4")`
-  font-size: 22px;
-  text-transform: capitalize;
-  color: #18216d;
-
-  @media screen and (max-width: 414px) {
-    padding: 1.5rem 0;
+  @media screen and (max-width: 768px) {
+    padding: 3rem 1rem;
+    overflow-x: hidden;
   }
 `;
 
-export const NavLink = styled(Link)`
+export const FooterContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  padding: 0 1rem;
+
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the left */
+    text-align: left; /* Ensure text aligns to the left */
+    width: 100%;
+  }
+`;
+
+export const FooterColumn = styled.div`
+  flex: 1;
+  margin: 0 1.5rem;
+  box-sizing: border-box;
+  max-width: 100%;
+
+  @media screen and (max-width: 768px) {
+    margin: 1.5rem 0;
+    width: 100%;
+  }
+`;
+
+export const FooterTitle = styled.h4`
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #f0f0f0;
+  margin-bottom: 1.5rem;
+  position: relative;
+
+  &::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: #00d4ff;
+    margin-top: 0.7rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    font-size: 1.4rem;
+    &::after {
+      width: 30%;
+      margin-left: 0; /* Align underline to the left */
+    }
+  }
+`;
+
+export const FooterText = styled.p`
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #d1d1d1;
+  margin-bottom: 1.5rem;
+
+  @media screen and (max-width: 768px) {
+    font-size: 0.95rem;
+    text-align: left; /* Ensure text aligns to the left */
+  }
+`;
+
+export const FooterLink = styled.a`
   display: block;
   font-size: 1rem;
-  margin-bottom: 0.625rem;
-  transition: all 0.2s ease-in-out;
-
-  &:hover,
-  &:active,
-  &:focus {
-    color: #15418e;
-  }
-`;
-
-export const Extra = styled("section")`
-  background: rgb(241, 242, 243);
-  position: relative;
-  width: 100%;
-  margin-right: auto;
-  margin-left: auto;
-  padding-bottom: 2rem;
-`;
-
-export const LogoContainer = styled("div")`
-  display: flex;
-  position: relative;
-`;
-
-export const Para = styled("div")`
-  color: #18216d;
-  font-size: 14px;
-  width: 70%;
-`;
-
-export const Large = styled(Link)`
-  font-size: 16px;
-  color: #000;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  text-transform: capitalize;
-  line-height: 24px;
-  display: block;
-  margin-bottom: 0.625rem;
-  transition: all 0.3s ease-in-out;
-  max-width: max-content;
+  color: #00d4ff;
+  margin-bottom: 0.7rem;
+  text-decoration: none;
+  transition: color 0.3s ease, transform 0.3s ease;
 
   &:hover {
-    color: rgb(255, 130, 92);
-    text-underline-position: under;
-    text-decoration: rgb(255, 130, 92) wavy underline;
+    color: #00ff99;
+    transform: translateX(5px);
+  }
+
+  @media screen and (max-width: 768px) {
+    font-size: 0.95rem;
+    text-align: left; /* Align links to the left */
   }
 `;
 
-export const Chat = styled("p")`
-  color: #18216d;
-  max-width: fit-content;
-  border-bottom: 1px solid #18216d;
-  cursor: pointer;
-  margin-top: 1rem;
-  transition: all 0.3s ease-in-out;
+export const FooterContactInfo = styled.div`
+  font-size: 1rem;
+  color: #d1d1d1;
+  margin: 1.5rem 0;
 
-  &:hover {
-    border-bottom: 1px solid rgb(255, 130, 92);
-    color: rgb(255, 130, 92);
+  & > div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.2rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    font-size: 0.95rem;
+    text-align: left;
   }
 `;
 
-export const Empty = styled("div")`
-  position: relative;
-  height: 53px;
-`;
-
-export const FooterContainer = styled("div")`
-  max-width: 510px;
-  width: 100%;
+export const SocialIcons = styled.div`
   display: flex;
-  justify-content: space-between;
-  text-align: center;
-  align-items: center;
-  transition: all 0.1s ease-in-out;
+  justify-content: flex-start; /* Align icons to the left */
+  margin-top: 2rem;
 
   a {
-    &:hover,
-    &:active,
-    &:focus {
-      -webkit-transform: scale(1.1);
-      -ms-transform: scale(1.1);
-      transform: scale(1.1);
-    }
-  }
-
-  @media screen and (max-width: 769px) {
-    width: auto;
-
-    a:not(:last-child) {
-      display: none;
-    }
-  }
-
-  div {
-    cursor: pointer;
-    margin-right: 15px;
-    width: 25px;
-    height: 25px;
+    margin: 0 1rem 0 0; /* Adjust spacing for alignment */
+    color: #f0f0f0;
+    font-size: 1.8rem;
+    transition: transform 0.3s ease, color 0.3s ease;
 
     &:hover {
-      fill: rgb(255, 130, 92);
+      transform: scale(1.3);
+      color: #00d4ff;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    margin-top: 1.5rem;
+    a {
+      font-size: 1.5rem;
+      margin: 0 0.8rem 0 0;
     }
   }
 `;
 
-export const Language = styled("h4")`
-  font-size: 22px;
-  text-transform: capitalize;
-  color: #18216d;
+export const FooterBottom = styled.div`
+  margin-top: 3rem;
+  text-align: left; /* Align text to the left */
+  font-size: 1rem;
+  color: #8a8a8a;
+  border-top: 1px solid #333;
+  padding-top: 1.5rem;
 
-  @media screen and (max-width: 414px) {
-    padding: 1.5rem 0;
+  @media screen and (max-width: 768px) {
+    margin-top: 2rem;
+    font-size: 0.95rem;
   }
 `;
 
-export const Label = styled("label")`
-  font-size: 22px;
-  text-transform: capitalize;
-  color: #18216d;
-  display: block;
-  margin-bottom: 2rem;
-  font-family: "Motiva Sans Bold", serif;
-
-  @media screen and (max-width: 414px) {
-    padding: 1.5rem 0;
-    margin-bottom: 1rem;
-  }
-`;
-
-export const LanguageSwitch = styled("div")`
-  cursor: pointer;
-  transition: all 0.1s ease-in-out;
-
-  &:hover,
-  &:active,
-  &:focus {
-    -webkit-transform: scale(1.1);
-    -ms-transform: scale(1.1);
-    transform: scale(1.1);
-  }
-`;
-
-export const LanguageSwitchContainer = styled("div")`
-  display: flex;
-  justify-content: space-between;
-  width: 85px;
+export const HighlightedText = styled.span`
+  color: #00ff99;
+  font-weight: 700;
 `;
