@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
-import { SectionContainer, DivisionContainer } from './style';
-import about1 from "../../assets/about-image/about.png";
+import { SectionContainer, DivisionContainer, Video } from './style';
+import about from '../../assets/about-image/Employees_having_business_meeting.mp4_1736422910838.mp4';
 
 const About: React.FC = () => {
   useEffect(() => {
@@ -24,10 +24,14 @@ const About: React.FC = () => {
         {/* Row 1 */}
         <div className="row row-1">
           <div>
-            <img src={about1} alt="ERP" />
+            <Video src={about} autoPlay loop muted playsInline />
           </div>
           <div>
-            <p>{getAnimatedText("At Shinelogics, we pride ourselves on being a pioneering Product Development as a Service (PDaaS) company. With a strong commitment to innovation and excellence, we specialize in delivering cutting-edge solutions that combine the power of technology and creativity to transform businesses.")}</p>
+            <p>
+              {getAnimatedText(
+                "At Shinelogics, we pride ourselves on being a pioneering Product Development as a Service (PDaaS) company. With a strong commitment to innovation and excellence, we specialize in delivering cutting-edge solutions that combine the power of technology and creativity to transform businesses."
+              )}
+            </p>
           </div>
         </div>
       </DivisionContainer>
