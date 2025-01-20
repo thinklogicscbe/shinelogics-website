@@ -12,6 +12,7 @@ import {
   DropdownContent,
   DropdownArrow,
   DropdownWrapperMobile,
+  StyledButton1
 } from "./styles";
 
 const Header = () => {
@@ -125,7 +126,7 @@ const Header = () => {
             style={{ position: "relative" }}
           >
             <NavLink to={link.path}>
-              <StyledButton
+              <StyledButton1
                 className={activeLink === link.path ? "active" : ""}
                 onClick={(e) => {
                   if (link.path === "/product") {
@@ -139,7 +140,7 @@ const Header = () => {
                 }}
               >
                 {link.label}
-              </StyledButton>
+              </StyledButton1>
             </NavLink>
             {link.hasDropdown && (
               <DropdownWrapperMobile

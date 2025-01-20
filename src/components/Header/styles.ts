@@ -66,13 +66,45 @@ export const StyledButton = styled.button`
   color: #333;
   position: relative;
   transition: all 0.3s ease;
+  text-decoration: none; /* No underline by default */
+  border-bottom: 2px solid transparent; /* Underline effect */
+
+  &.active {
+    font-weight: bold;
+    color: #007bff;
+    border-bottom-color: #007bff; /* Show underline when active */
+  }
+
+  &:hover {
+    color: #555;
+    border-bottom-color: #555; /* Underline on hover */
+  }
+
+  &.light-theme {
+    background: #f9f9f9;
+    color: #333;
+
+    &:hover {
+      color: #007bff;
+      border-bottom-color: #007bff;
+    }
+  }
+`;
+export const StyledButton1 = styled.button`
+  background: none;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  position: relative;
+  transition: all 0.3s ease;
 
   &.active {
     font-weight: bold;
     color: #007bff;
   }
 `;
-
 export const DropdownWrapper = styled.div`
   display: none;
   position: absolute;
@@ -80,12 +112,17 @@ export const DropdownWrapper = styled.div`
   left: 0;
   background-color: #fff;
   width: 200px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  z-index: 1;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  z-index: 10;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 
   &.visible {
     display: block;
+    opacity: 1;
+    transform: translateY(0);
   }
 `;
 export const DropdownWrapperMobile = styled.div`

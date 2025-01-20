@@ -26,7 +26,7 @@ const OurProduct = () => {
                 </ProductCard>
 
                 <ProductCard>
-                    <h5>Farm2Bag (E-commerce Platform)</h5>
+                    <h5>E-commerce Platform</h5>
                     <Video ref={eComRef} src={E_commerce} autoPlay loop muted controls={false} />
                 </ProductCard>
 
