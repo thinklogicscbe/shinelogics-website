@@ -51,7 +51,7 @@ const Header = () => {
   ];
 
   const productDropdownLinks = [
-    { path: "/product", label: "Category 1" },
+    { path: "/product", label: "ERP(Enterprise resource planning)" },
     { path: "/product", label: "Category 2" },
     { path: "/product", label: "Category 3" },
   ];
