@@ -10,21 +10,13 @@ export const SectionContainer = styled.div`
 
 export const SliderContainer = styled.div`
   display: flex;
-  gap: 20px;
-  overflow-x: auto;
+  gap: 80px;
   background: #c7dcfc;
   padding: 20px;
   width: 100%;
-  white-space: nowrap;
-  scroll-behavior: smooth;
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  @media (max-width: 768px) {
-    gap: 10px;
-    padding: 15px;
-  }
+  justify-content: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
 `;
 
 export const ServiceBox = styled.div`
