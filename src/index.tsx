@@ -1,5 +1,5 @@
+import ReactDOM from "react-dom/client"; // Use react-dom/client for React 18
 import { BrowserRouter } from "react-router-dom";
-import ReactDOM from "react-dom";
 import { I18nextProvider } from "react-i18next";
 import "antd/dist/antd.css";
 
@@ -14,4 +14,9 @@ const App = () => (
   </BrowserRouter>
 );
 
-ReactDOM.render(<App />, document.getElementById("root"));
+const rootElement = document.getElementById("root");
+
+if (rootElement) {
+  const root = ReactDOM.createRoot(rootElement); // Create the React 18 root
+  root.render(<App />);
+}
