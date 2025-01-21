@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import {
   SectionContainer,
   SliderContainer,
@@ -8,132 +8,28 @@ import {
   Title,
   DescriptionTitle,
   DescriptionText,
-  DescriptionImage,
   DescriptionBox,
   AdditionalContainers,
   ContainerBox,
   ContainerTitle,
   ContainerText,
 } from "./style";
-import aboutVideo from "../../assets/about-image/Employees_having_business_meeting.mp4_1736422910838.mp4"; // Your video import
-import product from "../../assets/service/product.jpg";
-import tech from "../../assets/service/techInovation.jpg";
-import scalability from "../../assets/service/Scalability.jpg";
+import { serviceData } from "./servicesData"; // Importing the service data
 
-
-
-const serviceImages = [product, tech, scalability];
-
-const services = Array.from({ length: 10 }, (_, index) => ({
-  id: index + 1,
-  title: `Service ${index + 1}`,
-  descriptions: [
-    {
-      title: `Product Development`,
-      description: `From ideation and prototyping to deployment and ongoing support, we guide you through every stage of product development. Whether it’s a brand-new concept or an enhancement to an existing product, we ensure a smooth, effective process. ${
-        index + 1
-      }`,
-      image: product,
-    },
-    {
-      title: `Technology Innovation`,
-      description: `We harness the power of the latest technologies—ranging from full-stack development to AI/ML and data engineering—to build products that are both innovative and future-ready. ${
-        index + 1
-      }.`,
-      image: tech,
-    },
-    {
-      title: `Scalability & Growth`,
-      description: `Our solutions are designed to grow with your business. We ensure that your products are not only relevant today but adaptable to future business demands. ${
-        index + 1
-      }.`,
-      image: scalability,
-    },
-  ],
-}));
-
-type ServiceType = {
-  id: number;
-  title: string;
-  descriptions: {
-    title: string;
-    description: string;
-    image: string; // Add image property here
-  }[];
-};
-
+const keys = [
+  "web_development_services",
+  "mobile_app_development_services",
+  "cybersecurity_services",
+];
 
 const Service = () => {
-  const [selectedService, setSelectedService] = useState<ServiceType>(
-    services[0]
-  );
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const [showArrows, setShowArrows] = useState(false);
+  const [selectedServiceKey, setSelectedServiceKey] = useState<string>(keys[0]);
+  const [selectedService, setSelectedService] = useState(serviceData[keys[0]]);
 
-  const handleServiceClick = (service: ServiceType) => {
-    setSelectedService(service);
+  const handleServiceClick = (key: string) => {
+    setSelectedServiceKey(key);
+    setSelectedService(serviceData[key]);
   };
-
-  const handleScroll = (event: WheelEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    if (sliderRef.current) {
-      const scrollAmount = event.deltaY > 0 ? 300 : -300;
-      sliderRef.current.scrollBy({
-        left: scrollAmount,
-        behavior: "smooth",
-      });
-    }
-  };
-
-  const handleSliderMouseEnter = () => setShowArrows(true);
-  const handleSliderMouseLeave = () => setShowArrows(false);
-
-  const preventMouseActions = (event: MouseEvent) => {
-    event.stopPropagation();
-  };
-
-  useEffect(() => {
-    const disablePageScroll = (e: KeyboardEvent) => {
-      if (
-        e.key === "ArrowUp" ||
-        e.key === "ArrowDown" ||
-        e.key === "PageUp" ||
-        e.key === "PageDown"
-      ) {
-        e.preventDefault();
-      }
-    };
-
-    if (sliderRef.current) {
-      sliderRef.current.addEventListener("wheel", handleScroll);
-      sliderRef.current.addEventListener("mousedown", preventMouseActions);
-      sliderRef.current.addEventListener("mousemove", preventMouseActions);
-      sliderRef.current.addEventListener("mouseup", preventMouseActions);
-
-      window.addEventListener("keydown", disablePageScroll);
-
-      return () => {
-        if (sliderRef.current) {
-          sliderRef.current.removeEventListener("wheel", handleScroll);
-          sliderRef.current.removeEventListener(
-            "mousedown",
-            preventMouseActions
-          );
-          sliderRef.current.removeEventListener(
-            "mousemove",
-            preventMouseActions
-          );
-          sliderRef.current.removeEventListener("mouseup", preventMouseActions);
-        }
-
-        window.removeEventListener("keydown", disablePageScroll);
-      };
-    }
-  }, []);
-  const serviceDescription =
-    "Our comprehensive Enterprise Resource Planning (ERP) solution is designed to streamline and integrate your business processes, enhancing efficiency and decision-making across your organization. With a deep understanding of global markets—particularly in the US and Canada—we bring valuable industry insights and best practices to every collaboration, ensuring the right solutions for your business.";
 
   return (
     <SectionContainer>
@@ -148,38 +44,32 @@ const Service = () => {
       >
         OUR SERVICES
       </h1>
-      <SliderContainer
-        ref={sliderRef}
-        onMouseEnter={handleSliderMouseEnter}
-        onMouseLeave={handleSliderMouseLeave}
-      >
-        {services.map((service) => (
-          <div key={service.id} style={{ textAlign: "center", margin: "10px" }}>
+      <SliderContainer>
+        {keys.map((key, index) => (
+          <div key={key} style={{ textAlign: "center", margin: "10px" }}>
             <ServiceBox
-              onClick={() => handleServiceClick(service)}
+              onClick={() => handleServiceClick(key)}
               style={{
                 position: "relative",
                 overflow: "hidden",
                 border:
-                  service.id === selectedService.id
+                  selectedServiceKey === key
                     ? "2px solid #007bff"
                     : "1px solid #ddd",
                 boxShadow:
-                  service.id === selectedService.id
+                  selectedServiceKey === key
                     ? "0 2px 10px rgba(0, 123, 255, 0.2)"
                     : "none",
                 transform:
-                  service.id === selectedService.id
-                    ? "scale(1.05)"
-                    : "scale(1)",
+                  selectedServiceKey === key ? "scale(1.05)" : "scale(1)",
                 transition:
                   "transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease",
+                animationDelay: `${index * 0.1}s`, // Staggered delay based on index
               }}
             >
-              <video
-                autoPlay
-                loop
-                muted
+              <img
+                src={serviceData[key].image}
+                alt={serviceData[key].title}
                 style={{
                   position: "absolute",
                   top: "0",
@@ -188,57 +78,70 @@ const Service = () => {
                   height: "100%",
                   objectFit: "cover",
                 }}
-              >
-                <source src={aboutVideo} type="video/mp4" />
-              </video>
+              />
             </ServiceBox>
+
             <div
               style={{
                 marginTop: "10px",
                 fontWeight: "bold",
                 fontSize: "16px",
-                color: service.id === selectedService.id ? "#007bff" : "#000",
+                color: selectedServiceKey === key ? "#007bff" : "#000",
+                textAlign: "center",
               }}
             >
-              {service.title}
+              {serviceData[key].title}
             </div>
           </div>
         ))}
       </SliderContainer>
+
       <Title>{selectedService.title}</Title>
-
-      {/* Trigger animation on selected service change */}
-      <div key={selectedService.id}>
-      <DetailsContainer>
-  {selectedService.descriptions.length > 0 ? (
-    <DescriptionRow>
-      {selectedService.descriptions.map((desc, index) => (
-        <DescriptionBox key={index}>
-          <DescriptionImage src={desc.image} alt={desc.title} />
-          <DescriptionTitle>{desc.title}</DescriptionTitle>
-          <DescriptionText>{desc.description}</DescriptionText>
-        </DescriptionBox>
-      ))}
-    </DescriptionRow>
-  ) : (
-    <p>No descriptions available.</p>
-  )}
-</DetailsContainer>   
-
-  <AdditionalContainers>
-    {Array.from({ length: 4 }).map((_, index) => (
-      <ContainerBox
-        key={index}
-        $isLeft={index % 2 === 0}
-        $delay={index * 0.3}
+      <DescriptionText
+        style={{
+          textAlign: "center",
+          margin: "20px 0",
+          fontSize: "18px",
+          color: "#555",
+        }}
       >
-        <ContainerTitle>ERP Solution</ContainerTitle>
-        <ContainerText>{serviceDescription}</ContainerText>
-      </ContainerBox>
-    ))}
-  </AdditionalContainers>
-</div>
+        {selectedService.description}
+      </DescriptionText>
+      <DetailsContainer>
+        {Object.keys(selectedService.expertise).map((expertiseKey, idx) => {
+          const expertise = selectedService.expertise[expertiseKey];
+          const isEven = idx % 2 === 0; // Check if the index is even or odd
+          const delay = `${idx * 0.1}s`; // Set delay based on index (e.g., 0s, 0.5s, 1s, 1.5s...)
 
+          return (
+            <DescriptionRow key={expertiseKey} delay={delay}>
+              <DescriptionBox isEven={isEven}>
+                <div style={{ flex: "1", paddingRight: "10px" }}>
+                  <img
+                    src={expertise.image}
+                    alt={expertiseKey}
+                    style={{
+                      width: "100%",
+                      height: "90%",
+                      borderRadius: "8px",
+                    }}
+                  />
+                </div>
+                <div style={{ flex: "1", paddingLeft: "10px" }}>
+                  <DescriptionTitle>
+                    {expertiseKey.replace(/_/g, " ")}
+                  </DescriptionTitle>
+                  <DescriptionText>
+                    {expertise.description.map((item, index) => (
+                      <div key={index}>➤ {item}</div>
+                    ))}
+                  </DescriptionText>
+                </div>
+              </DescriptionBox>
+            </DescriptionRow>
+          );
+        })}
+      </DetailsContainer>
     </SectionContainer>
   );
 };
