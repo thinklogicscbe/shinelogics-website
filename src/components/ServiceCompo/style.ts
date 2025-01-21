@@ -201,7 +201,7 @@ export const DescriptionText = styled.p`
   }
 
   @media (max-width: 768px) {
-    font-size: 0.9rem;
+    font-size: 1.3rem;
   }
 `;
 
