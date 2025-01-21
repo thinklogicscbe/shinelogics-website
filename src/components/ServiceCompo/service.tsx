@@ -8,8 +8,21 @@ import {
   Title,
   DescriptionTitle,
   DescriptionText,
+  DescriptionImage,
+  DescriptionBox,
+  AdditionalContainers,
+  ContainerBox,
+  ContainerTitle,
+  ContainerText,
 } from "./style";
 import aboutVideo from "../../assets/about-image/Employees_having_business_meeting.mp4_1736422910838.mp4"; // Your video import
+import product from "../../assets/service/product.jpg";
+import tech from "../../assets/service/techInovation.jpg";
+import scalability from "../../assets/service/Scalability.jpg";
+
+
+
+const serviceImages = [product, tech, scalability];
 
 const services = Array.from({ length: 10 }, (_, index) => ({
   id: index + 1,
@@ -20,18 +33,21 @@ const services = Array.from({ length: 10 }, (_, index) => ({
       description: `From ideation and prototyping to deployment and ongoing support, we guide you through every stage of product development. Whether it’s a brand-new concept or an enhancement to an existing product, we ensure a smooth, effective process. ${
         index + 1
       }`,
+      image: product,
     },
     {
       title: `Technology Innovation`,
       description: `We harness the power of the latest technologies—ranging from full-stack development to AI/ML and data engineering—to build products that are both innovative and future-ready. ${
         index + 1
       }.`,
+      image: tech,
     },
     {
       title: `Scalability & Growth`,
       description: `Our solutions are designed to grow with your business. We ensure that your products are not only relevant today but adaptable to future business demands. ${
         index + 1
       }.`,
+      image: scalability,
     },
   ],
 }));
@@ -42,8 +58,10 @@ type ServiceType = {
   descriptions: {
     title: string;
     description: string;
+    image: string; // Add image property here
   }[];
 };
+
 
 const Service = () => {
   const [selectedService, setSelectedService] = useState<ServiceType>(
@@ -114,13 +132,15 @@ const Service = () => {
       };
     }
   }, []);
+  const serviceDescription =
+    "Our comprehensive Enterprise Resource Planning (ERP) solution is designed to streamline and integrate your business processes, enhancing efficiency and decision-making across your organization. With a deep understanding of global markets—particularly in the US and Canada—we bring valuable industry insights and best practices to every collaboration, ensuring the right solutions for your business.";
 
   return (
     <SectionContainer>
       <h1
         style={{
           textAlign: "center",
-          marginTop:"20px",
+          marginTop: "20px",
           marginBottom: "60px",
           fontSize: "24px",
           fontWeight: "bold",
@@ -188,20 +208,37 @@ const Service = () => {
       <Title>{selectedService.title}</Title>
 
       {/* Trigger animation on selected service change */}
-      <DetailsContainer key={selectedService.id}>
-        {selectedService.descriptions.length > 0 ? (
-          <DescriptionRow>
-            {selectedService.descriptions.map((desc, index) => (
-              <div key={index}>
-                <DescriptionTitle>{desc.title}</DescriptionTitle>
-                <DescriptionText>{desc.description}</DescriptionText>
-              </div>
-            ))}
-          </DescriptionRow>
-        ) : (
-          <p>No descriptions available.</p>
-        )}
-      </DetailsContainer>
+      <div key={selectedService.id}>
+      <DetailsContainer>
+  {selectedService.descriptions.length > 0 ? (
+    <DescriptionRow>
+      {selectedService.descriptions.map((desc, index) => (
+        <DescriptionBox key={index}>
+          <DescriptionImage src={desc.image} alt={desc.title} />
+          <DescriptionTitle>{desc.title}</DescriptionTitle>
+          <DescriptionText>{desc.description}</DescriptionText>
+        </DescriptionBox>
+      ))}
+    </DescriptionRow>
+  ) : (
+    <p>No descriptions available.</p>
+  )}
+</DetailsContainer>   
+
+  <AdditionalContainers>
+    {Array.from({ length: 4 }).map((_, index) => (
+      <ContainerBox
+        key={index}
+        $isLeft={index % 2 === 0}
+        $delay={index * 0.3}
+      >
+        <ContainerTitle>ERP Solution</ContainerTitle>
+        <ContainerText>{serviceDescription}</ContainerText>
+      </ContainerBox>
+    ))}
+  </AdditionalContainers>
+</div>
+
     </SectionContainer>
   );
 };

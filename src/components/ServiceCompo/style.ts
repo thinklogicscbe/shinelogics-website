@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const SectionContainer = styled.div`
   text-align: center;
@@ -81,27 +81,16 @@ export const Title = styled.h2`
 
 export const DescriptionRow = styled.div`
   display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  margin-bottom: 30px;
-  gap: 20px;
+  flex-wrap: wrap; // Allow wrapping of elements for smaller screens
+  justify-content: center; // Center the content in the row
+  gap: 90px; // Add consistent spacing between the boxes
   opacity: 0;
   transform: translateY(50px);
   animation: slideUp 2s ease-out forwards;
 
-  &:nth-child(1) {
-    animation-delay: 0.3s;
-  }
-  &:nth-child(2) {
-    animation-delay: 0.6s;
-  }
-  &:nth-child(3) {
-    animation-delay: 0.9s;
-  }
-
   @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 10px;
+    flex-direction: column; // Stack the elements vertically on small screens
+    align-items: center; // Center the items when stacked
   }
 
   @keyframes slideUp {
@@ -121,10 +110,10 @@ export const DescriptionTitle = styled.h6`
   font-weight: bold;
   color: #007bff;
   margin-bottom: 10px;
-  text-align: left;
+  text-align: center; // Center-align the title text
 
   @media (max-width: 768px) {
-    font-size: 1rem;
+    font-size: 1.1rem; // Adjust title size for smaller screens
   }
 `;
 
@@ -132,9 +121,98 @@ export const DescriptionText = styled.p`
   font-size: 1rem;
   color: #666;
   line-height: 1.6;
-  text-align: left;
+  text-align: center; // Center-align the description text
+  margin-top: 10px; // Add space above the text
 
   @media (max-width: 768px) {
-    font-size: 0.9rem;
+    font-size: 0.9rem; // Smaller text on mobile screens
   }
+`;
+export const DescriptionBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center; // Center content horizontally
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 320px; // Set a max width for each box
+  margin-bottom: 20px; // Add space between each box
+  padding: 15px; // Padding around content inside each box
+  background-color: #f9f9f9; // Optional: a background to differentiate the sections
+  border-radius: 10px; // Add rounded corners
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); // Soft shadow for depth
+
+  @media (max-width: 768px) {
+    max-width: 100%; // Allow the boxes to use full width on smaller screens
+  }
+`;
+export const DescriptionImage = styled.img`
+  width: 100%; // Ensure images fill the width of the box
+  height: 200px; // Fixed height for all images
+  object-fit: cover; // Ensure the image covers the area without stretching
+  border-radius: 8px; // Optional: rounded corners for the image
+  margin-bottom: 20px; // Space below the image
+  max-width: 100%; // Prevent images from exceeding the container width
+`;
+
+
+const smoothSlideInLeft = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
+const smoothSlideInRight = keyframes`
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+`;
+
+export const AdditionalContainers = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin-top: 40px;
+`;
+
+export const ContainerBox = styled.div<{ $isLeft: boolean; $delay: number }>`
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 25px;
+  text-align: center;
+  background-color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transform: translateX(${({ $isLeft }) => ($isLeft ? "-50px" : "50px")});
+  animation: ${({ $isLeft }) => ($isLeft ? smoothSlideInLeft : smoothSlideInRight)}
+    1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  animation-delay: ${({ $delay }) => $delay}s;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+`;
+
+export const ContainerTitle = styled.h3`
+  font-size: 20px;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 15px;
+`;
+
+export const ContainerText = styled.p`
+  font-size: 16px;
+  color: #333;
+  line-height: 1.8;
 `;
