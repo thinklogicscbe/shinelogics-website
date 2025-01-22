@@ -133,7 +133,7 @@ export const SectionContainer = styled("div")`
   display: flex;
   justify-content: space-between;
   width: 100%;
-  height: 90vh;
+  height: 90%;
   background: linear-gradient(135deg, #f4fbff 0%, #ffffff 50%, #e6f7ff 100%);
   padding: 0 5%;
   border: 1px solid rgba(0, 150, 255, 0.1);
@@ -141,7 +141,7 @@ export const SectionContainer = styled("div")`
   position: relative;
 
   /* Subtle glow effect */
-  box-shadow: 0 10px 30px rgba(0, 150, 255, 0.2), inset 0 0 12px rgba(0, 255, 255, 0.05);
+  // box-shadow: 0 10px 30px rgba(0, 150, 255, 0.2), inset 0 0 12px rgba(0, 255, 255, 0.05);
 
   &:before {
     content: "";
@@ -150,7 +150,7 @@ export const SectionContainer = styled("div")`
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, transparent 70%, rgba(0, 150, 255, 0.02));
+    // background: radial-gradient(circle, transparent 70%, rgba(0, 150, 255, 0.02));
     background-size: 100px 100px;
     pointer-events: none;
     z-index: 0;
@@ -160,9 +160,10 @@ export const SectionContainer = styled("div")`
 export const DivisionContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 50px;
+  gap: 1px;
   position: relative;
   z-index: 1;
+  padding-bottom:80px;
 
   .row {
     margin-top: 60px;
@@ -195,7 +196,7 @@ export const DivisionContainer = styled.div`
       color: #0078d7;
       font-size: 22px;
       font-weight: bold;
-      text-shadow: 0 0 4px rgba(0, 120, 255, 0.2), 0 0 8px rgba(0, 255, 255, 0.1);
+      // text-shadow: 0 0 4px rgba(0, 120, 255, 0.2), 0 0 8px rgba(0, 255, 255, 0.1);
       border-left: 4px solid rgba(0, 150, 255, 0.3);
       padding-left: 12px;
     }
@@ -215,11 +216,14 @@ export const DivisionContainer = styled.div`
     }
 
     p {
-      font-size: 18px;
+      font-size: 22px;
       text-align: justify; 
-      color: #333;
-      line-height: 1.6;
-      margin: 0;
+      color:#2D2D2D; 
+      font-weight: bold;
+      padding:2px;
+      font-family: Uni Neue ;  
+      line-height: 2.0;
+      margin: 1px;
       overflow: hidden;
       animation: slideUp 1s ease-in-out forwards;
 

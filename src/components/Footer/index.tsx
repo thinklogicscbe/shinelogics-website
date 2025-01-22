@@ -22,16 +22,16 @@ const Footer = () => {
       </FooterText>
     </FooterColumn>
     <FooterColumn>
-      <FooterTitle>Explore</FooterTitle>
-      <FooterLink href="/home">Home</FooterLink>
-      <FooterLink href="/about">About</FooterLink>
-      <FooterLink href="/services">Services</FooterLink>
-      <FooterLink href="/portfolio">Portfolio</FooterLink>
-      <FooterLink href="/team">Team</FooterLink>
+      <FooterTitle>Explore</FooterTi
+      <FooterLink href="home">Home</FooterLink>
+      <FooterLink href="About">About</FooterLink>
+      <FooterLink href="Service">Services</FooterLink>
+      <FooterLink href="#">Portfolio</FooterLink>
+      <FooterLink href="#">Team</FooterLink>
     </FooterColumn>
     <FooterColumn>
       <FooterTitle>Privacy Policy</FooterTitle>
-      <FooterLink href="#">Privacy Policy</FooterLink>
+      <FooterLink href="privacyPolicy">Privacy Policy</FooterLink>
     </FooterColumn>
     <FooterColumn>
       <FooterTitle>Get in Touch</FooterTitle>
