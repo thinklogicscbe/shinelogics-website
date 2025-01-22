@@ -22,7 +22,7 @@ const Footer = () => {
       </FooterText>
     </FooterColumn>
     <FooterColumn>
-      <FooterTitle>Explore</FooterTi
+      <FooterTitle>Explore</FooterTitle>
       <FooterLink href="home">Home</FooterLink>
       <FooterLink href="About">About</FooterLink>
       <FooterLink href="Service">Services</FooterLink>
