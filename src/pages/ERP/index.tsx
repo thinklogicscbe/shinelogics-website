@@ -147,15 +147,15 @@ const productData = [
 ];
 
 
-const emsData = [
-  {
-    id: 1,
-    title: "Employee Management System (EMS)",
-    description:
-      "Our Employee Management System (EMS) is a comprehensive solution designed to automate and simplify HR processes, improve workforce efficiency, and enhance employee engagement. Whether you're a growing startup or an established enterprise, our EMS ensures seamless management of employees from recruitment to retirement.",
-    bannerImage: "/ems-banner.jpg", // Example path for a banner image
-  },
-];
+// const emsData = [
+//   {
+//     id: 1,
+//     title: "Employee Management System (EMS)",
+//     description:
+//       "Our Employee Management System (EMS) is a comprehensive solution designed to automate and simplify HR processes, improve workforce efficiency, and enhance employee engagement. Whether you're a growing startup or an established enterprise, our EMS ensures seamless management of employees from recruitment to retirement.",
+//     bannerImage: "/ems-banner.jpg", // Example path for a banner image
+//   },
+// ];
 
 const ERP: React.FC = () => {
   useEffect(() => {

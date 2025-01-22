@@ -19,63 +19,58 @@ import {
 
 const Header = () => {
   const [visible, setVisibility] = useState(false);
-  const [activeLink, setActiveLink] = useState("/"); 
+  const [activeLink, setActiveLink] = useState("/");
   const [dropdownVisible, setDropdownVisible] = useState(false);
-  const [mobileDropdownVisible, setMobileDropdownVisible] = useState(false); 
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Track if the screen is mobile
+  const [mobileDropdownVisible, setMobileDropdownVisible] = useState(false);
+  const [, setIsMobile] = useState(window.innerWidth <= 768); // Track if the screen is mobile
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-      if (window.innerWidth > 768) {
-        setVisibility(false); // Close drawer on desktop
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    // Cleanup on component unmount
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const toggleDrawer = () => {
-    setVisibility(!visible);
-    setMobileDropdownVisible(false); // Close dropdown when the drawer is toggled
+useEffect(() => {
+  const handleResize = () => {
+    setIsMobile(window.innerWidth <= 768);
   };
 
-  const showDropdown = () => {
-    setDropdownVisible(true);
-  };
+  window.addEventListener("resize", handleResize);
 
-  const hideDropdown = () => {
-    setDropdownVisible(false);
-  };
+  // Cleanup on component unmount
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
 
-  const handleLinkClick = (path: string) => {
-    setActiveLink(path);
-    setVisibility(false); // Close drawer after link click
-    setMobileDropdownVisible(false); // Close dropdown after link click
-  };
+const toggleDrawer = () => {
+  setVisibility(!visible);
+  setMobileDropdownVisible(false); // Close dropdown when the drawer is toggled
+};
 
-  const handleMobileDropdownToggle = () => {
-    setMobileDropdownVisible(!mobileDropdownVisible);
-  };
+const showDropdown = () => {
+  setDropdownVisible(true);
+};
 
-  const navigationLinks = [
-    { path: "/home", label: "Home" },
-    { path: "/about", label: "About" },
-    { path: "/service", label: "Service" },
-    { path: "/product", label: "Product", hasDropdown: true },
-    { path: "/contact", label: "Contact" },
+const hideDropdown = () => {
+  setDropdownVisible(false);
+};
 
-  ];
+const handleLinkClick = (path: string) => {
+  setActiveLink(path);
+  setVisibility(false); // Close drawer after link click
+  setMobileDropdownVisible(false); // Close dropdown after link click
+};
 
-  const productDropdownLinks = [
-    { path: "/productcompo/erp", label: "ERP (Enterprise Resource Planning)" },
-    { path: "/productcompo/ems", label: "EMS (Employee Management System)" },
-    { path: "/productCompo/e-commerce", label: "ECOMMERCE" },
-  
-  ];
+const handleMobileDropdownToggle = () => {
+  setMobileDropdownVisible(!mobileDropdownVisible);
+};
+
+const navigationLinks = [
+  { path: "/home", label: "Home" },
+  { path: "/about", label: "About" },
+  { path: "/service", label: "Service" },
+  { path: "/product", label: "Product", hasDropdown: true },
+  { path: "/contact", label: "Contact" },
+];
+
+const productDropdownLinks = [
+  { path: "/productcompo/erp", label: "ERP (Enterprise Resource Planning)" },
+  { path: "/productcompo/ems", label: "EMS (Employee Management System)" },
+  { path: "/productcompo/e-commerce", label: "ECOMMERCE" },
+];
 
   return (
     <HeaderSection>
