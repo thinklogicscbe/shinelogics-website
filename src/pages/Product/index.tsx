@@ -1,10 +1,18 @@
-import { lazy } from "react";
+
+
+
+import { lazy, Suspense } from "react";
 
 const Products = lazy(() => import("../../components/ProductCompo/product"));
 
-const Product = () => {
+
+const Product: React.FC = () => {
   return (
-    <Products />
+    <Suspense fallback={<div>Loading...</div>}>
+      <Products />
+    
+      
+    </Suspense>
   );
 };
 

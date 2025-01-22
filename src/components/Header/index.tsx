@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { Drawer } from "antd";
 import { SvgIcon } from "../../common/SvgIcon";
+
+
 import {
   HeaderSection,
   LogoContainer,
@@ -12,16 +14,33 @@ import {
   DropdownContent,
   DropdownArrow,
   DropdownWrapperMobile,
-  StyledButton1
+  StyledButton1,
 } from "./styles";
 
 const Header = () => {
   const [visible, setVisibility] = useState(false);
-  const [activeLink, setActiveLink] = useState("/");
+  const [activeLink, setActiveLink] = useState("/"); 
   const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [mobileDropdownVisible, setMobileDropdownVisible] = useState(false); 
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768); // Track if the screen is mobile
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      if (window.innerWidth > 768) {
+        setVisibility(false); // Close drawer on desktop
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup on component unmount
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const toggleDrawer = () => {
     setVisibility(!visible);
+    setMobileDropdownVisible(false); // Close dropdown when the drawer is toggled
   };
 
   const showDropdown = () => {
@@ -34,12 +53,12 @@ const Header = () => {
 
   const handleLinkClick = (path: string) => {
     setActiveLink(path);
-    setVisibility(false);
+    setVisibility(false); // Close drawer after link click
+    setMobileDropdownVisible(false); // Close dropdown after link click
   };
 
-  const handleDropdownLinkClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setDropdownVisible(true);
+  const handleMobileDropdownToggle = () => {
+    setMobileDropdownVisible(!mobileDropdownVisible);
   };
 
   const navigationLinks = [
@@ -51,15 +70,17 @@ const Header = () => {
   ];
 
   const productDropdownLinks = [
-    { path: "/product", label: "Category 1" },
-    { path: "/product", label: "Category 2" },
-    { path: "/product", label: "Category 3" },
+    { path: "/productcompo/erp", label: "ERP (Enterprise Resource Planning)" },
+    { path: "/productcompo/ems", label: "EMS (Employee Management System)" },
+    { path: "/productCompo/e-commerce", label: "ECOMMERCE" },
+  
   ];
 
   return (
     <HeaderSection>
       <LogoContainer to="/" aria-label="homepage">
-        <SvgIcon src="logo.svg" width="300px" height="60px" />
+        <SvgIcon src="shinelogics-logo.svg" width="300px" height="60px" />
+        
       </LogoContainer>
 
       <Burger onClick={toggleDrawer}>
@@ -93,7 +114,7 @@ const Header = () => {
                 {link.label}
               </StyledButton>
             </NavLink>
-            {link.hasDropdown && (
+            {link.hasDropdown && dropdownVisible && (
               <DropdownWrapper className={dropdownVisible ? "visible" : ""}>
                 <DropdownArrow />
                 {productDropdownLinks.map((sublink) => (
@@ -110,6 +131,7 @@ const Header = () => {
           </div>
         ))}
       </NavLinks>
+
       {/* Mobile Drawer */}
       <Drawer
         closable={false}
@@ -119,41 +141,32 @@ const Header = () => {
         style={{ width: "300px" }}
       >
         {navigationLinks.map((link) => (
-          <div
-            key={link.path}
-            onMouseEnter={link.hasDropdown ? showDropdown : undefined}
-            onMouseLeave={link.hasDropdown ? hideDropdown : undefined}
-            style={{ position: "relative" }}
-          >
+          <div key={link.path} style={{ position: "relative" }}>
             <NavLink to={link.path}>
               <StyledButton1
                 className={activeLink === link.path ? "active" : ""}
                 onClick={(e) => {
                   if (link.path === "/product") {
                     e.preventDefault();
+                    handleMobileDropdownToggle(); 
                   } else {
-                    if (!link.hasDropdown) {
-                      handleLinkClick(link.path);
-                      toggleDrawer();
-                    }
+                    handleLinkClick(link.path);
+                    toggleDrawer(); 
                   }
                 }}
               >
                 {link.label}
               </StyledButton1>
             </NavLink>
-            {link.hasDropdown && (
-              <DropdownWrapperMobile
-                className={dropdownVisible ? "visible" : "hidden"}
-              >
+            {link.hasDropdown && mobileDropdownVisible && (
+              <DropdownWrapperMobile className={mobileDropdownVisible ? "visible" : ""}>
                 <DropdownArrow />
                 {productDropdownLinks.map((sublink) => (
                   <div
                     key={sublink.path}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDropdownLinkClick(e);
+                    onClick={() => {
                       handleLinkClick(sublink.path);
+                      toggleDrawer(); 
                     }}
                   >
                     <NavLink to={sublink.path}>

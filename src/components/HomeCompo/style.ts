@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import background from "../../assets/bg-hero.png";
 
 //BELOW GIVEN CSS CODE WAS [ HOME ] PAGE STYLE CSS
@@ -264,7 +264,7 @@ export const ProductTitle = styled.h1`
 `;
 
 export const ProductCard = styled.div`
-  background-color: #e8f4fc;
+  // background-color: #e8f4fc;
   padding: 0px;
   border-radius: 8px;
   text-align: center;
@@ -276,6 +276,13 @@ export const ProductCard = styled.div`
     font-size: 30px;
     color: #007bff;
     margin-bottom: 15px;
+  }
+
+
+  .v1{
+
+  
+  
   }
 
   h5 {
@@ -294,12 +301,10 @@ export const ProductCard = styled.div`
     ); /* Semi-transparent black background for contrast */
     border-radius: 5px;
   }
-
   p {
     font-size: 14px;
     color: #666;
   }
-
   &:hover {
     transform: scale(1.05);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
@@ -315,5 +320,74 @@ export const Video = styled.video`
   /* Media query to adjust video size on mobile */
   @media (max-width: 768px) {
     width: 100%;
+  }
+`;
+
+
+export const BannerImage = styled.div`
+  width: 70%; /* Full width of the container */
+  height: 500px; /* Adjust the height as per your preference */
+  margin: 30px auto; /* Center the banner with space at the top and bottom */
+  background-image: url('/Desktop - 57 (1).png'); /* Update with your image path */
+  background-size: contain; /* Ensures the entire image fits within the container */
+  background-position: center; /* Centers the image */
+  background-repeat: no-repeat; /* Prevents image from repeating */
+  border-radius: 8px; /* Optional: rounded corners for a neater look */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Initial box shadow */
+  transition: box-shadow 0.3s ease, transform 0.3s ease; /* Smooth transition for box-shadow and transform */
+
+  /* Hover effect */
+  &:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Stronger shadow on hover */
+    transform: translateY(-5px); /* Slight lift effect */
+  }
+
+  /* Optional: Add responsiveness for smaller screens */
+  @media (max-width: 768px) {
+    width: 100%; /* Make it full width on smaller screens */
+    height: 300px; /* Adjust height on smaller screens */
+    background-size: cover; /* Ensure the image covers the full width */
+    background-position: center center; /* Center the image properly */
+    padding: 0 10%; /* Add some horizontal padding */
+  }
+
+@media (max-width: 480px) {
+  width: 90%; /* Ensure the image takes 90% of the container width */
+  height: 180px; /* Adjust height to fit better on small screens */
+  background-size: contain; /* Ensures the entire image fits without cropping */
+  background-position: center center; /* Keeps the image centered */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+  padding: 0 5%; /* Adds some padding to ensure it’s not stretched to the edges */
+}
+`;
+
+export const TechnologiesHeading = styled.h2`
+  text-align: center; /* Center the heading */
+  font-size: 2rem; /* Adjust the font size */
+  color:#003366 /* Set the text color */
+  margin-bottom: 20px; /* Add space between the heading and the banner */
+  font-weight: bold; /* Make the heading bold */
+`;
+
+
+export const TechnologiesParagraph = styled.p`
+  font-size: 1.2rem; /* Slightly larger font for readability */
+  line-height: 1.8; /* Increase line height for better readability */
+  font-weight: bold; /* Make the text bold */
+  text-align: center; /* Center align the text */
+  max-width: 80%; /* Reduce the width */
+  margin: 0 auto 20px auto; /* Center the paragraph and add space at the bottom */
+  color: #555; /* Set a dark grey color for the text */
+  padding: 0 20px; /* Add horizontal padding for mobile responsiveness */
+
+  /* Optional: Add responsiveness for smaller screens */
+  @media (max-width: 768px) {
+    font-size: 1.1rem; /* Adjust font size on smaller screens */
+    max-width: 90%; /* Reduce width further on smaller screens */
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1rem; /* Further reduce font size on very small screens */
+    max-width: 95%; /* Adjust width on very small screens */
   }
 `;
