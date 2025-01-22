@@ -23,11 +23,11 @@ const Footer = () => {
     </FooterColumn>
     <FooterColumn>
       <FooterTitle>Explore</FooterTitle>
-      <FooterLink href="#">Home</FooterLink>
-      <FooterLink href="#">About</FooterLink>
-      <FooterLink href="#">Services</FooterLink>
-      <FooterLink href="#">Portfolio</FooterLink>
-      <FooterLink href="#">Team</FooterLink>
+      <FooterLink href="/home">Home</FooterLink>
+      <FooterLink href="/about">About</FooterLink>
+      <FooterLink href="/services">Services</FooterLink>
+      <FooterLink href="/portfolio">Portfolio</FooterLink>
+      <FooterLink href="/team">Team</FooterLink>
     </FooterColumn>
     <FooterColumn>
       <FooterTitle>Privacy Policy</FooterTitle>
