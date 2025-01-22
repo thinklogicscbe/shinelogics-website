@@ -48,6 +48,7 @@ const Header = () => {
     { path: "/service", label: "Service" },
     { path: "/product", label: "Product", hasDropdown: true },
     { path: "/contact", label: "Contact" },
+    { path: "/privacyPolicy", label: "PrivacyPolicy" },
   ];
 
   const productDropdownLinks = [

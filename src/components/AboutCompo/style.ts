@@ -216,6 +216,7 @@ export const DivisionContainer = styled.div`
 
     p {
       font-size: 18px;
+      text-align: justify; 
       color: #333;
       line-height: 1.6;
       margin: 0;
