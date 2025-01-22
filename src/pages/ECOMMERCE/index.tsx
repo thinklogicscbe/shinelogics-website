@@ -6,7 +6,7 @@ const productheading = [
         id: 1,
         title: "E-commerce",
         description:
-            "Our E-Commerce Platform is designed to empower businesses to create dynamic, high-performance online stores. With user-friendly tools, flexible features, and full scalability, we provide everything you need to drive your business forward in the digital world.",
+            "Our E-Commerce Platform is a powerful and comprehensive solution designed to help businesses of all sizes build dynamic, high-performance online stores with ease. Equipped with user-friendly tools, our platform enables you to effortlessly create and manage an engaging shopping experience that drives sales and enhances customer satisfaction. Whether you're launching a new brand or expanding your online presence, our platform offers flexible features tailored to meet your specific business needs.",
         bannerimage: "/ecommerce-banner.jpg", // Make sure this image exists in the public directory
         isHeading: true,
     },
@@ -22,15 +22,7 @@ const coreFeatures = [
         ],
         icon: "💻",
     },
-    {
-        title: "Secure Payment Systems",
-        points: [
-            "Accept payments from multiple gateways: PayPal, Stripe, credit/debit cards, and more",
-            "Secure, encrypted payment processing for safe transactions",
-            "Simple checkout process to minimize cart abandonment",
-        ],
-        icon: "💳",
-    },
+  
     {
         title: "Efficient Inventory & Order Management",
         points: [
@@ -93,6 +85,15 @@ const coreFeatures = [
             "Create targeted marketing campaigns to drive repeat business",
         ],
         icon: "🛒",
+    },
+    {
+        title: "Secure Payment Systems",
+        points: [
+            "Accept payments from multiple gateways: PayPal, Stripe, credit/debit cards, and more",
+            "Secure, encrypted payment processing for safe transactions",
+            "Simple checkout process to minimize cart abandonment",
+        ],
+        icon: "💳",
     },
 ];
 

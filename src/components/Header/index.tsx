@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { Drawer } from "antd";
 import { SvgIcon } from "../../common/SvgIcon";
+
+
 import {
   HeaderSection,
   LogoContainer,
@@ -72,13 +74,14 @@ const Header = () => {
     { path: "/productcompo/erp", label: "ERP (Enterprise Resource Planning)" },
     { path: "/productcompo/ems", label: "EMS (Employee Management System)" },
     { path: "/productCompo/e-commerce", label: "ECOMMERCE" },
-    { path: "/productCompo/contact", label: "Contact" },
+  
   ];
 
   return (
     <HeaderSection>
       <LogoContainer to="/" aria-label="homepage">
-        <SvgIcon src="logo.svg" width="300px" height="60px" />
+        <SvgIcon src="shinelogics-logo.svg" width="300px" height="60px" />
+        
       </LogoContainer>
 
       <Burger onClick={toggleDrawer}>

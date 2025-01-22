@@ -11,7 +11,7 @@ const productheading = [
     title: "ERP",
     altText: "",
     bannerimage: "/erp-banner.jpg",
-    description: "Our comprehensive Enterprise Resource Planning (ERP) solution is designed to streamline and integrate your business processes, enhancing efficiency and decision-making across your organization. Key features include:",
+    description: "Our Enterprise Resource Planning (ERP) solution is designed to seamlessly integrate and optimize your business operations, ensuring efficiency and productivity across departments. It centralizes critical functions such as finance, HR, inventory, procurement, sales, and customer relationship management (CRM) into a unified platform. With real-time data access and automation, decision-making becomes faster and more accurate, reducing manual efforts and operational costs.",
     reverseOrder: false,
     isHeading: true, // Flag to identify the heading
   },

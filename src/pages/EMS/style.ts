@@ -4,7 +4,7 @@ import styled from 'styled-components';
 export const BannerContainer = styled.div`
   .heading-container {
     width: 100%;
-    margin-top: 120px;
+    // margin-top: 120px;
   }
 
   .heading-banner {
@@ -39,7 +39,7 @@ export const BannerContainer = styled.div`
     background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background for text */
     border-radius: 8px;
     width: 60%;
-    height: 60%;
+    height: 70%;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Optional: Adds a subtle shadow */
     transform: scale(1);
     animation: fadeIn 1s ease-in-out;
@@ -70,7 +70,7 @@ export const BannerContainer = styled.div`
   }
 
   .heading-content p {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     line-height: 1.6;
    
     font-weight: 600;
@@ -310,62 +310,44 @@ export const BannerContainer = styled.div`
     }
   }
 
-  /* Media Queries for Smaller Screens */
-  @media (max-width: 1024px) {
-    .features-container {
-      grid-template-columns: 1fr 1fr; /* Keep 2 columns for tablets */
-      padding: 15px;
-    }
-
-    .feature-item {
-      font-size: 1.3rem; /* Adjust font size for smaller screens */
-    }
-
-  }
-
+  /* Responsive Media Queries */
   @media (max-width: 768px) {
-    .features-container {
-      grid-template-columns: 1fr; /* Stack items in one column on smaller screens */
-      padding: 10px;
-    }
-
-    .feature-item {
-      font-size: 1.1rem; /* Adjust font size for mobile */
-    }
-
-    .heading-content {
-      width: 90%; /* Maximize content width on mobile */
-      height: auto; /* Auto height to fit content */
-      padding: 10px; /* Further reduce padding */
-    }
-
-    .heading-content h1 {
-      font-size: 1.5rem; /* Adjust font size for smaller headers */
-    }
-
-    .heading-content p {
-      font-size: 1rem; /* Adjust font size for smaller paragraphs */
-    }
-  }
-
-  @media (max-width: 468px) {
     .heading-banner {
-      height: 250px; /* Further reduce banner height for smaller screens */
+      height: 300px; /* Reduce banner height for tablets and smaller devices */
     }
-
     .heading-content {
-      width: 90%; /* Maximize content width on mobile */
-      height: 220px; /* Auto height to fit content */
-      padding: 10px; /* Further reduce padding */
+      width: 80%; /* Increase width for better readability */
+      height: auto; /* Adjust height to fit content */
+      padding: 15px; /* Reduce padding */
     }
-
     .heading-content h1 {
-      font-size: 1.2rem; /* Adjust font size for smaller headers */
+      font-size: 2rem; /* Adjust font size for headers */
     }
-
     .heading-content p {
-      font-size: 0.9rem; /* Adjust font size for smaller paragraphs */
+      font-size: 1rem; /* Adjust font size for paragraph */
     }
   }
+
+  
+@media (max-width: 468px) {
+  .heading-banner {
+    height: 400px; /* Reduce the height even further for very small screens */
+  }
+
+  .heading-content {
+    width: 90%; /* Reduce content width to fit better on small screens */
+    height: auto; /* Allow content to adjust based on its height */
+    padding: 15px; /* Slightly reduce padding */
+  }
+
+  .heading-content h1 {
+    font-size: 1.2rem; /* Further reduce font size for better fit */
+  }
+
+  .heading-content p {
+    font-size: 0.75rem; /* Smaller font size for paragraphs */
+    line-height: 1.9; /* Adjust line height for better readability */
+  }
+}
 `;
 
