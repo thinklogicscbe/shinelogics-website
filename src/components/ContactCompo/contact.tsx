@@ -1,22 +1,36 @@
 import React from "react";
-
-import {SectionContainer} from './style';
+import { SectionContainer, ImageContainer, FormContainer } from './style';
 
 const Contact = () => {
   return (
     <SectionContainer>
-        <div>
-          <span>AI.Tech</span>
-          <h1>Artificial Intelligence for Your Business Contact PAGE</h1>
-          <p>
-            Tempor rebun no at dolore lorem clita rebun ipsum rebun stet dolor
-            sed justo kasd. Ut dolor sed magna dolor sea diam. Sit diam sit.
-          </p>
-          <div className="button-group">
-            <button>Read More</button>
-            <button>Contact Us</button>
-          </div>
-        </div>
+      <ImageContainer>
+        <img src="/img/Aiimage/AI.jpg" alt="AI Tech" />
+      </ImageContainer>
+
+      <FormContainer>
+        <span>AI.Tech</span>
+        <h1>Artificial Intelligence for Your Business Contact PAGE</h1>
+        <form>
+          <label>
+            FullName<span>*</span>
+          </label>
+          <input type="text" id="name" placeholder="Enter your FullName" required />
+          <label>
+            Email<span>*</span>
+          </label>
+          <input type="email" placeholder="Enter your Email" required />
+          <label>
+            Phone Number<span>*</span>
+          </label>
+          <input type="number" placeholder="Enter your number" required />
+          <label>
+            Message<span>*</span>
+          </label>
+          <textarea placeholder="Write your Queries " required />
+          <button type="submit">Send ✉️ </button>
+        </form>
+      </FormContainer>
     </SectionContainer>
   );
 };
