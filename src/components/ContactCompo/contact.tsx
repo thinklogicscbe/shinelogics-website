@@ -1,7 +1,15 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { SectionContainer, ImageContainer, FormContainer } from './style';
 
-const Contact = () => {
+const Contact: React.FC = () => {
+  
+  const handleNumberInput = (event: ChangeEvent<HTMLInputElement>) => {
+    let value = event.target.value;
+    value = value.replace(/[^0-9]/g, '');
+    value = value.slice(0, 10);
+    event.target.value = value;
+  };
+
   return (
     <SectionContainer>
       <ImageContainer>
@@ -9,8 +17,8 @@ const Contact = () => {
       </ImageContainer>
 
       <FormContainer>
-        <span>AI.Tech</span>
-        <h1>Artificial Intelligence for Your Business Contact PAGE</h1>
+        <span>ShineLogics.AI</span>
+        <h1>Please use this form to ask any inquiries that you may have.</h1>
         <form>
           <label>
             FullName<span>*</span>
@@ -23,7 +31,13 @@ const Contact = () => {
           <label>
             Phone Number<span>*</span>
           </label>
-          <input type="number" placeholder="Enter your number" required />
+          <input
+            id="numberInput"
+            type="text"
+            placeholder="Enter your number"
+            required
+            onInput={handleNumberInput}  
+          />
           <label>
             Message<span>*</span>
           </label>

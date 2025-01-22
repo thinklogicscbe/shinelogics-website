@@ -23,15 +23,15 @@ const Footer = () => {
     </FooterColumn>
     <FooterColumn>
       <FooterTitle>Explore</FooterTitle>
-      <FooterLink href="#">Home</FooterLink>
-      <FooterLink href="#">About</FooterLink>
-      <FooterLink href="#">Services</FooterLink>
+      <FooterLink href="home">Home</FooterLink>
+      <FooterLink href="About">About</FooterLink>
+      <FooterLink href="Service">Services</FooterLink>
       <FooterLink href="#">Portfolio</FooterLink>
       <FooterLink href="#">Team</FooterLink>
     </FooterColumn>
     <FooterColumn>
       <FooterTitle>Privacy Policy</FooterTitle>
-      <FooterLink href="#">Privacy Policy</FooterLink>
+      <FooterLink href="privacyPolicy">Privacy Policy</FooterLink>
     </FooterColumn>
     <FooterColumn>
       <FooterTitle>Get in Touch</FooterTitle>

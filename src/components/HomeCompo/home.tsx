@@ -10,7 +10,7 @@ const Home = () => {
           <h1>WE'RE AN AI-DRIVEN PRODUCT DEVELOPMENT COMPANY</h1>
           <div className="button-group">
             <button>Read More</button>
-            <button>Contact Us</button>
+            <button >Contact Us</button>
           </div>
         </div>
       </TextContainer>

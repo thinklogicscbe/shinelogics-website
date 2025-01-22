@@ -43,12 +43,11 @@ const Header = () => {
   };
 
   const navigationLinks = [
-    { path: "/", label: "Home" },
+    { path: "/home", label: "Home" },
     { path: "/about", label: "About" },
     { path: "/service", label: "Service" },
     { path: "/product", label: "Product", hasDropdown: true },
     { path: "/contact", label: "Contact" },
-    { path: "/privacyPolicy", label: "PrivacyPolicy" },
   ];
 
   const productDropdownLinks = [

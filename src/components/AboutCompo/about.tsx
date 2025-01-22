@@ -24,32 +24,53 @@ const About: React.FC = () => {
         {/* Row 1 */}
         <div className="row row-1">
           <div>
-            <Video src={about} autoPlay loop muted playsInline />
+          <img src='/img/apimage/aboutimg5.jpg' alt='about us'></img>
           </div>
           <div>
             <p>
               {getAnimatedText(
-                "At Shinelogics, we pride ourselves on being a pioneering Product Development as a Service (PDaaS) company. Our mission is to empower businesses by providing innovative solutions tailored to meet the unique challenges of a rapidly evolving technological landscape. With an unwavering commitment to innovation and excellence, we strive to deliver products that seamlessly blend creativity and advanced technology, enabling our clients to stay ahead of the competition and achieve sustainable growth."
+                "At Shinelogics, we pride ourselves on being a pioneering Product Development as a Service (PDaaS) company. Our primary goal is to empower businesses by delivering innovative solutions tailored to address the unique challenges that arise in a rapidly evolving technological landscape. In an age where digital transformation is crucial to staying competitive, we offer comprehensive strategies that help businesses scale effectively and efficiently. By leveraging cutting-edge technology, we assist our clients in navigating complex challenges and capturing new opportunities."
               )}
               </p>
-              <br></br>
-              <br></br>
-              <p>
-              {getAnimatedText(
-                "Our approach is built on a deep understanding of our clients' needs, enabling us to craft solutions that drive tangible results. By leveraging the latest advancements in technology and combining them with a user-centered design philosophy, we create products that not only meet but exceed expectations. From ideation and prototyping to full-scale deployment, we ensure that every step of the product development process is guided by precision, innovation, and a focus on delivering real value to our clients."
-              )}
-              </p>
+          </div>
+        </div>  
 
-              <br></br>
-              <br></br>
-              <p>
+        <div className="row row-2">
+          <div>
+             <img src='/img/apimage/aboutimg6.jpg' alt='about us'></img>
+          </div>
+          <div>
+            <p>
               {getAnimatedText(
-                " At Shinelogics, collaboration and adaptability form the foundation of our success. We understand that each client is unique, and their challenges demand tailored solutions. Our team of dedicated professionals works closely with businesses of all sizes to co-create solutions that align with their specific needs and aspirations. By fostering a culture of transparency, trust, and partnership, we enable businesses to confidently navigate their product development journey with our guidance."
+                "Our commitment to innovation and excellence is the cornerstone of everything we do. We understand that each business has its own set of needs, which is why we offer customized solutions that align with their specific goals. Whether it’s building a product from the ground up or enhancing an existing solution, we focus on delivering results that drive growth and foster long-term success. We believe that innovation is not just about new ideas, but also about bringing those ideas to life in a way that makes a real difference."
               )}
               </p>
+          </div>
+        </div>  
 
-               
-           
+        <div className="row row-1">
+          <div>
+          <img src='/img/apimage/aboutimg3.jpg' alt='about us'></img>
+          </div>
+          <div>
+            <p>
+              {getAnimatedText(
+                "At Shinelogics, we blend creativity with technology to design products that are not only functional but also forward-thinking. Our team of experts combines technical proficiency with a passion for design to create products that stand out in the marketplace. We work closely with our clients to understand their vision, ensuring that the final product is a seamless reflection of their business objectives. We believe that every product we create should help our clients stay ahead of the competition, giving them the tools they need to succeed in today’s fast-paced market."
+              )}
+              </p>
+          </div>
+        </div>  
+
+        <div className="row row-2">
+          <div>
+          <img src='/img/apimage/aboutimg4.jpg' alt='about us'></img>
+          </div>
+          <div>
+            <p>
+              {getAnimatedText(
+                "Above all, we are dedicated to fostering sustainable growth for our clients. We believe that technology should be an enabler of progress, not just a tool for solving immediate problems. Our solutions are designed with scalability in mind, ensuring that as our clients grow, their technology infrastructure grows with them. By partnering with businesses to create long-lasting, adaptable products, we help them maintain a competitive edge while ensuring that they can continue to evolve and thrive in the ever-changing digital world."
+              )}
+              </p>
           </div>
         </div>  
 
