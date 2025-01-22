@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import { SectionContainer, DivisionContainer, Video } from './style';
-import about from '../../assets/about-image/Employees_having_business_meeting.mp4_1736422910838.mp4';
+import { SectionContainer, DivisionContainer } from './style';
 
 const About: React.FC = () => {
   useEffect(() => {

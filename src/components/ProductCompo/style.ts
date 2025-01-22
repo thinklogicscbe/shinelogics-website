@@ -1,7 +1,5 @@
-import styled from 'styled-components';
-import background from '../../assets/bg-hero.png';
+import styled from "styled-components";
 /* SectionContainer */
-
 
 export const SectionContainer = styled.div`
   display: flex;
@@ -22,15 +20,13 @@ export const DivisionContainer = styled.div`
   flex-direction: column;
   gap: 80px; /* Increased gap for even spacing between rows */
 
-  .img1, .img2 {
-    width: 180px;  /* Reduced image width */
-    height: 180px;  /* Set a fixed height */
+  .img1,
+  .img2 {
+    width: 180px; /* Reduced image width */
+    height: 180px; /* Set a fixed height */
     object-fit: cover; /* Maintain aspect ratio without distortion */
     border-radius: 8px;
   }
-
-  
-
 
   .content {
     font-size: 30px;
@@ -102,20 +98,21 @@ export const DivisionContainer = styled.div`
   }
 
   @media (max-width: 768px) {
-  .row {
-    flex-direction: column;
-    align-items: center;
-    gap: 40px; /* Adjust spacing for smaller screens */
+    .row {
+      flex-direction: column;
+      align-items: center;
+      gap: 40px; /* Adjust spacing for smaller screens */
+    }
+    .img1,
+    .img2 {
+      width: 120px; /* Adjust image size */
+      height: 120px;
+    }
+    p,
+    .content {
+      font-size: 16px; /* Adjust font size */
+    }
   }
-  .img1, .img2 {
-    width: 120px; /* Adjust image size */
-    height: 120px;
-  }
-  p, .content {
-    font-size: 16px; /* Adjust font size */
-  }
-}
-
 
   /* Animations */
   @keyframes fadeIn {
@@ -172,49 +169,47 @@ export const DivisionContainer = styled.div`
   }
 
   @media (max-width: 468px) {
-  .row {
-    flex-direction: column;
-    align-items: center;
-    gap: 20px; /* Reduced gap for smaller screens */
+    .row {
+      flex-direction: column;
+      align-items: center;
+      gap: 20px; /* Reduced gap for smaller screens */
+    }
+    .img1,
+    .img2 {
+      width: 100px; /* Adjusted image size for smaller devices */
+      height: 100px;
+    }
+    .content,
+    p {
+      font-size: 14px; /* Smaller font size for better readability on mobile */
+      text-align: center; /* Center-align text for better visual alignment */
+    }
+    .row > div:first-child {
+      width: 100%; /* Image takes full width */
+      text-align: center; /* Center-align images */
+    }
+    .row > div:last-child {
+      width: 100%; /* Content takes full width */
+      text-align: center; /* Center-align text */
+    }
+    .heading-content {
+      width: 90%; /* Reduce width to fit mobile screens */
+      height: auto; /* Adjust height dynamically */
+      padding: 10px; /* Reduce padding for compact design */
+    }
+    .heading-content h1 {
+      font-size: 2rem; /* Adjusted font size for headers */
+    }
+    .heading-content p {
+      font-size: 1rem; /* Adjusted font size for paragraph */
+    }
   }
-  .img1, .img2 {
-    width: 100px; /* Adjusted image size for smaller devices */
-    height: 100px;
-  }
-  .content,
-  p {
-    font-size: 14px; /* Smaller font size for better readability on mobile */
-    text-align: center; /* Center-align text for better visual alignment */
-  }
-  .row > div:first-child {
-    width: 100%; /* Image takes full width */
-    text-align: center; /* Center-align images */
-  }
-  .row > div:last-child {
-    width: 100%; /* Content takes full width */
-    text-align: center; /* Center-align text */
-  }
-  .heading-content {
-    width: 90%; /* Reduce width to fit mobile screens */
-    height: auto; /* Adjust height dynamically */
-    padding: 10px; /* Reduce padding for compact design */
-  }
-  .heading-content h1 {
-    font-size: 2rem; /* Adjusted font size for headers */
-  }
-  .heading-content p {
-    font-size: 1rem; /* Adjusted font size for paragraph */
-  }
-}
-
 `;
-
 
 export const MainContainer = styled.div`
   .heading-container {
     width: 100%;
-    margin-top: 140px
-    
+    margin-top: 140px;
   }
 
   .heading-banner {
@@ -245,7 +240,12 @@ export const MainContainer = styled.div`
     z-index: 2; /* Ensure the content is above the overlay */
     text-align: center;
     padding: 20px;
-    background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background for text */
+    background: rgba(
+      255,
+      255,
+      255,
+      0.8
+    ); /* Semi-transparent white background for text */
     border-radius: 8px;
     width: 60%;
     height: 60%;
@@ -256,7 +256,7 @@ export const MainContainer = styled.div`
     font-size: 3rem;
     margin-bottom: 15px;
     font-weight: bold;
-    color: #18216D; /* Text color */
+    color: #18216d; /* Text color */
   }
 
   .heading-content p {
@@ -301,5 +301,3 @@ export const MainContainer = styled.div`
     }
   }
 `;
-
-

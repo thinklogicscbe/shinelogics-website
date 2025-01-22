@@ -1,11 +1,11 @@
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 
 interface DescriptionBoxProps {
   isEven: boolean;
 }
 
 interface DescriptionRowProps {
-  delay?: string; 
+  delay?: string;
 }
 
 export const SectionContainer = styled.div`
@@ -20,13 +20,13 @@ export const SliderContainer = styled.div`
   display: flex;
   gap: 90px;
   overflow-x: auto;
-  background:rgb(133, 182, 249);
+  background: rgb(133, 182, 249);
   padding: 20px;
   width: 100%;
   white-space: nowrap;
   scroll-behavior: smooth;
   justify-content: center; /* Center the ServiceBoxes horizontally */
-  
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -53,8 +53,8 @@ export const ServiceBox = styled.div`
   font-weight: bold;
   transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   opacity: 0;
-  animation: fadeInUp 1s ease-out forwards;  /* Apply animation on load */
-  
+  animation: fadeInUp 1s ease-out forwards; /* Apply animation on load */
+
   @keyframes fadeInUp {
     0% {
       opacity: 0;
@@ -78,12 +78,10 @@ export const ServiceBox = styled.div`
   }
 `;
 
-
-
 export const Title = styled.h2`
   font-size: 2.0rem;
   font-weight: bold;
-  color:rgb(2, 45, 99);
+  color: rgb(2, 45, 99);
   margin-top: 30px;
   margin-bottom: 20px;
   text-align: center; /* Center the title horizontally with respect to ServiceBox */
@@ -101,7 +99,7 @@ export const DescriptionImage = styled.img`
   margin-bottom: 20px;
   max-width: 100%;
   animation: fadeInScale 1.5s ease-in-out forwards;
-  
+
   @keyframes fadeInScale {
     0% {
       opacity: 0;
@@ -131,7 +129,10 @@ export const DetailsContainer = styled.div`
   }
 `;
 
-export const DescriptionRow = styled.div<DescriptionRowProps>`
+export const DescriptionRow =
+  styled.div <
+  DescriptionRowProps >
+  `
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -139,7 +140,7 @@ export const DescriptionRow = styled.div<DescriptionRowProps>`
   opacity: 0;
   transform: translateY(50px);
   animation: slideUpCinematic 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  animation-delay: ${(props) => props.delay || "0.5s"};
+  animation-delay: ${props => props.delay || "0.5s"};
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -162,15 +163,21 @@ export const DescriptionRow = styled.div<DescriptionRowProps>`
   }
 `;
 
-export const DescriptionBox = styled.div<DescriptionBoxProps>`
+export const DescriptionBox =
+  styled.div <
+  DescriptionBoxProps >
+  `
   display: flex;
   padding: 30px;
   gap: 30px;
-  flex-direction: ${(props) => (props.isEven ? "row-reverse" : "row")};
+  flex-direction: ${props => (props.isEven ? "row-reverse" : "row")};
   justify-content: center;
   opacity: 0;
   transform: translateY(50px);
-  animation: ${(props) => (props.isEven ? "imageSlideLeftCinematic" : "imageSlideRightCinematic")} 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  animation: ${props =>
+    props.isEven
+      ? "imageSlideLeftCinematic"
+      : "imageSlideRightCinematic"} 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 
   @keyframes imageSlideRightCinematic {
     0% {
@@ -258,4 +265,3 @@ export const DescriptionTitle = styled.h6`
     }
   }
 `;
-
