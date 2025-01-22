@@ -3,6 +3,7 @@ import { SectionContainer, DivisionContainer, MainContainer } from './style';
 
 
 
+
 const productheading = [
 
   {
@@ -145,6 +146,17 @@ const productData = [
 
 ];
 
+
+const emsData = [
+  {
+    id: 1,
+    title: "Employee Management System (EMS)",
+    description:
+      "Our Employee Management System (EMS) is a comprehensive solution designed to automate and simplify HR processes, improve workforce efficiency, and enhance employee engagement. Whether you're a growing startup or an established enterprise, our EMS ensures seamless management of employees from recruitment to retirement.",
+    bannerImage: "/ems-banner.jpg", // Example path for a banner image
+  },
+];
+
 const Product: React.FC = () => {
   useEffect(() => {
     const lines = document.querySelectorAll('.line');
@@ -184,9 +196,7 @@ const Product: React.FC = () => {
             <div key={`heading-${product.id}`} className="heading-container">
               <div
                 className="heading-banner"
-                style={{
-                  backgroundImage: `url(${product.bannerimage})`,
-                }}
+                style={{ backgroundImage: `url(${product.bannerimage})` }}
               >
                 <div className="heading-content">
                   <h1>{product.title}</h1>
@@ -199,21 +209,20 @@ const Product: React.FC = () => {
       </MainContainer>
 
       <SectionContainer>
-
         <DivisionContainer>
-          {productData.map((product, index) => (
-            <div key={`row-${product.id}`} className={`row row-${index + 1}`}>
-              {product.reverseOrder ? (
+          {productData.map((item, index) => (
+            <div key={`row-${item.id}-${index}`} className={`row row-${index + 1}`}>
+              {item.reverseOrder ? (
                 <>
                   <div>
-                    <h2 className="content">{product.title}</h2>
-                    <p>{getAnimatedText(product.description)}</p>
+                    <h2 className="content">{item.title}</h2>
+                    <p>{getAnimatedText(item.description)}</p>
                   </div>
                   <div>
                     <img
                       className={`img${index % 2 === 0 ? '2' : '1'}`}
-                      src={product.image}
-                      alt={product.altText}
+                      src={item.image}
+                      alt={item.altText}
                     />
                   </div>
                 </>
@@ -222,41 +231,41 @@ const Product: React.FC = () => {
                   <div>
                     <img
                       className={`img${index % 2 === 0 ? '1' : '2'}`}
-                      src={product.image}
-                      alt={product.altText}
+                      src={item.image}
+                      alt={item.altText}
                     />
                   </div>
                   <div>
-                    <h2 className="content">{product.title}</h2>
-                    <p>{getAnimatedText(product.description)}</p>
+                    <h2 className="content">{item.title}</h2>
+                    <p>{getAnimatedText(item.description)}</p>
                   </div>
                 </>
               )}
             </div>
           ))}
+          
         </DivisionContainer>
-        
       </SectionContainer>
 
-      <hr style={{marginTop: '70px', marginLeft: '50px', marginRight: '50px' }} />
-
-      
+      <hr style={{ marginTop: '70px', marginLeft: '50px', marginRight: '50px' }} />
 
       <div style={{ textAlign: 'center', margin: '40px 0', marginTop: '70px' }}>
         <img
-          src="/ERP-image.png" // Replace with your image path
+          src="/ERP-image.png"
           alt="Center Decorative"
           style={{
-            maxWidth: '60%', // Reduce the size to 60% of its original width
+            maxWidth: '60%',
             height: 'auto',
-            boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)', // Increased shadow for a more prominent effect
+            boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.2)',
             borderRadius: '8px',
-            margin: '0 auto', // Ensure it's horizontally centered
-            display: 'block', // This helps in centering the image block
+            margin: '0 auto',
+            display: 'block',
           }}
         />
       </div>
     </>
+
+    
   );
 };
 

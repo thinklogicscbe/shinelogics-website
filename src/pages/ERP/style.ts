@@ -29,9 +29,6 @@ export const DivisionContainer = styled.div`
     border-radius: 8px;
   }
 
-  
-
-
   .content {
     font-size: 30px;
   }
@@ -102,20 +99,19 @@ export const DivisionContainer = styled.div`
   }
 
   @media (max-width: 768px) {
-  .row {
-    flex-direction: column;
-    align-items: center;
-    gap: 40px; /* Adjust spacing for smaller screens */
+    .row {
+      flex-direction: column; /* Stack image and content vertically */
+      align-items: center;
+      gap: 40px; /* Adjust spacing for smaller screens */
+    }
+    .img1, .img2 {
+      width: 120px; /* Adjust image size */
+      height: 120px;
+    }
+    p, .content {
+      font-size: 16px; /* Adjust font size */
+    }
   }
-  .img1, .img2 {
-    width: 120px; /* Adjust image size */
-    height: 120px;
-  }
-  p, .content {
-    font-size: 16px; /* Adjust font size */
-  }
-}
-
 
   /* Animations */
   @keyframes fadeIn {
@@ -172,42 +168,42 @@ export const DivisionContainer = styled.div`
   }
 
   @media (max-width: 468px) {
-  .row {
-    flex-direction: column;
-    align-items: center;
-    gap: 20px; /* Reduced gap for smaller screens */
+    .row {
+      flex-direction: column; /* Stack image and content vertically */
+      align-items: center;
+      gap: 20px; /* Reduced gap for smaller screens */
+    }
+    .img1, .img2 {
+      width: 100px; /* Adjusted image size for smaller devices */
+      height: 100px;
+    }
+    .content,
+    p {
+      font-size: 14px; /* Smaller font size for better readability on mobile */
+      text-align: left; /* Center-align text for better visual alignment */
+    }
+    .row > div:first-child {
+      width: 100%; /* Image takes full width */
+      text-align: center; /* Center-align images */
+    }
+    .row > div:last-child {
+      width: 100%; /* Content takes full width */
+      text-align: center; /* Center-align text */
+    }
+    .heading-content {
+      width: 90%; /* Reduce width to fit mobile screens */
+      height: auto; /* Adjust height dynamically */
+      padding: 10px; /* Reduce padding for compact design */
+    }
+    .heading-content h1 {
+      font-size: 2rem; /* Adjusted font size for headers */
+    }
+    .heading-content p {
+      font-size: 1rem; /* Adjusted font size for paragraph */
+    }
   }
-  .img1, .img2 {
-    width: 100px; /* Adjusted image size for smaller devices */
-    height: 100px;
-  }
-  .content,
-  p {
-    font-size: 14px; /* Smaller font size for better readability on mobile */
-    text-align: center; /* Center-align text for better visual alignment */
-  }
-  .row > div:first-child {
-    width: 100%; /* Image takes full width */
-    text-align: center; /* Center-align images */
-  }
-  .row > div:last-child {
-    width: 100%; /* Content takes full width */
-    text-align: center; /* Center-align text */
-  }
-  .heading-content {
-    width: 90%; /* Reduce width to fit mobile screens */
-    height: auto; /* Adjust height dynamically */
-    padding: 10px; /* Reduce padding for compact design */
-  }
-  .heading-content h1 {
-    font-size: 2rem; /* Adjusted font size for headers */
-  }
-  .heading-content p {
-    font-size: 1rem; /* Adjusted font size for paragraph */
-  }
-}
-
 `;
+
 
 
 export const MainContainer = styled.div`
