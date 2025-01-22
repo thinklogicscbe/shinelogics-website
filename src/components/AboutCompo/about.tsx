@@ -29,11 +29,31 @@ const About: React.FC = () => {
           <div>
             <p>
               {getAnimatedText(
-                "At Shinelogics, we pride ourselves on being a pioneering Product Development as a Service (PDaaS) company. With a strong commitment to innovation and excellence, we specialize in delivering cutting-edge solutions that combine the power of technology and creativity to transform businesses."
+                "At Shinelogics, we pride ourselves on being a pioneering Product Development as a Service (PDaaS) company. Our mission is to empower businesses by providing innovative solutions tailored to meet the unique challenges of a rapidly evolving technological landscape. With an unwavering commitment to innovation and excellence, we strive to deliver products that seamlessly blend creativity and advanced technology, enabling our clients to stay ahead of the competition and achieve sustainable growth."
               )}
-            </p>
+              </p>
+              <br></br>
+              <br></br>
+              <p>
+              {getAnimatedText(
+                "Our approach is built on a deep understanding of our clients' needs, enabling us to craft solutions that drive tangible results. By leveraging the latest advancements in technology and combining them with a user-centered design philosophy, we create products that not only meet but exceed expectations. From ideation and prototyping to full-scale deployment, we ensure that every step of the product development process is guided by precision, innovation, and a focus on delivering real value to our clients."
+              )}
+              </p>
+
+              <br></br>
+              <br></br>
+              <p>
+              {getAnimatedText(
+                " At Shinelogics, collaboration and adaptability form the foundation of our success. We understand that each client is unique, and their challenges demand tailored solutions. Our team of dedicated professionals works closely with businesses of all sizes to co-create solutions that align with their specific needs and aspirations. By fostering a culture of transparency, trust, and partnership, we enable businesses to confidently navigate their product development journey with our guidance."
+              )}
+              </p>
+
+               
+           
           </div>
-        </div>
+        </div>  
+
+         
       </DivisionContainer>
     </SectionContainer>
   );
