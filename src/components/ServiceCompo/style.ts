@@ -81,9 +81,9 @@ export const ServiceBox = styled.div`
 
 
 export const Title = styled.h2`
-  font-size: 1.5rem;
+  font-size: 2.0rem;
   font-weight: bold;
-  color: #fae102;
+  color:rgb(2, 45, 99);
   margin-top: 30px;
   margin-bottom: 20px;
   text-align: center; /* Center the title horizontally with respect to ServiceBox */
@@ -94,12 +94,28 @@ export const Title = styled.h2`
 `;
 
 export const DescriptionImage = styled.img`
-  width: 100%; // Ensure images fill the width of the box
-  height: 200px; // Fixed height for all images
-  object-fit: cover; // Ensure the image covers the area without stretching
-  border-radius: 8px; // Optional: rounded corners for the image
-  margin-bottom: 20px; // Space below the image
-  max-width: 100%; // Prevent images from exceeding the container width
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  max-width: 100%;
+  animation: fadeInScale 1.5s ease-in-out forwards;
+  
+  @keyframes fadeInScale {
+    0% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(1.02);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
 `;
 
 export const DetailsContainer = styled.div`
@@ -108,7 +124,7 @@ export const DetailsContainer = styled.div`
   width: 100%;
   text-align: center;
   margin-bottom: 50px;
-  transition: transform 0.5s ease, opacity 0.5s ease;
+  transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
 
   @media (max-width: 768px) {
     padding: 20px;
@@ -117,25 +133,29 @@ export const DetailsContainer = styled.div`
 
 export const DescriptionRow = styled.div<DescriptionRowProps>`
   display: flex;
-  flex-direction: row; // Stack horizontally by default
+  flex-direction: row;
   justify-content: center;
   gap: 20px;
   opacity: 0;
   transform: translateY(50px);
-  animation: slideUp 2s ease-out forwards;
-  animation-delay: ${(props) => props.delay || "1s"}; // Use delay prop here
-  
+  animation: slideUpCinematic 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: ${(props) => props.delay || "0.5s"};
+
   @media (max-width: 768px) {
-    flex-direction: column; // Stack elements vertically on small screens
+    flex-direction: column;
     align-items: center;
   }
 
-  @keyframes slideUp {
-    from {
+  @keyframes slideUpCinematic {
+    0% {
       opacity: 0;
-      transform: translateY(50px);
+      transform: translateY(80px);
     }
-    to {
+    50% {
+      opacity: 0.5;
+      transform: translateY(20px);
+    }
+    100% {
       opacity: 1;
       transform: translateY(0);
     }
@@ -150,25 +170,33 @@ export const DescriptionBox = styled.div<DescriptionBoxProps>`
   justify-content: center;
   opacity: 0;
   transform: translateY(50px);
-  animation: ${(props) => (props.isEven ? "imageFromLeft" : "imageFromRight")} 1.5s ease-out forwards;
+  animation: ${(props) => (props.isEven ? "imageSlideLeftCinematic" : "imageSlideRightCinematic")} 2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 
-  @keyframes imageFromRight {
-    from {
+  @keyframes imageSlideRightCinematic {
+    0% {
       opacity: 0;
-      transform: translateX(100px);
+      transform: translateX(120px);
     }
-    to {
+    60% {
+      opacity: 0.7;
+      transform: translateX(-10px);
+    }
+    100% {
       opacity: 1;
       transform: translateX(0);
     }
   }
 
-  @keyframes imageFromLeft {
-    from {
+  @keyframes imageSlideLeftCinematic {
+    0% {
       opacity: 0;
-      transform: translateX(-100px);
+      transform: translateX(-120px);
     }
-    to {
+    60% {
+      opacity: 0.7;
+      transform: translateX(10px);
+    }
+    100% {
       opacity: 1;
       transform: translateX(0);
     }
@@ -181,20 +209,23 @@ export const DescriptionBox = styled.div<DescriptionBoxProps>`
 `;
 
 export const DescriptionText = styled.p`
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 1.1rem;
+  line-height: 2.0;
   color: #555;
   text-align: left;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  animation: textFromBottom 2s ease-out forwards;
+  animation: textFadeInUp 1.8s ease-in-out forwards;
 
-  @keyframes textFromBottom {
-    from {
+  @keyframes textFadeInUp {
+    0% {
       opacity: 0;
-      transform: translateY(30px);
+      transform: translateY(40px);
     }
-    to {
+    50% {
+      opacity: 0.7;
+    }
+    100% {
       opacity: 1;
       transform: translateY(0);
     }
@@ -205,7 +236,6 @@ export const DescriptionText = styled.p`
   }
 `;
 
-
 export const DescriptionTitle = styled.h6`
   font-size: 1.2rem;
   font-weight: bold;
@@ -215,66 +245,17 @@ export const DescriptionTitle = styled.h6`
   word-wrap: break-word;
   overflow-wrap: break-word;
   width: 100%;
-`;
+  animation: titleZoomIn 1.5s ease-in-out forwards;
 
-const smoothSlideInLeft = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-`;
-
-const smoothSlideInRight = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
+  @keyframes titleZoomIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 `;
 
-export const AdditionalContainers = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-  margin-top: 40px;
-`;
-
-export const ContainerBox = styled.div<{ $isLeft: boolean; $delay: number }>`
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 25px;
-  text-align: center;
-  background-color: #fff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  opacity: 0;
-  transform: translateX(${({ $isLeft }) => ($isLeft ? "-50px" : "50px")});
-  animation: ${({ $isLeft }) => ($isLeft ? smoothSlideInLeft : smoothSlideInRight)}
-    1s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-  animation-delay: ${({ $delay }) => $delay}s;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-`;
-
-export const ContainerTitle = styled.h3`
-  font-size: 20px;
-  font-weight: bold;
-  color: #007bff;
-  margin-bottom: 15px;
-`;
-
-export const ContainerText = styled.p`
-  font-size: 16px;
-  color: #333;
-  line-height: 1.8;
-`;
