@@ -1,7 +1,5 @@
-import styled from 'styled-components';
-import background from '../../assets/bg-hero.png';
+import styled from "styled-components";
 /* SectionContainer */
-
 
 export const SectionContainer = styled.div`
   display: flex;
@@ -22,9 +20,10 @@ export const DivisionContainer = styled.div`
   flex-direction: column;
   gap: 80px; /* Increased gap for even spacing between rows */
 
-  .img1, .img2 {
-    width: 180px;  /* Reduced image width */
-    height: 180px;  /* Set a fixed height */
+  .img1,
+  .img2 {
+    width: 180px; /* Reduced image width */
+    height: 180px; /* Set a fixed height */
     object-fit: cover; /* Maintain aspect ratio without distortion */
     border-radius: 8px;
   }
@@ -104,11 +103,13 @@ export const DivisionContainer = styled.div`
       align-items: center;
       gap: 40px; /* Adjust spacing for smaller screens */
     }
-    .img1, .img2 {
+    .img1,
+    .img2 {
       width: 120px; /* Adjust image size */
       height: 120px;
     }
-    p, .content {
+    p,
+    .content {
       font-size: 16px; /* Adjust font size */
     }
   }
@@ -173,7 +174,8 @@ export const DivisionContainer = styled.div`
       align-items: center;
       gap: 20px; /* Reduced gap for smaller screens */
     }
-    .img1, .img2 {
+    .img1,
+    .img2 {
       width: 100px; /* Adjusted image size for smaller devices */
       height: 100px;
     }
@@ -204,13 +206,10 @@ export const DivisionContainer = styled.div`
   }
 `;
 
-
-
 export const MainContainer = styled.div`
   .heading-container {
     width: 100%;
     // margin-top: 140px
-    
   }
 
   .heading-banner {
@@ -241,7 +240,12 @@ export const MainContainer = styled.div`
     z-index: 2; /* Ensure the content is above the overlay */
     text-align: center;
     padding: 20px;
-    background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background for text */
+    background: rgba(
+      255,
+      255,
+      255,
+      0.8
+    ); /* Semi-transparent white background for text */
     border-radius: 8px;
     width: 60%;
     height: 70%;
@@ -252,7 +256,7 @@ export const MainContainer = styled.div`
     font-size: 3rem;
     margin-bottom: 15px;
     font-weight: bold;
-    color: #18216D; /* Text color */
+    color: #18216d; /* Text color */
   }
 
   .heading-content p {
@@ -280,27 +284,24 @@ export const MainContainer = styled.div`
     }
   }
 
-  
-@media (max-width: 468px) {
-  .heading-banner {
-    height: 400px; /* Reduce the height even further for very small screens */
-  }
+  @media (max-width: 468px) {
+    .heading-banner {
+      height: 400px; /* Reduce the height even further for very small screens */
+    }
 
-  .heading-content {
-    width: 90%; /* Reduce content width to fit better on small screens */
-    height: auto; /* Allow content to adjust based on its height */
-    padding: 15px; /* Slightly reduce padding */
-  }
+    .heading-content {
+      width: 90%; /* Reduce content width to fit better on small screens */
+      height: auto; /* Allow content to adjust based on its height */
+      padding: 15px; /* Slightly reduce padding */
+    }
 
-  .heading-content h1 {
-    font-size: 1.2rem; /* Further reduce font size for better fit */
-  }
+    .heading-content h1 {
+      font-size: 1.2rem; /* Further reduce font size for better fit */
+    }
 
-  .heading-content p {
-    font-size: 0.75rem; /* Smaller font size for paragraphs */
-    line-height: 1.9; /* Adjust line height for better readability */
+    .heading-content p {
+      font-size: 0.75rem; /* Smaller font size for paragraphs */
+      line-height: 1.9; /* Adjust line height for better readability */
+    }
   }
-}
 `;
-
-
