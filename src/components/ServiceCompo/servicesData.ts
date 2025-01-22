@@ -45,12 +45,13 @@ export const serviceData: ServicesData = {
         ],
         image: require("../../assets/service/web2.jpg"),
       },
-      React_Native_For_Web: {
+      React_Web_Development: {
         description: [
-          "React Native allows you to write a single codebase for both iOS and Android, streamlining development and reducing maintenance time.",
-          "The lightweight nature of React Native ensures that applications run smoothly even on devices with limited resources, enhancing performance.",
-          "By utilizing server-side rendering (SSR) and optimizing metadata, React Native apps can be made SEO-friendly, increasing visibility on search engines.",
-          "React Native allows the creation of visually rich interfaces with native-like performance, providing users with an engaging experience.",
+          "Our skilled developers leverage the latest React frameworks, libraries, and tools to create fast, interactive, and dynamic web applications.",
+          "We provide tailored solutions that align with your unique business requirements, ensuring a seamless user experience.",
+          "Our front-end experts craft intuitive and visually appealing interfaces that engage users and enhance brand presence.",
+          "Creating highly responsive SPAs for an engaging user experience.",
+          "We follow agile methodologies to ensure flexibility, transparency, and on-time delivery of your projects.",
         ],
         image: require("../../assets/service/web5.jpg"),
       },
@@ -79,7 +80,16 @@ export const serviceData: ServicesData = {
           "Enhance user engagement with immersive AR/VR experiences, leveraging native SDKs and frameworks for both platforms.",
           "Integrate AI-driven features such as chatbots, recommendation engines, and smart notifications for enhanced functionality."
         ],
-        image: require("../../assets/service/ios.jpg"),
+        image: require("../../assets/service/mobile.jpg"),
+      },
+      React_Native_Mobile_App_Development: {
+        description: [
+          "React Native allows you to write a single codebase for both iOS and Android, streamlining development and reducing maintenance time.",
+          "The lightweight nature of React Native ensures that applications run smoothly even on devices with limited resources, enhancing performance.",
+          "By utilizing server-side rendering (SSR) and optimizing metadata, React Native apps can be made SEO-friendly, increasing visibility on search engines.",
+          "React Native allows the creation of visually rich interfaces with native-like performance, providing users with an engaging experience.",
+        ],
+        image: require("../../assets/service/web5.jpg"),
       },
     },
     image: require("../../assets/service/mobileApp.jpg"),
@@ -132,5 +142,56 @@ export const serviceData: ServicesData = {
       },
     },
     image: require("../../assets/service/cyberSecurity.jpg"),
+  },
+  data_analytics: {
+    title: "Data Analytics",
+    description:
+      "Transforming Data into Actionable Insights for Smarter Decision-Making In today’s data-driven world, businesses generate massive amounts of data daily. But raw data is not enough—you need insights that drive strategic decisions. At Shinelogics, we specialize in Data Analytics solutions that help organizations extract valuable insights, identify trends, and optimize operations for better business outcomes.",
+    overview: "Protect Your Business from Cyber Threats.",
+    expertise: {
+      Business_Intelligence_and_Data_Visualization: {
+        description: [
+          "We help businesses visualize their data with intuitive dashboards and reports, enabling stakeholders to make informed decisions at a glance.",
+          "Custom Dashboards & Reports – Power BI, Tableau, Google Data Studio KPI & Performance Monitoring – Track sales, customer engagement, and operational efficiency.",
+          "Data-Driven Decision Making – Interactive reports with real-time updates Executive Insights – High-level business overviews for leadership teams.",
+        ],
+        image: require("../../assets/service/data1.jpg"),
+      },
+      Big_Data_Analytics: {
+        description: [
+          "Leverage cutting-edge big data analytics tools to process large volumes of data, uncovering patterns and trends. This helps drive informed decision-making and predictive insights.",
+          "Build efficient data warehousing solutions to store vast amounts of data. Implement ETL pipelines to streamline data extraction, transformation, and loading for analysis.",
+          "Use distributed computing frameworks like Apache Spark and Hadoop to process large-scale datasets. This ensures high-speed data processing and real-time analysis across multiple nodes.",
+          "Create data lakes to store all types of raw, unstructured, and structured data in a central repository. This approach enables flexible and scalable data access for analysis and future use.",
+        ],
+        image: require("../../assets/service/data2.jpg"),
+      },
+      Predictive_Analytics_and_Machine_Learning: {
+        description: [
+          "Leverage AI to analyze past interactions, helping businesses predict future purchasing behaviors and preferences. This enables tailored marketing strategies and personalized product recommendations.",
+          "AI can identify anomalies in transaction data, flagging potential fraudulent activities in real-time. By learning from historical data, it helps minimize financial losses and improve security.",
+          "AI models can identify patterns leading to customer churn, allowing businesses to proactively address issues. Retention strategies are optimized by targeting at-risk customers with personalized offers and engagement.",
+          "AI uses historical sales data to predict future trends and demand. This helps businesses plan inventory levels, optimize resource allocation, and set more accurate sales targets.",
+        ],
+        image: require("../../assets/service/data3.jpg"),
+      },
+      Data_Engineering_and_Cloud_Data_Solutions: {
+        description: [
+          "Cloud Data Warehousing (AWS Redshift, Google BigQuery, Azure Synapse)We implement scalable cloud data warehouses for efficient data storage and retrieval. Our solutions integrate seamlessly with platforms like AWS Redshift, Google BigQuery, and Azure Synapse.",
+          "ETL Development & Data Pipelines We design ETL processes to enable smooth data extraction, transformation, and loading. Our automated pipelines ensure reliable and efficient data flow across various sources.",
+          "Database Optimization & Performance Tuning We optimize database performance by refining queries and structures for faster response times. Our tuning techniques enhance efficiency and scalability to meet business demands.",
+        ],
+        image: require("../../assets/service/data4.jpg"),
+      },
+      AI_Powered_Analytics_and_NLP: {
+        description: [
+          "Chatbots & Automated Reporting: Utilize AI-powered chatbots to provide instant customer support and generate automated reports, improving efficiency and reducing manual effort.",
+          "Text & Speech Analytics: Leverage NLP to process and analyze text and voice data, extracting valuable insights that drive business growth and enhance customer experiences.",
+          "Real-time Decision Making: AI-driven insights enable businesses to make informed decisions quickly by analyzing large volumes of data and identifying trends in real time.",
+        ],
+        image: require("../../assets/service/data5.jpg"),
+      },
+    },
+    image: require("../../assets/service/data.jpg"),
   },
 };

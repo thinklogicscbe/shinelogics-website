@@ -9,10 +9,7 @@ import {
   DescriptionTitle,
   DescriptionText,
   DescriptionBox,
-  AdditionalContainers,
-  ContainerBox,
-  ContainerTitle,
-  ContainerText,
+
 } from "./style";
 import { serviceData } from "./servicesData"; // Importing the service data
 
@@ -20,6 +17,7 @@ const keys = [
   "web_development_services",
   "mobile_app_development_services",
   "cybersecurity_services",
+  "data_analytics",
 ];
 
 const Service = () => {
