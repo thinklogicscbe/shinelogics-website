@@ -1,6 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import Ai from "../../assets/hero-img.png";
-import {SectionContainer, TextContainer, ImageContainer} from './style';
+import { SectionContainer, TextContainer, ImageContainer } from './style';
 
 const Home = () => {
   return (
@@ -9,8 +10,13 @@ const Home = () => {
         <div>
           <h1>WE'RE AN AI-DRIVEN PRODUCT DEVELOPMENT COMPANY</h1>
           <div className="button-group">
-            <button>Read More</button>
-            <button>Contact Us</button>
+            {/* Replace buttons with Link components */}
+            <Link to="/about">
+              <button>Read More</button>
+            </Link>
+            <Link to="/contact">
+              <button>Contact Us</button>
+            </Link>
           </div>
         </div>
       </TextContainer>

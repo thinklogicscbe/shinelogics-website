@@ -209,7 +209,7 @@ export const DivisionContainer = styled.div`
 export const MainContainer = styled.div`
   .heading-container {
     width: 100%;
-    margin-top: 140px
+    // margin-top: 140px
     
   }
 
@@ -244,7 +244,7 @@ export const MainContainer = styled.div`
     background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background for text */
     border-radius: 8px;
     width: 60%;
-    height: 60%;
+    height: 70%;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Optional: Adds a subtle shadow */
   }
 
@@ -256,7 +256,7 @@ export const MainContainer = styled.div`
   }
 
   .heading-content p {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     line-height: 1.6;
     font-weight: 600;
     color: black; /* Text color */
@@ -280,22 +280,27 @@ export const MainContainer = styled.div`
     }
   }
 
-  @media (max-width: 468px) {
-    .heading-banner {
-      height: 200px; /* Further reduce banner height for smaller screens */
-    }
-    .heading-content {
-      width: 90%; /* Maximize content width on mobile */
-      height: auto; /* Auto height to fit content */
-      padding: 10px; /* Further reduce padding */
-    }
-    .heading-content h1 {
-      font-size: 1.5rem; /* Adjust font size for smaller headers */
-    }
-    .heading-content p {
-      font-size: 0.9rem; /* Adjust font size for smaller paragraphs */
-    }
+  
+@media (max-width: 468px) {
+  .heading-banner {
+    height: 400px; /* Reduce the height even further for very small screens */
   }
+
+  .heading-content {
+    width: 90%; /* Reduce content width to fit better on small screens */
+    height: auto; /* Allow content to adjust based on its height */
+    padding: 15px; /* Slightly reduce padding */
+  }
+
+  .heading-content h1 {
+    font-size: 1.2rem; /* Further reduce font size for better fit */
+  }
+
+  .heading-content p {
+    font-size: 0.75rem; /* Smaller font size for paragraphs */
+    line-height: 1.9; /* Adjust line height for better readability */
+  }
+}
 `;
 
 

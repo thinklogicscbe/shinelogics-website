@@ -4,7 +4,7 @@ import styled from 'styled-components';
 export const BannerContainer = styled.div`
   .heading-container {
     width: 100%;
-    margin-top: 120px;
+    // margin-top: 120px;
   }
 
   .heading-banner {
@@ -38,7 +38,7 @@ export const BannerContainer = styled.div`
     background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background for text */
     border-radius: 8px;
     width: 60%;
-    height: 60%;
+    height: 70%;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Optional: Adds a subtle shadow */
     transform: scale(1);
     animation: fadeIn 1s ease-in-out;
@@ -60,7 +60,7 @@ export const BannerContainer = styled.div`
   }
 
   .heading-content p {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     line-height: 1.6;
     font-weight: 600;
     color: black; /* Text color */
@@ -111,29 +111,26 @@ export const BannerContainer = styled.div`
     }
   }
 
-  @media (max-width: 480px) {
-    .heading-banner {
-      height: 250px; /* Adjust height for mobile screens */
-    }
-
-    .heading-content {
-      width: 90%; /* Make heading content take more space on mobile screens */
-      height: auto;
-      padding: 10px;
-    }
-
-    .heading-content h1 {
-      font-size: 1.6rem;
-    }
-
-    .heading-content h3 {
-      font-size: 1.1rem;
-    }
-
-    .heading-content p {
-      font-size: 0.9rem;
-    }
+@media (max-width: 468px) {
+  .heading-banner {
+    height: 400px; /* Reduce the height even further for very small screens */
   }
+
+  .heading-content {
+    width: 90%; /* Reduce content width to fit better on small screens */
+    height: auto; /* Allow content to adjust based on its height */
+    padding: 15px; /* Slightly reduce padding */
+  }
+
+  .heading-content h1 {
+    font-size: 1.2rem; /* Further reduce font size for better fit */
+  }
+
+  .heading-content p {
+    font-size: 0.75rem; /* Smaller font size for paragraphs */
+    line-height: 1.9; /* Adjust line height for better readability */
+  }
+}
 
   /* Extra small screens like phones in portrait mode */
   @media (max-width: 320px) {
