@@ -194,4 +194,73 @@ export const serviceData: ServicesData = {
     },
     image: require("../../assets/service/data.jpg"),
   },
+  seo_optimization: {
+    title: "SEO Optimization",
+    description:
+      "Our SEO Optimization Services enhance your website’s rankings, boost organic traffic, and strengthen your online presence. We use advanced techniques, data-driven insights, and best practices to optimize for both search engines and users. From keyword research to technical SEO and link building, our holistic approach ensures high-quality traffic and conversions. Stay ahead with our tailored solutions designed for long-term growth and success.",
+    overview: "Protect Your Business from Cyber Threats.",
+    expertise: {
+      On_Page_SEO_Optimization: {
+        description: [
+          "Keyword Research & Strategy – Target relevant, high-traffic keywords for your business.",
+          "Title Tags, Meta Descriptions & Header Tags – Optimize key on-page elements for better rankings.",
+          "URL Structuring & Internal Linking – Improve site navigation and user flow.",
+          "Content Optimization – Ensure your content is high-quality, engaging, and keyword-rich.",
+          " Mobile Optimization & Page Speed – Enhance site speed and responsiveness for mobile users."
+        ],
+        image: require("../../assets/service/seo1.jpg"),
+      },
+      Off_Page_SEO_Optimization: {
+        description: [
+          "Link Building & Guest Posting – Secure high-authority backlinks from industry-relevant websites.",
+          "Social Media Optimization – Leverage social platforms to drive traffic and enhance brand visibility.",
+          "Influencer Outreach & PR – Partner with influencers and brands for greater exposure.",
+          "Local Listings & Directories – Ensure your business is listed in local directories and review sites.",
+          "We optimize your Google My Business (GMB) profile and ensure consistency across local listings."
+        ],
+        image: require("../../assets/service/seo2.jpg"),
+      },
+      Local_SEO_Optimization: {
+        description: [
+          "Google My Business (GMB) Optimization – Claim and optimize your GMB listing.",
+          "Local Keyword Targeting – Optimize your website for location-based search terms.",
+          "NAP Consistency (Name, Address, Phone) – Ensure consistency across local directories.",
+          "Customer Reviews & Reputation Management – Build a strong online reputation through positive reviews.",
+          "Use automated tools to monitor cloud activity and generate alerts for suspicious behavior or non-compliance.",
+        ],
+        image: require("../../assets/service/seo3.jpg"),
+      },
+      Technical_SEO_Services: {
+        description: [
+          "Website Audit & SEO Health Check – Comprehensive audit to identify technical issues.",
+          "Fix Crawl Errors & Broken Links – Resolve issues that impact your website’s performance.",
+          "Improve Site Speed & Core Web Vitals – Optimize page load times for a better user experience.",
+          "Mobile-Friendly Optimization – Ensure your website is fully responsive and mobile-ready.",
+          "Structured Data (Schema Markup) – Implement schema to enhance search visibility and rich snippets.",
+        ],
+        image: require("../../assets/service/seo4.jpg"),
+      },
+      Content_Creation_and_Optimization: {
+        description: [
+          "Website Audit & SEO Health Check – Comprehensive audit to identify technical issues.",
+          "Fix Crawl Errors & Broken Links – Resolve issues that impact your website’s performance.",
+          "Improve Site Speed & Core Web Vitals – Optimize page load times for a better user experience.",
+          "Mobile-Friendly Optimization – Ensure your website is fully responsive and mobile-ready.",
+          "Structured Data (Schema Markup) – Implement schema to enhance search visibility and rich snippets.",
+        ],
+        image: require("../../assets/service/seo5.jpg"),
+      },
+      SEO_Analytics_and_Reporting: {
+        description: [
+          "Keyword Ranking Reports – Track progress and ranking for your target keywords.",
+          "Traffic & Conversion Analysis – Measure organic traffic, user behavior, and conversion rates.",
+          "Competitor Analysis – Monitor competitors’ SEO strategies and identify opportunities.",
+          "SEO Health Reports – Regular reports on technical issues, backlinks, and content performance.",
+          "We provide detailed analytics and performance tracking to ensure your SEO efforts are delivering measurable results. Through regular reporting and analysis, we continuously adjust strategies to improve rankings and traffic.",
+        ],
+        image: require("../../assets/service/seo6.jpg"),
+      },
+    },
+    image: require("../../assets/service/seo.jpg"),
+  },
 };
