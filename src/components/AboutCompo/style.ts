@@ -140,20 +140,13 @@ export const SectionContainer = styled("div")`
   border-radius: 12px;
   position: relative;
 
-  /* Subtle glow effect */
-  // box-shadow: 0 10px 30px rgba(0, 150, 255, 0.2), inset 0 0 12px rgba(0, 255, 255, 0.05);
+  @media (max-width: 1024px) { /* Laptop */
+    padding: 0 3%;
+  }
 
-  &:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    // background: radial-gradient(circle, transparent 70%, rgba(0, 150, 255, 0.02));
-    background-size: 100px 100px;
-    pointer-events: none;
-    z-index: 0;
+  @media (max-width: 768px) { /* Mobile */
+    flex-direction: column;
+    padding: 0 2%;
   }
 `;
 
@@ -163,15 +156,13 @@ export const DivisionContainer = styled.div`
   gap: 1px;
   position: relative;
   z-index: 1;
-  padding-bottom:80px;
+  padding-bottom: 80px;
 
   .row {
     margin-top: 60px;
     display: flex;
     align-items: center;
     gap: 25px;
-    opacity: 0;
-    animation: fadeIn 2s ease-in-out forwards;
 
     &.row-1 {
       flex-direction: row;
@@ -179,26 +170,15 @@ export const DivisionContainer = styled.div`
 
     &.row-2 {
       flex-direction: row-reverse;
-      animation: slideFromRight 2s ease-in-out forwards;
     }
 
     & > div:first-child {
       flex: 0 0 30%; 
-      animation: slideFromLeft 2s ease-in-out forwards;
     }
 
     & > div:last-child {
       flex: 0 0 70%;
       text-align: left;
-      animation: slideContentFromRight 2s ease-in-out forwards;
-      
-      /* Subtle, sleek futuristic text styling */
-      color: #0078d7;
-      font-size: 22px;
-      font-weight: bold;
-      // text-shadow: 0 0 4px rgba(0, 120, 255, 0.2), 0 0 8px rgba(0, 255, 255, 0.1);
-      border-left: 4px solid rgba(0, 150, 255, 0.3);
-      padding-left: 12px;
     }
 
     img {
@@ -207,97 +187,47 @@ export const DivisionContainer = styled.div`
       border-radius: 8px;
       border: 2px solid rgba(0, 150, 255, 0.1);
       box-shadow: 0 6px 20px rgba(0, 150, 255, 0.15);
-
-      &:hover {
-        transform: scale(1.03);
-        box-shadow: 0 8px 25px rgba(0, 150, 255, 0.2);
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-      }
     }
 
     p {
       font-size: 22px;
-      text-align: justify; 
-      color:#2D2D2D; 
-      font-weight: bold;
-      padding:2px;
-      font-family: Uni Neue ;  
+      text-align: justify;
       line-height: 2.0;
-      margin: 1px;
-      overflow: hidden;
-      animation: slideUp 1s ease-in-out forwards;
+      color: #2D2D2D;
+      padding: 2px;
+      font-family: 'Uni Neue';
+    }
 
-      position: relative;
-      &:after {
-        content: "";
-        position: absolute;
-        bottom: -5px;
-        left: 0;
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(to right, #0078d7, rgba(0, 150, 255, 0.2));
-        transform: scaleX(0);
-        transform-origin: left;
-        transition: transform 0.3s ease-out;
+    @media (max-width: 1024px) { /* Laptop */
+      gap: 15px;
+      margin-top: 40px;
+
+      img {
+        border-radius: 6px;
       }
 
-      &:hover:after {
-        transform: scaleX(1);
+      p {
+        font-size: 20px;
       }
     }
-  }
 
-  /* Animations */
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
+    @media (max-width: 768px) { /* Mobile */
+      flex-direction: column;
+      text-align: center;
 
-  @keyframes slideFromLeft {
-    0% {
-      opacity: 0;
-      transform: translateX(-25%);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
+      &.row-1, &.row-2 {
+        flex-direction: column;
+      }
 
-  @keyframes slideFromRight {
-    0% {
-      opacity: 0;
-      transform: translateX(25%);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
+      img {
+        width: 90%;
+        margin: 0 auto;
+      }
 
-  @keyframes slideContentFromRight {
-    0% {
-      opacity: 0;
-      transform: translateX(20%);
-    }
-    100% {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  @keyframes slideUp {
-    0% {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
+      p {
+        font-size: 18px;
+        padding: 5px;
+      }
     }
   }
 `;
@@ -309,15 +239,14 @@ export const Video = styled.video`
   border: 2px solid rgba(0, 150, 255, 0.1);
   box-shadow: 0 6px 15px rgba(0, 150, 255, 0.15);
 
-  /* Subtle glowing effect */
-  &:hover {
-    box-shadow: 0 8px 20px rgba(0, 150, 255, 0.2);
-    transform: scale(1.02);
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  @media (max-width: 1024px) { /* Laptop */
+    border-radius: 6px;
   }
 
-  @media (max-width: 768px) {
-    width: 100%;
+  @media (max-width: 768px) { /* Mobile */
+    width: 90%;
+    margin: 0 auto;
+    border-radius: 5px;
   }
 `;
 
