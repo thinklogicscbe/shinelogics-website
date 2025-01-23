@@ -18,7 +18,7 @@ export const SectionContainer = styled.div`
 
 export const SliderContainer = styled.div`
   display: flex;
-  gap: 90px;
+  gap: 20px;
   overflow-x: auto;
   background: rgb(133, 182, 249);
   padding: 20px;
@@ -51,9 +51,9 @@ export const ServiceBox = styled.div`
   cursor: pointer;
   font-size: 1.2rem;
   font-weight: bold;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background 0.3s ease-in-out;
   opacity: 0;
-  animation: fadeInUp 1s ease-out forwards; /* Apply animation on load */
+  animation: fadeInUp 2s ease-out forwards;
 
   @keyframes fadeInUp {
     0% {
@@ -67,8 +67,8 @@ export const ServiceBox = styled.div`
   }
 
   &:hover {
-    transform: scale(1.1);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    transform: scale(1.15); /* Increase scale to make it pop more */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); /* Deeper shadow for popping effect */
   }
 
   @media (max-width: 768px) {
@@ -77,6 +77,7 @@ export const ServiceBox = styled.div`
     font-size: 1rem;
   }
 `;
+
 
 export const Title = styled.h2`
   font-size: 2.0rem;
@@ -88,31 +89,6 @@ export const Title = styled.h2`
 
   @media (max-width: 768px) {
     font-size: 1.2rem;
-  }
-`;
-
-export const DescriptionImage = styled.img`
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  max-width: 100%;
-  animation: fadeInScale 1.5s ease-in-out forwards;
-
-  @keyframes fadeInScale {
-    0% {
-      opacity: 0;
-      transform: scale(0.8);
-    }
-    50% {
-      opacity: 0.5;
-      transform: scale(1.02);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
   }
 `;
 
@@ -240,6 +216,35 @@ export const DescriptionText = styled.p`
 
   @media (max-width: 768px) {
     font-size: 1.3rem;
+  }
+`;
+export const DescriptionText1 = styled.p`
+  font-size: 1.1rem;
+  line-height: 2.0;
+  color: #555;
+  text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  animation: textFadeInUp 1.8s ease-in-out forwards;
+
+  @keyframes textFadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    50% {
+      opacity: 0.7;
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1.3rem;
+    width:110%;
+    text-align: left;
   }
 `;
 

@@ -4,10 +4,28 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import routes from "./config";
 import { Styles } from "../styles/styles";
+import {
+  LoaderContainer,
+  Dot1,
+  Dot2,
+  Dot3,
+  LoaderText,
+} from "./style";
 
 const Router = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense
+      fallback={
+        <LoaderContainer>
+          <div>
+            <Dot1 />
+            <Dot2 />
+            <Dot3 />
+          </div>
+          <LoaderText>Shinelogics</LoaderText> 
+        </LoaderContainer>
+      }
+    >
       <Styles />
       <Header />
       <Switch>
