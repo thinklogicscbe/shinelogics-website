@@ -33,7 +33,7 @@ const PrivacyPolicy = () => {
         Responding to inquiries and customer support
         Sending updates and promotional content (only with consent)
         Ensuring website security and preventing fraud
-
+                                                                                                                                                                    
         </Paragraph>
 
         <SubHeading>How We Share Your Information</SubHeading>
@@ -67,7 +67,7 @@ const PrivacyPolicy = () => {
         Restrict or object to data processing
         For requests, contact us at [Insert Contact Email].
 
-        </Paragraph>
+        </Paragraph>   
       </PolicyContent>
     </>
   );
