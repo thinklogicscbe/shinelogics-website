@@ -161,7 +161,17 @@ export const SocialIcons = styled.div`
     margin: 0 1rem 0 0; /* Adjust spacing for alignment */
     color: #f0f0f0;
     font-size: 1.8rem;
+    display: flex; /* Flexbox to align image and text */
+    align-items: center; /* Vertically align icons and text */
     transition: transform 0.3s ease, color 0.3s ease;
+
+    img {
+     border:2px solid white;
+       border-radius:50%;
+      width: 25px; 
+      height: 25px; 
+      margin-right: 0.5rem;  
+    }
 
     &:hover {
       transform: scale(1.3);
@@ -174,9 +184,15 @@ export const SocialIcons = styled.div`
     a {
       font-size: 1.5rem;
       margin: 0 0.8rem 0 0;
+      
+      img {
+        width: 20px; /* Adjust image size for smaller screens */
+        height: 20px;
+      }
     }
   }
 `;
+
 
 export const FooterBottom = styled.div`
   margin-top: 3rem;
@@ -196,3 +212,5 @@ export const HighlightedText = styled.span`
   color: #00ff99;
   font-weight: 700;
 `;
+ 
+

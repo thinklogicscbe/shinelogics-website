@@ -36,7 +36,7 @@ const Contact: React.FC = () => {
           <FormControl variant="filled" fullWidth sx={{ mb: 2 }}>
             <InputLabel htmlFor="email">Email<span>*</span></InputLabel>
             <FilledInput id="email" placeholder="Enter your Email" required />
-            <FormHelperText>Please enter a valid email address.</FormHelperText>
+            <FormHelperText>Please enter a valid email.</FormHelperText>
           </FormControl>
 
           {/* Phone Number Field */}

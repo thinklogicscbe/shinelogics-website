@@ -9,7 +9,7 @@ import {
   FooterContactInfo,
   HighlightedText,
   FooterBottom,
-  SocialMediaIcon
+  SocialIcons
 } from "./styles";
 
 const Footer = () => {
@@ -21,23 +21,13 @@ const Footer = () => {
           <FooterText>
             Shinelogics is a global leader in <HighlightedText>AI-powered solutions</HighlightedText>, dedicated to transforming businesses with cutting-edge technology.
           </FooterText>
-
-          <SocialMediaIcon>
-            <div className="socialmediaicon">
-              <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
-                <img src="/facebook-icon(1).png" alt="Facebook"  />
-              </a>
-              <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" width={30} height={30} />
-              </a>
-              <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer">
-                <img src="/linkedin_icon(2) (1).png" alt="LinkedIn"   />
-              </a>
-              <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer">
-                <img src="/twitter-icon_1_-removebg-preview.png" alt="Twitter"  />
-              </a>
-            </div>
-          </SocialMediaIcon>
+          <SocialIcons>
+           <a href="https://www.facebook.com/share/1YHbrEVKhb/"><img src="/img/socialmediaimg/facebook.png" alt="" /></a>
+           <a href="https://www.instagram.com/shinelogicschennai?igsh=OXkycHRoZWxtbmNs"><img src="/img/socialmediaimg/social.png" alt="" /></a>
+           <a href="https://www.linkedin.com/company/shinelogics-pvt-ltd/"><img src="/img/socialmediaimg/linkedin.png" alt="" /></a>
+            <a href="https://x.com/shinelogic?t=WWH5qEbodqxZwAdmbIWxvA&s=09"><img src="/img/socialmediaimg/twitter.png" alt="" /></a>
+            <a href="https://youtube.com/@shinelogicsinfotech3857?si=hy7SKoSgFf7WpMT_ "><img src="/img/socialmediaimg/youtube.png" alt="you tube" /></a>
+          </SocialIcons>
 
         </FooterColumn>
         <FooterColumn>
@@ -69,7 +59,6 @@ const Footer = () => {
       </FooterContainer>
       <FooterBottom>&copy; 2025 Shinelogics. All Rights Reserved.</FooterBottom>
     </FooterSection>
-
   );
 };
 

@@ -13,8 +13,8 @@ const PrivacyPolicy = () => {
           Shinelogics ("we," "our," or "us") respects your privacy and is committed to protecting any personal information you share with us. This Privacy Policy explains how we collect, use, and safeguard your data when you visit our website.
         </H6>
         <SubHeading> Information We Collect</SubHeading>
-        <Paragraph>We may collect the following types of information:</Paragraph>
-        <Paragraph>
+        <Paragraph><b>We may collect the following types of information</b></Paragraph>
+        <Paragraph style={{ marginLeft: '2%' }}>
           Personal Information:
           Name, email address, phone number, and other contact details
           Business information if you inquire about our services
@@ -26,9 +26,9 @@ const PrivacyPolicy = () => {
 
         <SubHeading>How We Use Your Information</SubHeading>
         <Paragraph>
-        We use the collected information for:
+        <b>We use the collected information for</b>
         </Paragraph>
-        <Paragraph>
+        <Paragraph style={{ marginLeft: '2%' }}>
         Providing and improving our services
         Responding to inquiries and customer support
         Sending updates and promotional content (only with consent)
@@ -37,8 +37,8 @@ const PrivacyPolicy = () => {
         </Paragraph>
 
         <SubHeading>How We Share Your Information</SubHeading>
-        <Paragraph>We do not sell or rent your personal data. However, we may share your information with:</Paragraph>
-        <Paragraph>
+        <Paragraph><b>We do not sell or rent your personal data. However, we may share your information with</b></Paragraph>
+        <Paragraph style={{ marginLeft: '2%' }}>
         Trusted third-party service providers (e.g., hosting, analytics)
         Legal authorities if required by law.
         </Paragraph>
@@ -59,9 +59,9 @@ const PrivacyPolicy = () => {
         Your Rights
         </SubHeading>
         <Paragraph>
-        You have the right to:
+        <b>You have the right to</b>
         </Paragraph>
-        <Paragraph>
+        <Paragraph style={{ marginLeft: '2%' }}>
         Access, update, or delete your data
         Opt-out of marketing communications
         Restrict or object to data processing
