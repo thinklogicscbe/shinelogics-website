@@ -108,6 +108,7 @@ export const ImageContainer = styled("div")`
   align-items: center;
 
   img {
+    border:0.2px solid white;
     width: 100%;
     max-width: 600px; /* Maintain aspect ratio */
     height: auto;

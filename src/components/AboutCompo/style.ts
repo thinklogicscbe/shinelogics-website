@@ -1,134 +1,40 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
-// export const SectionContainer = styled("div")`
-//   display: flex;
-//   justify-content: space-between;
-//   width: 100%;
-//   height: 90vh;
-//   background: linear-gradient(to bottom right, #f5faff, #ffffff); /* Soft futuristic gradient */
-//   padding: 0 5%;
-//   border: 1px solid rgba(0, 0, 0, 0.1);
-//   border-radius: 12px;
+// Keyframes for animations
+const fadeIn = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1.7;
+    transform: translateY(0);
+  }
+`;
 
-//   /* Subtle shadow for depth */
-//   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1), inset 0 0 8px rgba(0, 150, 255, 0.1);
-// `;
+const slideIn = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  100% {
+    opacity: 2;
+    transform: translateX(0);
+  }
+`;
 
-// export const DivisionContainer = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   gap: 40px;
+const imageZoom = keyframes`
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+`;
 
-//   .row {
-//     margin-top: 60px;
-//     display: flex;
-//     align-items: center;
-//     gap: 20px;
-//     opacity: 0;
-//     animation: fadeIn 1s ease forwards;
-
-//     &.row-1 {
-//       flex-direction: row; /* Image on the left */
-//     }
-
-//     &.row-2 {
-//       flex-direction: row-reverse; /* Image on the right */
-//       animation: slideFromRight 1.5s ease forwards;
-//     }
-
-//     & > div:first-child {
-//       flex: 0 0 30%; /* Image container takes 30% */
-//       animation: slideFromLeft 1.5s ease forwards;
-//     }
-
-//     & > div:last-child {
-//       flex: 0 0 70%; /* Text container takes 70% */
-//       text-align: left;
-//       animation: slideContentFromRight 1.5s ease forwards;
-
-//       /* Text styling */
-//       color: #0078d7; /* Vibrant AI blue */
-//       font-weight: 600;
-//       text-shadow: 0 0 3px rgba(0, 120, 215, 0.3);
-//     }
-
-//     img {
-//       width: 100%;
-//       height: auto;
-//       border-radius: 8px;
-//       border: 2px solid rgba(0, 0, 0, 0.1);
-//       box-shadow: 0 4px 10px rgba(0, 120, 255, 0.2);
-//     }
-
-//     p {
-//       font-size: 18px;
-//       color: #333; /* Neutral dark text for readability */
-//       line-height: 1.6;
-//       margin: 0;
-//       overflow: hidden;
-//       animation: slideUp 0.5s ease forwards;
-//     }
-//   }
-
-//   /* Animations */
-//   @keyframes fadeIn {
-//     0% {
-//       opacity: 0;
-//     }
-//     100% {
-//       opacity: 1;
-//     }
-//   }
-
-//   @keyframes slideFromLeft {
-//     0% {
-//       opacity: 0;
-//       transform: translateX(-20%);
-//     }
-//     100% {
-//       opacity: 1;
-//       transform: translateX(0);
-//     }
-//   }
-
-//   @keyframes slideContentFromRight {
-//     0% {
-//       opacity: 0;
-//       transform: translateX(20%);
-//     }
-//     100% {
-//       opacity: 1;
-//       transform: translateX(0);
-//     }
-//   }
-
-//   @keyframes slideUp {
-//     0% {
-//       opacity: 0;
-//       transform: translateY(10px);
-//     }
-//     100% {
-//       opacity: 1;
-//       transform: translateY(0);
-//     }
-//   }
-// `;
-
-// export const Video = styled.video`
-//   width: 100%;
-//   border-radius: 8px;
-//   display: block; /* Ensures the video fills the container */
-//   border: 2px solid rgba(0, 120, 255, 0.2);
-//   box-shadow: 0 4px 10px rgba(0, 120, 255, 0.3);
-
-//   /* Media query for responsive adjustments */
-//   @media (max-width: 768px) {
-//     width: 100%;
-//   }
-// `;
-
-
-
+// Section container
 export const SectionContainer = styled("div")`
   display: flex;
   justify-content: space-between;
@@ -140,16 +46,17 @@ export const SectionContainer = styled("div")`
   border-radius: 12px;
   position: relative;
 
-  @media (max-width: 1024px) { /* Laptop */
+  @media (max-width: 1024px) {
     padding: 0 3%;
   }
 
-  @media (max-width: 768px) { /* Mobile */
+  @media (max-width: 768px) {
     flex-direction: column;
     padding: 0 2%;
   }
 `;
 
+// Division container with animations
 export const DivisionContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -163,6 +70,7 @@ export const DivisionContainer = styled.div`
     display: flex;
     align-items: center;
     gap: 25px;
+    animation: ${fadeIn} 1s ease-in-out;
 
     &.row-1 {
       flex-direction: row;
@@ -173,12 +81,14 @@ export const DivisionContainer = styled.div`
     }
 
     & > div:first-child {
-      flex: 0 0 30%; 
+      flex: 0 0 30%;
+      animation: ${imageZoom} 0.9s ease-in-out;
     }
 
     & > div:last-child {
       flex: 0 0 70%;
       text-align: left;
+      animation: ${slideIn} 1.2s ease-in-out;
     }
 
     img {
@@ -193,12 +103,14 @@ export const DivisionContainer = styled.div`
       font-size: 22px;
       text-align: justify;
       line-height: 2.0;
-      color: #2D2D2D;
+      color: #2d2d2d;
       padding: 2px;
-      font-family: 'Uni Neue';
+      font-family: "Uni Neue";
+      opacity: 0;
+      animation: ${fadeIn} 1s ease-in-out 0.3s forwards; /* Delayed fade-in */
     }
 
-    @media (max-width: 1024px) { /* Laptop */
+    @media (max-width: 1024px) {
       gap: 15px;
       margin-top: 40px;
 
@@ -211,11 +123,12 @@ export const DivisionContainer = styled.div`
       }
     }
 
-    @media (max-width: 768px) { /* Mobile */
+    @media (max-width: 768px) {
       flex-direction: column;
       text-align: center;
 
-      &.row-1, &.row-2 {
+      &.row-1,
+      &.row-2 {
         flex-direction: column;
       }
 
@@ -232,22 +145,22 @@ export const DivisionContainer = styled.div`
   }
 `;
 
+// Video with animation
 export const Video = styled.video`
   width: 100%;
   border-radius: 8px;
   display: block;
   border: 2px solid rgba(0, 150, 255, 0.1);
   box-shadow: 0 6px 15px rgba(0, 150, 255, 0.15);
+  animation: ${imageZoom} 1.5s ease-in-out;
 
-  @media (max-width: 1024px) { /* Laptop */
+  @media (max-width: 1024px) {
     border-radius: 6px;
   }
 
-  @media (max-width: 768px) { /* Mobile */
+  @media (max-width: 768px) {
     width: 90%;
     margin: 0 auto;
     border-radius: 5px;
   }
 `;
-
-
