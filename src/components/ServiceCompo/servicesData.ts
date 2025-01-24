@@ -263,4 +263,40 @@ export const serviceData: ServicesData = {
     },
     image: require("../../assets/service/seo.jpg"),
   },
+  graphic_design_services: {
+    title: "Graphic Design Services",
+    description:
+      "In today’s fast-paced digital world, visual appeal plays a crucial role in attracting and retaining audiences. Our Graphic Design Services provide stunning, user-centric designs that enhance your brand’s identity and create seamless user experiences. Whether you need website designs, UI/UX prototypes, marketing creatives, or custom branding solutions, we leverage industry-leading tools like Figma, Adobe Suite (Photoshop, Illustrator, XD), HTML, CSS, and Bootstrap to bring your vision to life.",
+    overview: "Protect Your Business from Cyber Threats.",
+    expertise: {
+      "UI/UX Design & Prototyping (Figma, Adobe XD)": {
+        description: [
+          "Wireframing & Prototyping – Interactive prototypes for better visualization, allowing stakeholders to test functionality, refine user flows, and ensure an intuitive user experience before development begins.",
+          "High-Fidelity Prototypes – Interactive mockups that mimic real-world user interactions, incorporating detailed UI elements, animations, and transitions to provide a realistic preview of the final product.",
+          "User Flow Mapping – Designing intuitive navigation paths for better usability, ensuring seamless transitions between screens and minimizing friction in the user journey for an optimal experience.",
+          "Usability Testing – Refining designs based on feedback to ensure a flawless experience, identifying pain points early and iterating on design elements to enhance user satisfaction and engagement.",
+        ],
+        image: require("../../assets/service/ui.jpg"),
+      },
+      "Website & Landing Page Design (HTML, CSS, Bootstrap)": {
+        description: [
+          "Custom Web Design – We create unique, brand-aligned web designs that reflect your business identity, ensuring a visually appealing and engaging user experience that enhances customer trust and retention.",
+          "Responsive & Mobile-First Development – Our designs are optimized to provide seamless experiences across all devices, adapting fluidly to different screen sizes for enhanced usability and accessibility.",
+          "HTML & CSS Styling – We craft pixel-perfect layouts with smooth animations and transitions, ensuring visually stunning and high-performance websites that captivate and retain user attention.",
+          " Bootstrap Framework – Leveraging the power of Bootstrap, we build fast, scalable, and fully responsive front-end designs, ensuring consistency, efficiency, and ease of maintenance across all digital platforms.",
+        ],
+        image: require("../../assets/service/webDesign.jpg"),
+      },
+      "Branding & Marketing Collateral (Adobe Photoshop, Illustrator)": {
+        description: [
+          "Wireframing & Prototyping – Interactive prototypes for better visualization, allowing stakeholders to test functionality, refine user flows, and ensure an intuitive user experience before development begins.",
+          "High-Fidelity Prototypes – Interactive mockups that mimic real-world user interactions, incorporating detailed UI elements, animations, and transitions to provide a realistic preview of the final product.",
+          "User Flow Mapping – Designing intuitive navigation paths for better usability, ensuring seamless transitions between screens and minimizing friction in the user journey for an optimal experience.",
+          "Usability Testing – Refining designs based on feedback to ensure a flawless experience, identifying pain points early and iterating on design elements to enhance user satisfaction and engagement.",
+        ],
+        image: require("../../assets/service/brand.jpg"),
+      },
+    },
+    image: require("../../assets/service/graphic.jpg"),
+  },
 };

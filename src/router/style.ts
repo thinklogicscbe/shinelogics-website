@@ -1,4 +1,20 @@
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes,createGlobalStyle  } from "styled-components";
+
+export const GlobalStyle = createGlobalStyle`
+  /* Hide scrollbar but allow scrolling */
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  
+  body {
+    overflow-y: scroll;  /* Allows vertical scrolling */
+    overflow-x: hidden;  /* Hides horizontal scrolling */
+  }
+`;
 
 const bounce = keyframes`
   0% {
