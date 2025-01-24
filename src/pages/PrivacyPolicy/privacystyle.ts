@@ -173,7 +173,7 @@ export const SubHeading = styled.h4`
 `;
 
 export const Paragraph = styled.p`
-  margin-bottom: 16px;
+  margin-bottom: -18px;
   color: #333;
   padding: 12px;
   text-align: justify;
