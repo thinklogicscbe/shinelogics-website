@@ -2,6 +2,9 @@ import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 
 export const HeaderSection = styled.header`
+  position: sticky;
+  top: 0;
+  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: left;
@@ -18,15 +21,6 @@ export const HeaderSection = styled.header`
   @media (max-width: 480px) {
     padding: 10px; 
   }
-`;
-
-export const ContentWrapper = styled.div`
-  // margin: 20px auto;
-  // padding: 20px;
-  // max-width: 1200px;
- 
-  // border-radius: 10px;
-  // box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 `;
 
 

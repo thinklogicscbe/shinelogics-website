@@ -18,17 +18,17 @@ export const SectionContainer = styled.div`
 
 export const SliderContainer = styled.div`
   display: flex;
-  gap: 20px;
-  overflow-x: auto;
+  gap: 40px;
+  overflow-x: auto; /* Enables horizontal scrolling */
   background: rgb(133, 182, 249);
   padding: 20px;
   width: 100%;
   white-space: nowrap;
   scroll-behavior: smooth;
-  justify-content: center; /* Center the ServiceBoxes horizontally */
+  justify-content: flex-start; /* Allow scrolling horizontally on mobile or larger screens */
 
   &::-webkit-scrollbar {
-    display: none;
+    display: none; /* Hide the scrollbar */
   }
 
   @media (max-width: 768px) {
@@ -40,7 +40,7 @@ export const SliderContainer = styled.div`
 
 export const ServiceBox = styled.div`
   flex: 0 0 auto;
-  width: 220px;
+  width: 220px; /* This defines the width of each ServiceBox */
   height: 150px;
   background: linear-gradient(135deg, #6a11cb, #2575fc);
   border-radius: 15px;
@@ -67,8 +67,8 @@ export const ServiceBox = styled.div`
   }
 
   &:hover {
-    transform: scale(1.15); /* Increase scale to make it pop more */
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); /* Deeper shadow for popping effect */
+    transform: scale(1.15); /* Hover effect for pop */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
   }
 
   @media (max-width: 768px) {
@@ -77,6 +77,7 @@ export const ServiceBox = styled.div`
     font-size: 1rem;
   }
 `;
+
 
 
 export const Title = styled.h2`
