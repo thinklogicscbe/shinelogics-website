@@ -10,35 +10,35 @@ const OurService = () => {
         <ServiceCard>
           <div className="icon">💻</div>
           <h3>Web Development</h3>
-          <p>Amet justo dolor lorem kasd amet magna sea stet eos vero lorem ipsum dolore sed</p>
+          <p>Empowers businesses with cutting-edge web development solutions, blending innovative design and robust functionality to build seamless, user-friendly websites.</p>
         </ServiceCard>
         <ServiceCard>
           <div className="icon">📱</div>
           <h3>Apps Development</h3>
-          <p>Amet justo dolor lorem kasd amet magna sea stet eos vero lorem ipsum dolore sed</p>
+          <p>ShineLogics.ai specializes in app development, delivering high-performance, user-centric mobile and web applications tailored to meet diverse business needs with precision and innovation.</p>
         </ServiceCard>
         <ServiceCard>
           <div className="icon">🔒</div>
           <h3>Cyber Security</h3>
-          <p>Amet justo dolor lorem kasd amet magna sea stet eos vero lorem ipsum dolore sed</p>
+          <p>Ensures robust cyber security solutions, safeguarding your business with advanced threat detection, data protection, and proactive risk management strategies.</p>
         </ServiceCard>
         <ServiceCard>
           <div className="icon">📊</div>
           <h3>Data Analytics</h3>
-          <p>Amet justo dolor lorem kasd amet magna sea stet eos vero lorem ipsum dolore sed</p>
+          <p>Transforms raw data into actionable insights with advanced data analytics solutions, empowering businesses to make informed decisions and drive growth.</p>
         </ServiceCard>
 
 
         <ServiceCard>
           <div className="icon">🔍</div>
           <h3>SEO Optimization</h3>
-          <p>Amet justo dolor lorem kasd amet magna sea stet eos vero lorem ipsum dolore sed</p>
+          <p>Enhances your online presence with expert SEO optimization, boosting website visibility, driving traffic, and improving search engine rankings for sustainable growth.</p>
         </ServiceCard>
         <ServiceCard>
           <div className="icon">📞</div> {/* Added a phone icon */}
           <h3>Call Us For Quote</h3>
-          <p>Clita ipsum magna kasd rebum at ipsum amet dolor justo dolor est magna stet eirmod</p>
-          <p>+91 8508601842</p>
+          <p>Feel free to ask us.</p>
+          <p>info@shinelogics.com  |  +91-9500037221</p>
         </ServiceCard>
       </div>
     </ServiceContainer>
