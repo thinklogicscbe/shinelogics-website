@@ -62,7 +62,6 @@ export const DivisionContainer = styled.div`
   flex-direction: column;
   gap: 1px;
   position: relative;
-  z-index: 1;
   padding-bottom: 80px;
 
   .row {
@@ -100,7 +99,7 @@ export const DivisionContainer = styled.div`
     }
 
     p {
-      font-size: 22px;
+      font-size: 1.1rem;
       text-align: justify;
       line-height: 2.0;
       color: #2d2d2d;

@@ -65,7 +65,7 @@ const PrivacyPolicy = () => {
         Access, update, or delete your data
         Opt-out of marketing communications
         Restrict or object to data processing
-        For requests, contact us at info@shinelogics.com.
+        For requests, contact us at <b><em>info@shinelogics.com.</em></b>
 
         </Paragraph>   
       </PolicyContent>

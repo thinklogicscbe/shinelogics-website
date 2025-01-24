@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import routes from "./config";
 import { Styles } from "../styles/styles";
+import ChatbotButton from "../components/ChatbotCompo";
 import {
   LoaderContainer,
   Dot1,
@@ -41,6 +42,7 @@ const Router = () => {
         ))}
       </Switch>
       <Footer />
+      <ChatbotButton/>
     </Suspense>
   );
 };

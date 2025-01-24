@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   SectionContainer,
   SliderContainer,
@@ -10,7 +10,6 @@ import {
   DescriptionText,
   DescriptionText1,
   DescriptionBox,
-
 } from "./style";
 import { serviceData } from "./servicesData"; // Importing the service data
 
@@ -20,16 +19,47 @@ const keys = [
   "cybersecurity_services",
   "data_analytics",
   "seo_optimization",
+  "graphic_design_services",
 ];
 
 const Service = () => {
   const [selectedServiceKey, setSelectedServiceKey] = useState<string>(keys[0]);
   const [selectedService, setSelectedService] = useState(serviceData[keys[0]]);
+  const sliderContainerRef = useRef<HTMLDivElement>(null);
 
   const handleServiceClick = (key: string) => {
     setSelectedServiceKey(key);
     setSelectedService(serviceData[key]);
   };
+  const handleWheel = (event: WheelEvent) => {
+    if (sliderContainerRef.current) {
+      // If the scroll is vertical (deltaY), scroll horizontally
+      if (event.deltaY !== 0) {
+        sliderContainerRef.current.scrollLeft += event.deltaY;
+        event.preventDefault(); // Prevent the page from scrolling
+      }
+
+      // If the scroll is horizontal (deltaX), allow the default behavior
+      if (event.deltaX !== 0) {
+        sliderContainerRef.current.scrollLeft += event.deltaX;
+      }
+    }
+  };
+
+  useEffect(() => {
+    const sliderContainer = sliderContainerRef.current;
+    if (sliderContainer) {
+      // Add event listener for mouse wheel
+      sliderContainer.addEventListener("wheel", handleWheel, {
+        passive: false,
+      });
+
+      return () => {
+        // Cleanup event listener when the component unmounts
+        sliderContainer.removeEventListener("wheel", handleWheel);
+      };
+    }
+  }, []);
 
   return (
     <SectionContainer>
@@ -44,7 +74,7 @@ const Service = () => {
       >
         OUR SERVICES
       </h1>
-      <SliderContainer>
+      <SliderContainer ref={sliderContainerRef}>
         {keys.map((key, index) => (
           <div key={key} style={{ textAlign: "center", margin: "10px" }}>
             <ServiceBox
