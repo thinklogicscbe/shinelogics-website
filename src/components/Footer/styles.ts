@@ -12,6 +12,44 @@ export const FooterSection = styled.footer`
   }
 `;
 
+export const SocialMediaIcon = styled.div`
+
+  .socialmediaicon {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    margin-right : 40px
+  }
+
+  .socialmediaicon a {
+    display: inline-block;
+    width: 40px; /* Set width of icon */
+    height: 40px; /* Set height of icon */
+    overflow: hidden;
+    border-radius: 50%; /* For rounded effect */
+    // background-color: #f0f0f0; /* Optional: to add background color behind the icon */
+    transition: transform 0.3s ease;
+  }
+
+  .socialmediaicon a img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Ensures the image fits properly */
+  }
+
+ 
+  .socialmediaicon a:hover {
+    transform: scale(1.1); /* Optional: to add a zoom effect on hover */
+  }
+
+  .socialmediaicon a:hover img {
+    opacity: 0.8; /* Optional: to add a slight fade effect on hover */
+  }
+`
+
+
+
 export const FooterContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;

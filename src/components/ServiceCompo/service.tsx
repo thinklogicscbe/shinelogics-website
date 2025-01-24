@@ -8,6 +8,7 @@ import {
   Title,
   DescriptionTitle,
   DescriptionText,
+  DescriptionText1,
   DescriptionBox,
 
 } from "./style";
@@ -18,6 +19,7 @@ const keys = [
   "mobile_app_development_services",
   "cybersecurity_services",
   "data_analytics",
+  "seo_optimization",
 ];
 
 const Service = () => {
@@ -129,11 +131,11 @@ const Service = () => {
                   <DescriptionTitle>
                     {expertiseKey.replace(/_/g, " ")}
                   </DescriptionTitle>
-                  <DescriptionText>
+                  <DescriptionText1>
                     {expertise.description.map((item, index) => (
                       <div key={index}>➤ {item}</div>
                     ))}
-                  </DescriptionText>
+                  </DescriptionText1>
                 </div>
               </DescriptionBox>
             </DescriptionRow>

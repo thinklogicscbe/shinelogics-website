@@ -21,7 +21,6 @@ const Footer = () => {
           <FooterText>
             Shinelogics is a global leader in <HighlightedText>AI-powered solutions</HighlightedText>, dedicated to transforming businesses with cutting-edge technology.
           </FooterText>
-
           <SocialIcons>
            <a href="https://www.facebook.com/share/1YHbrEVKhb/"><img src="/img/socialmediaimg/facebook.png" alt="" /></a>
            <a href="https://www.instagram.com/shinelogicschennai?igsh=OXkycHRoZWxtbmNs"><img src="/img/socialmediaimg/social.png" alt="" /></a>
