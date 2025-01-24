@@ -145,7 +145,7 @@ const ECOMMERCE: React.FC = () => {
 
             <BenefitsContainer>
                 <div className="why-choose-container">
-                    <h2>Why Choose Our EMS?</h2>
+                    <h2>Why Choose Our E-COMMERCE?</h2>
                     <ul>
                         {whyChooseECOMMERCE.map((item, index) => (
                             <li key={index} className="why-choose-item">

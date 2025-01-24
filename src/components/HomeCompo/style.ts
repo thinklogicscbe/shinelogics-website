@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import background from "../../assets/bg-hero.png";
+import background from "../../assets/AI-image.jpg";
 
 //BELOW GIVEN CSS CODE WAS [ HOME ] PAGE STYLE CSS
 
@@ -8,7 +8,7 @@ export const SectionContainer = styled("div")`
   justify-content: space-between;
   width: 100%;
   height: 90vh;
-  background-color: rgb(31, 101, 206); /* Fallback background color */
+  // background-color: rgb(31, 101, 206); /* Fallback background color */
   padding: 0 5%;
   background-image: url(${background}); /* Use the imported image */
   background-repeat: no-repeat;
@@ -67,11 +67,32 @@ export const ImageContainer = styled("div")`
   display: flex;
   justify-content: flex-end;
   align-items: flex-end; /* Align the image to the baseline */
-  
+
+  /* Define the dancing animation */
+  @keyframes danceUpDown {
+    0% {
+      transform: translateY(0);
+    }
+    25% {
+      transform: translateY(-5px);
+    }
+    50% {
+      transform: translateY(0);
+    }
+    75% {
+      transform: translateY(-5px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  /* Apply animation to the image */
   img {
     width: 100%; /* Adjust size as needed */
     max-width: 600px;
     height: auto;
+    animation: danceUpDown 2s ease-in-out infinite; /* Apply the animation */
   }
 
   span {
