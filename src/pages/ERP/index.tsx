@@ -228,6 +228,20 @@ const productData = [
       "Optimize operational efficiency across platforms."
     ],
     "reverseOrder": false
+  },
+  {
+    "id": 17,
+    "title": "ERP System Benefits",
+    "image": "/system-benefits.png",
+    "altText": "ERP",
+    "description": [
+      "Streamline business processes and enhance productivity.",
+      "Ensure real-time data visibility for better decision-making.",
+      "Improve collaboration across teams and departments.",
+      "Increase operational efficiency by automating tasks.",
+      "Scale easily as your business grows."
+    ],
+    "reverseOrder": true
   }
 ];
 

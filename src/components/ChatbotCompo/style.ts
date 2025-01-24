@@ -20,7 +20,7 @@ export const PopupWrapper = styled.div`
   position: fixed;
   bottom: 180px;
   right: 40px;
-  width: 350px;
+  width: 300px;
   z-index: 1000;
 `;
 
