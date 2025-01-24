@@ -11,12 +11,44 @@ import {
   Dot2,
   Dot3,
   LoaderText,
+  GlobalStyle
 } from "./style";
 
 const Router = () => {
   return (
+    // <Suspense
+    //   fallback={
+    //     <LoaderContainer>
+    //       <div>
+    //         <Dot1 />
+    //         <Dot2 />
+    //         <Dot3 />
+    //       </div>
+    //       <LoaderText>Shinelogics</LoaderText> 
+    //     </LoaderContainer>
+    //   }
+    // >
+    //   <Styles />
+    //   <Header />
+    //   <Switch>
+    //     {routes.map((routeItem) => (
+    //       <Route
+    //         key={routeItem.component}
+    //         path={routeItem.path}
+    //         exact={routeItem.exact}
+    //         component={lazy(() =>
+    //           import(`../pages/${routeItem.component}/index`)
+    //         )}
+    //       />
+    //     ))}
+    //   </Switch>
+    //   <Footer />
+    //   <ChatbotButton/>
+    // </Suspense>
     <Suspense
-      fallback={
+    fallback={
+      <>
+        <GlobalStyle />
         <LoaderContainer>
           <div>
             <Dot1 />
@@ -25,25 +57,28 @@ const Router = () => {
           </div>
           <LoaderText>Shinelogics</LoaderText> 
         </LoaderContainer>
-      }
-    >
-      <Styles />
-      <Header />
-      <Switch>
-        {routes.map((routeItem) => (
-          <Route
-            key={routeItem.component}
-            path={routeItem.path}
-            exact={routeItem.exact}
-            component={lazy(() =>
-              import(`../pages/${routeItem.component}/index`)
-            )}
-          />
-        ))}
-      </Switch>
-      <Footer />
-      <ChatbotButton/>
-    </Suspense>
+      </>
+    }
+  >
+    <GlobalStyle />
+    <Styles />
+    <Header />
+    <Switch>
+      {routes.map((routeItem) => (
+        <Route
+          key={routeItem.component}
+          path={routeItem.path}
+          exact={routeItem.exact}
+          component={lazy(() =>
+            import(`../pages/${routeItem.component}/index`)
+          )}
+        />
+      ))}
+    </Switch>
+    <Footer />
+    <ChatbotButton />
+  </Suspense>
+  
   );
 };
 

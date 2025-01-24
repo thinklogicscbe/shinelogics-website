@@ -9,7 +9,7 @@ import {
   DefaultQueries,
   QueryButton,
 } from "./style";
-import chatIconGif from "../../assets/chatbot.gif"; // Replace with your GIF file
+import chatIconGif from "../../assets/botimg.png"; // Replace with your GIF file
 
 const ChatbotButton = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -78,7 +78,7 @@ const ChatbotButton = () => {
         <img
           src={chatIconGif}
           alt="Chatbot"
-          style={{ width: "60px", height: "60px", cursor: "pointer" }}
+          style={{ width: "200px", height: "200px", cursor: "pointer" }}
         />
       </ChatbotIcon>
 

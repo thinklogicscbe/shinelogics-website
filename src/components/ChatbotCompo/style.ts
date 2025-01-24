@@ -8,21 +8,18 @@ const waveAnimation = keyframes`
 
 export const ChatbotIcon = styled.div`
   position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 60px;
-  height: 60px;
+  bottom: 10px;
+  right: 10px;
+  width: 160px;
+  height: 200px;
   cursor: pointer;
-  background-color: rgb(242, 244, 247);
-  border-radius: 50%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   animation: ${waveAnimation} 2s ease-in-out infinite;
 `;
 
 export const PopupWrapper = styled.div`
   position: fixed;
-  bottom: 80px;
-  right: 20px;
+  bottom: 180px;
+  right: 40px;
   width: 350px;
   z-index: 1000;
 `;
