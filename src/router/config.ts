@@ -1,6 +1,7 @@
 const routes = [
   { path: "/login", exact: true, component: "Login" },
   { path: "/", exact: true, component: "Home" },
+  { path: "/home", exact: true, component: "Home" },
   { path: "/about", exact: true, component: "About" },
   { path: "/service", exact: true, component: "Service" },
   { path: "/ProductCompo/erp", exact: true, component: "ERP" },
