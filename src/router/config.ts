@@ -7,7 +7,8 @@ const routes = [
   { path: "/ProductCompo/ems", exact: true, component: "EMS" },
   { path: "/ProductCompo/e-commerce", exact: true, component: "ECOMMERCE" },
   { path: "/contact", exact: true, component: "Contact" },
-  { path: "/privacyPolicy", exact: true, component: "PrivacyPolicy" }
+  { path: "/privacyPolicy", exact: true, component: "PrivacyPolicy" },
+  { path: "/admin", exact: true, component: "ADMIN" },
 ];
 
 export default routes;

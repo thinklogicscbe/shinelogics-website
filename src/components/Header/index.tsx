@@ -75,7 +75,7 @@ const productDropdownLinks = [
   return (
     <HeaderSection>
       <LogoContainer to="/" aria-label="homepage">
-        <SvgIcon src="shinelogics-logo.svg" width="300px" height="60px" />
+        <SvgIcon  src="shinelogics-logo.svg" width="300px" height="60px" />
         
       </LogoContainer>
 

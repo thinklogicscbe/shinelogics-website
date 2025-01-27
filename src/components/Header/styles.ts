@@ -28,7 +28,37 @@ export const LogoContainer = styled(NavLink)`
   display: flex;
   align-items: center;
   text-decoration: none;
+  
+  /* Set default padding and font size */
+  padding: 0.5rem;
+  font-size: 1.5rem;
+
+  /* For tablets and smaller screens (max-width: 1024px) */
+  @media (max-width: 1024px) {
+    font-size: 1.3rem;
+    padding: 0.35rem;
+  }
+
+  /* For mobile screens (max-width: 768px) */
+  @media (max-width: 768px) {
+    font-size: 1.2rem;
+    padding: 0.25rem;
+  }
+
+  /* For very small screens (max-width: 480px) */
+  @media (max-width: 480px) {
+    font-size: 1rem;
+    padding: 0.15rem;
+  }
+
+  /* For extremely small screens (max-width: 320px) */
+  @media (max-width: 320px) {
+    font-size: 0.2rem;  /* Further reduced font size */
+    padding: 0.1rem;    /* Even smaller padding */
+    
+  }
 `;
+
 
 export const Burger = styled.div`
   cursor: pointer;
