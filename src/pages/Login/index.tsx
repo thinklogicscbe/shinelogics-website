@@ -3,65 +3,52 @@ import { useHistory } from "react-router-dom"; // For redirecting to home page
 import { LoginSignupContainer } from "./style"; // Importing the CSS file
 
 const Login: React.FC = () => {
-  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState(""); // To track the email input
   const [password, setPassword] = useState(""); // To track the password input
-  const [name, setName] = useState(""); // To track the name input
+  const [errorMessage, setErrorMessage] = useState(""); // To store error messages
   const history = useHistory(); // Hook for redirecting
 
-  // Check if the email and password are stored in localStorage for autofill
   useEffect(() => {
-    if (isLogin) {
-      const storedEmail = localStorage.getItem("email");
-      const storedPassword = localStorage.getItem("password");
+    // Ensure fields are cleared on page load
+    setEmail("");
+    setPassword("");
+  }, []);
 
-      if (storedEmail) {
-        setEmail(storedEmail); // Autofill the email if available
-      }
-      if (storedPassword) {
-        setPassword(storedPassword); // Autofill the password if available
-      }
-    }
-  }, [isLogin]);
-
-  // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  // Handle login form submission
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (isLogin) {
-      // Compare entered email and password with stored data
-      const storedEmail = localStorage.getItem("email");
-      const storedPassword = localStorage.getItem("password");
+    try {
+      // Send email and password to backend API
+      const response = await fetch("http://localhost:3006/api/logins/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          emailId: email,
+          password: password,
+        }),
+      });
 
-      if (storedEmail === email && storedPassword === password) {
-        // Redirect to home page
-        history.push("/home");
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        // Save user data to localStorage or sessionStorage if needed
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        // Redirect to admin page on successful login
+        history.push("/admin");
       } else {
-        alert("Invalid login credentials");
+        setErrorMessage(data.message || "Invalid login credentials");
       }
-    } else {
-      // Store signup data in localStorage
-      localStorage.setItem("email", email);
-      localStorage.setItem("password", password);
-      localStorage.setItem("name", name);
-
-      // Redirect to login page after successful signup
-      setIsLogin(true);
+    } catch (error) {
+      setErrorMessage("An error occurred. Please try again later.");
+      console.error("Login error:", error);
     }
   };
-
-  // Clear email and password when switching between login and signup
-  const toggleAuthMode = () => {
-    setIsLogin(!isLogin);
-    if (isLogin) {
-      setEmail(""); // Clear email for signup mode
-      setPassword(""); // Clear password for signup mode
-    }
-  };
-
 
   return (
-    
     <LoginSignupContainer>
       <div className="container">
         <div className="image-section">
@@ -69,26 +56,17 @@ const Login: React.FC = () => {
         </div>
         <div className="auth-container">
           <div className="auth-box">
-            <h2>{isLogin ? "Login" : "Sign Up"}</h2>
-            <form onSubmit={handleSubmit}>
-              {!isLogin && (
-                <div className="input-group">
-                  <label htmlFor="name">Name</label>
-                  <input
-                    type="text"
-                    id="name"
-                    placeholder="Enter your name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                </div>
-              )}
+            <h2>Login</h2>
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            <form onSubmit={handleSubmit} autoComplete="off"> {/* Disable form-level autocomplete */}
               <div className="input-group">
                 <label htmlFor="email">Email</label>
                 <input
                   type="email"
                   id="email"
+                  name="email-dummy" /* Dummy name */
                   placeholder="Enter your email"
+                  autoComplete="new-email" /* Ensure no browser autofill */
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -98,24 +76,17 @@ const Login: React.FC = () => {
                 <input
                   type="password"
                   id="password"
+                  name="password-dummy" /* Dummy name */
                   placeholder="Enter your password"
+                  autoComplete="new-password" /* Ensure no browser autofill */
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
               <button type="submit" className="auth-button">
-                {isLogin ? "Login" : "Sign Up"}
+                Login
               </button>
             </form>
-            <p className="toggle-text">
-              {isLogin ? "Don't have an account?" : "Already have an account?"}
-              <span
-                onClick={toggleAuthMode}
-                className="toggle-link"
-              >
-                {isLogin ? " Sign Up" : " Login"}
-              </span>
-            </p>
           </div>
         </div>
       </div>

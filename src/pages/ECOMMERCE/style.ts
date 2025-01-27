@@ -133,29 +133,29 @@ export const BannerContainer = styled.div`
 }
 
   /* Extra small screens like phones in portrait mode */
-  @media (max-width: 320px) {
-    .heading-banner {
-      height: 200px; /* Adjust height for very small screens */
-    }
 
-    .heading-content {
-      width: 95%;
-      height: auto;
-      padding: 8px;
-    }
-
-    .heading-content h1 {
-      font-size: 1.4rem;
-    }
-
-    .heading-content h3 {
-      font-size: 1rem;
-    }
-
-    .heading-content p {
-      font-size: 0.8rem;
-    }
+  /* Responsive Media Queries for 320px */
+@media (max-width: 320px) {
+  .heading-banner {
+    height: 280px; /* Reduce banner height further for ultra-small screens */
   }
+
+  .heading-content {
+    width: 90%; /* Use the full width of the screen */
+    height: auto; /* Allow content height to adjust dynamically */
+    padding: 8px; /* Reduce padding for a tighter layout */
+  }
+
+  .heading-content h1 {
+    font-size: 0.9rem; /* Smaller font size for headers */
+    line-height: 1.3; /* Adjust line height for compact display */
+  }
+
+  .heading-content p {
+    font-size: 0.6rem; /* Smaller font size for paragraphs */
+    line-height: 1.5; /* Adjust line height for readability */
+  }
+}
 `;
 
 
@@ -355,5 +355,7 @@ export const BenefitsContainer = styled.div`
       font-size: 0.9rem; /* Adjust font size for small devices */
     }
   }
+
+  
 `;
 

@@ -311,9 +311,32 @@ export const BannerContainer = styled.div`
   }
 
   /* Responsive Media Queries */
+
+  /* Responsive Media Queries for 1024px */
+@media (max-width: 1024px) {
+  .heading-banner {
+    height: 400px; /* Adjust the height for medium screens */
+  }
+  
+  .heading-content {
+    width: 80%; /* Slightly reduce the width for better alignment */
+    height: auto; /* Allow content to adjust naturally */
+    padding: 15px; /* Moderate padding for readability */
+  }
+  
+  .heading-content h1 {
+    font-size: 2.5rem; /* Reduce font size to fit the layout */
+  }
+  
+  .heading-content p {
+    font-size: 1.2rem; /* Adjust font size for better readability */
+    line-height: 1.8; /* Slightly reduce line height */
+  }
+}
+
   @media (max-width: 768px) {
     .heading-banner {
-      height: 300px; /* Reduce banner height for tablets and smaller devices */
+      height: 400px; /* Reduce banner height for tablets and smaller devices */
     }
     .heading-content {
       width: 80%; /* Increase width for better readability */
@@ -327,6 +350,8 @@ export const BannerContainer = styled.div`
       font-size: 1rem; /* Adjust font size for paragraph */
     }
   }
+
+
 
   
 @media (max-width: 468px) {
@@ -349,5 +374,29 @@ export const BannerContainer = styled.div`
     line-height: 1.9; /* Adjust line height for better readability */
   }
 }
+
+  /* Responsive Media Queries for 320px */
+@media (max-width: 320px) {
+  .heading-banner {
+    height: 350px; /* Reduce banner height further for ultra-small screens */
+  }
+
+  .heading-content {
+    width: 85%; /* Use the full width of the screen */
+    height: auto; /* Allow content height to adjust dynamically */
+    padding: 8px; /* Reduce padding for a tighter layout */
+  }
+
+  .heading-content h1 {
+    font-size: 0.9rem; /* Smaller font size for headers */
+    line-height: 1.3; /* Adjust line height for compact display */
+  }
+
+  .heading-content p {
+    font-size: 0.6rem; /* Smaller font size for paragraphs */
+    line-height: 1.5; /* Adjust line height for readability */
+  }
+}
+
 `;
 

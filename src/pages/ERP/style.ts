@@ -312,6 +312,29 @@ export const BannerContainer = styled.div`
     }
   }
 
+
+  /* Responsive Media Queries for 1024px */
+@media (max-width: 1024px) {
+  .heading-banner {
+    height: 400px; /* Adjust the banner height for medium-sized screens */
+  }
+
+  .heading-content {
+    width: 85%; /* Slightly increase width for better layout on larger screens */
+    height: auto; /* Allow content height to adjust dynamically */
+    padding: 20px; /* Moderate padding for spacing */
+  }
+
+  .heading-content h1 {
+    font-size: 2.5rem; /* Adjust font size for headers */
+  }
+
+  .heading-content p {
+    font-size: 1.2rem; /* Slightly larger font size for readability */
+  }
+}
+
+
   /* Responsive Media Queries */
   @media (max-width: 768px) {
     .heading-banner {
