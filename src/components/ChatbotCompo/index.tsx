@@ -10,6 +10,7 @@ import {
   QueryButton,
 } from "./style";
 import chatIconGif from "../../assets/botimg.png"; // Replace with your GIF file
+import logo from "../../assets/logo.png";
 
 const ChatbotButton = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -87,10 +88,10 @@ const ChatbotButton = () => {
           <PopupContent>
             <ChatHeader>
               <div className="profile-picture">
-                <img src="https://via.placeholder.com/40" alt="Profile" />
+                <img src={logo} alt="Profile" />
               </div>
               <div className="header-text">
-                <h3>Team</h3>
+                <h3>Shinelogics</h3>
                 <p>We are online!</p>
               </div>
               <span className="close-button" onClick={togglePopup}>
