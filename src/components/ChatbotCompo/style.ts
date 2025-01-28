@@ -42,7 +42,6 @@ export const ChatHeader = styled.div`
   color: white;
 
   .profile-picture {
-    position: relative;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -56,6 +55,7 @@ export const ChatHeader = styled.div`
       width: 100%;
       height: 100%;
     }
+  }
 
   .header-text {
     flex-grow: 1;
@@ -72,13 +72,15 @@ export const ChatHeader = styled.div`
       opacity: 0.8;
       display: flex;
       align-items: center;
+
       .status-indicator {
         width: 6px;
         height: 6px;
-        background-color:rgb(4, 248, 61); /* Green color */
+        background-color:rgb(4, 243, 60); /* Green color */
         border-radius: 50%;
-        margin-left: 2px;
-        margin-right:1px;
+        margin-left: 1px;
+        margin-right:2px;
+        // animation: blink 1.5s infinite; /* Add blinking animation */
       }
     }
   }
@@ -89,8 +91,7 @@ export const ChatHeader = styled.div`
   }
 
   @keyframes blink {
-    0%,
-    100% {
+    0%, 100% {
       opacity: 1;
     }
     50% {
@@ -98,7 +99,6 @@ export const ChatHeader = styled.div`
     }
   }
 `;
-
 export const ChatMessages = styled.div`
   padding: 15px;
   max-height: 250px;
