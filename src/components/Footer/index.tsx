@@ -45,25 +45,25 @@ const Footer = () => {
         </FooterColumn>
         <FooterColumn>
           <FooterTitle>Explore</FooterTitle>
-          <FooterLink as={Link} to="/home">
+          <FooterLink as={Link} to="/home" onClick={() => window.scrollTo(0, 0)}>
             Home
           </FooterLink>
-          <FooterLink as={Link} to="/about">
+          <FooterLink as={Link} to="/about" onClick={() => window.scrollTo(0, 0)}>
             About
           </FooterLink>
-          <FooterLink as={Link} to="/service">
+          <FooterLink as={Link} to="/service" onClick={() => window.scrollTo(0, 0)}>
             Services
           </FooterLink>
-          <FooterLink as={Link} to="/portfolio">
+          <FooterLink as={Link} to="/portfolio" onClick={() => window.scrollTo(0, 0)}>
             Portfolio
           </FooterLink>
-          <FooterLink as={Link} to="/team">
+          <FooterLink as={Link} to="/team" onClick={() => window.scrollTo(0, 0)}>
             Team
           </FooterLink>
         </FooterColumn>
         <FooterColumn>
           <FooterTitle>Privacy Policy</FooterTitle>
-          <FooterLink as={Link} to="/privacyPolicy">Privacy Policy</FooterLink>
+          <FooterLink as={Link} to="/privacyPolicy" onClick={() => window.scrollTo(0, 0)}>Privacy Policy</FooterLink>
         </FooterColumn>
         <FooterColumn>
           <FooterTitle>Get in Touch</FooterTitle>
