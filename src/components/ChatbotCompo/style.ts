@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes } from "styled-components";
 
 const waveAnimation = keyframes`
   0% { transform: translateY(0px); }
@@ -8,7 +8,7 @@ const waveAnimation = keyframes`
 
 export const ChatbotIcon = styled.div`
   position: fixed;
-  bottom: 10px;
+  bottom: 1px;
   right: 10px;
   width: 160px;
   height: 200px;
@@ -18,7 +18,7 @@ export const ChatbotIcon = styled.div`
 
 export const PopupWrapper = styled.div`
   position: fixed;
-  bottom: 180px;
+  bottom: 160px;
   right: 40px;
   width: 300px;
   z-index: 1000;
@@ -70,6 +70,18 @@ export const ChatHeader = styled.div`
       margin: 0;
       font-size: 12px;
       opacity: 0.8;
+      display: flex;
+      align-items: center;
+
+      .status-indicator {
+        width: 6px;
+        height: 6px;
+        background-color:rgb(4, 243, 60); /* Green color */
+        border-radius: 50%;
+        margin-left: 1px;
+        margin-right:2px;
+        // animation: blink 1.5s infinite; /* Add blinking animation */
+      }
     }
   }
 
@@ -77,11 +89,19 @@ export const ChatHeader = styled.div`
     font-size: 20px;
     cursor: pointer;
   }
-`;
 
+  @keyframes blink {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0; /* Hide the dot briefly at midpoint */
+    }
+  }
+`;
 export const ChatMessages = styled.div`
   padding: 15px;
-  max-height: 250px;
+  max-height: 320px;
   overflow-y: auto;
   background: #f7f8fc;
   display: flex;
@@ -117,19 +137,39 @@ export const DefaultQueries = styled.div`
   overflow-y: auto; /* Enable vertical scrolling */
 `;
 
+export const QueryButtonsWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap; /* Allows wrapping for buttons that overflow */
+  gap: 8px; /* Add spacing between buttons */
+  margin-top: 10px; /* Add some spacing from the main bot message */
+  justify-content: flex-start; /* Align items to the left */
+`;
 
+// Query Button Styling
 export const QueryButton = styled.button`
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 20px;
-  font-size: 14px;
+  background-color: #f0f0f0; /* Neutral background color */
+  color: #333; /* Dark text color for contrast */
+  border: 1px solid #ddd; /* Subtle border */
+  border-radius: 16px; /* Rounded edges for a modern look */
+  padding: 8px 12px; /* Padding for a comfortable click area */
+  font-size: 14px; /* Adjust font size for readability */
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
 
   &:hover {
-    background: #0056d2;
+    background-color: #e6f7ff; /* Subtle hover effect */
+    color: #007bff; /* Blue text on hover */
+    border-color: #007bff; /* Border changes on hover */
+  }
+
+  &:active {
+    background-color: #d5e9f8; /* Slightly darker on click */
+    transform: scale(0.98); /* Scale effect when clicked */
+  }
+
+  @media (max-width: 768px) {
+    font-size: 12px; /* Adjust font size for smaller screens */
+    padding: 6px 10px; /* Reduce padding for small screens */
   }
 `;
 
@@ -138,7 +178,7 @@ export const ChatInput = styled.input`
   border: 1px solid #ddd;
   border-radius: 20px;
   margin: 10px;
-  width:90%;
+  width: 90%;
   outline: none;
   font-size: 14px;
 

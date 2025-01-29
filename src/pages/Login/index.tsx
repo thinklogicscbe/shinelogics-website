@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom"; // For redirecting to home page
+import { useNavigate } from "react-router-dom"; // Use useNavigate instead of useHistory
 import { LoginSignupContainer } from "./style"; // Importing the CSS file
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState(""); // To track the email input
   const [password, setPassword] = useState(""); // To track the password input
   const [errorMessage, setErrorMessage] = useState(""); // To store error messages
-  const history = useHistory(); // Hook for redirecting
+  const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
     // Ensure fields are cleared on page load
@@ -38,7 +38,7 @@ const Login: React.FC = () => {
         localStorage.setItem("user", JSON.stringify(data.user));
 
         // Redirect to admin page on successful login
-        history.push("/admin");
+        navigate("/admin");
       } else {
         setErrorMessage(data.message || "Invalid login credentials");
       }
@@ -58,15 +58,15 @@ const Login: React.FC = () => {
           <div className="auth-box">
             <h2>Login</h2>
             {errorMessage && <p className="error-message">{errorMessage}</p>}
-            <form onSubmit={handleSubmit} autoComplete="off"> {/* Disable form-level autocomplete */}
+            <form onSubmit={handleSubmit} autoComplete="off">
               <div className="input-group">
                 <label htmlFor="email">Email</label>
                 <input
                   type="email"
                   id="email"
-                  name="email-dummy" /* Dummy name */
+                  name="email-dummy"
                   placeholder="Enter your email"
-                  autoComplete="new-email" /* Ensure no browser autofill */
+                  autoComplete="new-email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -76,9 +76,9 @@ const Login: React.FC = () => {
                 <input
                   type="password"
                   id="password"
-                  name="password-dummy" /* Dummy name */
+                  name="password-dummy"
                   placeholder="Enter your password"
-                  autoComplete="new-password" /* Ensure no browser autofill */
+                  autoComplete="new-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />

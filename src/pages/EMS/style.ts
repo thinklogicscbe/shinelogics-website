@@ -312,6 +312,82 @@ export const BannerContainer = styled.div`
 
   /* Responsive Media Queries */
 
+
+  @media (min-width: 1920px) {
+  .heading-banner {
+    height: 500px; /* Set banner height for large screens */
+  }
+
+  .heading-content {
+    width: 60%; /* Set content width to 60% for better balance */
+    height: auto; /* Allow content height to adjust dynamically */
+    padding: 20px; /* Add some padding for spacing */
+    margin: 0 auto; /* Center the content horizontally */
+  }
+
+  .heading-content h1 {
+    font-size: 4rem; /* Larger font size for headers on large screens */
+    line-height: 1.2; /* Ensure proper line height for large text */
+  }
+
+  .heading-content p {
+    font-size: 1.5rem; /* Larger font size for paragraphs */
+    line-height: 1.8; /* Adjust line height for readability */
+  }
+}
+
+/* Media query for 1600px width */
+@media (min-width: 1600px) {
+  .heading-banner {
+    height: 450px; /* Set banner height for 1600px width */
+  }
+
+  .heading-content {
+    width: 65%; /* Set content width to 65% for a balanced layout */
+    height: auto; /* Allow content height to adjust dynamically */
+    padding: 20px; /* Moderate padding for spacing */
+    margin: 0 auto; /* Center the content horizontally */
+  }
+
+  .heading-content h1 {
+    font-size: 3.5rem; /* Slightly smaller font size than on 1920px screens */
+    line-height: 1.3; /* Maintain proper line height for readability */
+  }
+
+  .heading-content p {
+    font-size: 1.4rem; /* Slightly smaller font size for paragraphs */
+    line-height: 1.7; /* Adjust line height for readability */
+  }
+}
+
+/* Media query for 1245px width */
+@media (min-width: 1245px) {
+  .heading-banner {
+    height: 400px; /* Adjust banner height for 1245px screens */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Reduced shadow size */
+  }
+
+  .heading-content {
+    width: 60%; /* Reduce content width to 60% for a more compact layout */
+    height: auto; /* Allow content height to adjust dynamically */
+    padding: 10px; /* Reduced padding for a more compact design */
+    margin: 0 auto; /* Center the content horizontally */
+  }
+
+  .heading-content h1 {
+    font-size: 2.5rem; /* Reduce font size for headers */
+    line-height: 1.3; /* Ensure proper line height */
+  }
+
+  .heading-content p {
+    font-size: 1.1rem; /* Reduce font size for paragraphs */
+    line-height: 1.5; /* Adjust line height for readability */
+  }
+}
+}
+
+
+
   /* Responsive Media Queries for 1024px */
 @media (max-width: 1024px) {
   .heading-banner {
