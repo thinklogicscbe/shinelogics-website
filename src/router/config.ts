@@ -10,6 +10,7 @@ const routes = [
   { path: "/contact", exact: true, component: "Contact" },
   { path: "/privacyPolicy", exact: true, component: "PrivacyPolicy" },
   { path: "/admin", exact: true, component: "ADMIN" },
+  { path: "**", exact: true, component: "NotFoundPage" },
 ];
 
 export default routes;

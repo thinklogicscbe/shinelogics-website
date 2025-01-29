@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom"; // Removed extra Router import
+import { Routes, Route } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import routes from "./config";
@@ -12,8 +12,9 @@ import {
   Dot2,
   Dot3,
   LoaderText,
-  GlobalStyle
+  GlobalStyle,
 } from "./style";
+import NotFoundPage from "../components/NotFoundCompo";
 
 const AppRouter = () => {
   return (
@@ -36,10 +37,10 @@ const AppRouter = () => {
       <Styles />
       <ScrollToTop />
       <Header />
-      <Routes> {/* No extra Router here */}
+      <Routes>
         {routes.map((routeItem) => {
-          const LazyComponent = lazy(() =>
-            import(`../pages/${routeItem.component}/index`)
+          const LazyComponent = lazy(
+            () => import(`../pages/${routeItem.component}/index`)
           );
 
           return (
@@ -50,6 +51,7 @@ const AppRouter = () => {
             />
           );
         })}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Footer />
       <ChatbotButton />
