@@ -71,7 +71,7 @@ const Career = () => {
                 to="/Jobs?job=jobOne"
                 style={{ textDecoration: "none", color: "inherit" }}
               >
-                View JobOne
+                View Job {/* 1 */}
               </Link>
             </ButtonContainers>
           </TextContainer>
@@ -89,7 +89,7 @@ const Career = () => {
                 to="/Jobs?job=jobTwo"
                 style={{ textDecoration: "none", color: "inherit" }}
               >
-                View JobTwo
+                View Job {/* 2 */}
               </Link>
             </ButtonContainers>
           </TextContainer>
@@ -107,7 +107,7 @@ const Career = () => {
                 to="/Jobs?job=jobThree"
                 style={{ textDecoration: "none", color: "inherit" }}
               >
-                View JobThree
+                View Job {/* 3 */}
               </Link>
             </ButtonContainers>
           </TextContainer>
