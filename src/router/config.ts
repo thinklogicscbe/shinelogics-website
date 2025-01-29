@@ -12,6 +12,8 @@ const routes = [
   { path: "/privacyPolicy", exact: true, component: "PrivacyPolicy" },
   { path: "/admin", exact: true, component: "ADMIN" },
   { path: "/Jobs", exact: true, component: "Jobs" },
+  { path: "**", exact: true, component: "NotFoundPage" },
+
 ];
 
 export default routes;
