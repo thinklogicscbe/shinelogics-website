@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import {
   Heading,
@@ -16,7 +16,7 @@ import {
 import { jobData } from "./jobdata"; // Importing job openings dynamically
 
 const Career = () => {
-  const [selectedJob, setSelectedJob] = useState(null);
+  // const [selectedJob, setSelectedJob] = useState(null);
 
   return (
     <>
