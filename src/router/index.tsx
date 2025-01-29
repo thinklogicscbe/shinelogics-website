@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { HashRouter as Router, Switch, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom"; // Removed extra Router import
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import routes from "./config";
@@ -34,24 +34,25 @@ const AppRouter = () => {
     >
       <GlobalStyle />
       <Styles />
-      <Router>
-        <ScrollToTop/>
-        <Header />
-        <Switch>
-          {routes.map((routeItem) => (
+      <ScrollToTop />
+      <Header />
+      <Routes> {/* No extra Router here */}
+        {routes.map((routeItem) => {
+          const LazyComponent = lazy(() =>
+            import(`../pages/${routeItem.component}/index`)
+          );
+
+          return (
             <Route
               key={routeItem.component}
               path={routeItem.path}
-              exact={routeItem.exact}
-              component={lazy(() =>
-                import(`../pages/${routeItem.component}/index`)
-              )}
+              element={<LazyComponent />}
             />
-          ))}
-        </Switch>
-        <Footer />
-        <ChatbotButton />
-      </Router>
+          );
+        })}
+      </Routes>
+      <Footer />
+      <ChatbotButton />
     </Suspense>
   );
 };

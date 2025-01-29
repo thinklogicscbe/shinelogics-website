@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useRef,useEffect } from "react";
 import { Link } from "react-router-dom"; // For routing
 import {
   ChatbotIcon,
@@ -33,6 +33,14 @@ const ChatbotButton = () => {
     projectTime: "",
     contactDetails: "",
   });
+  const chatMessagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    // Ensure that the reference is not null before calling scrollIntoView
+    if (chatMessagesEndRef.current) {
+      chatMessagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]); // This effect runs every time the messages state changes
 
   const followUpQueries: { [key in "Our Products" | "Our Services" | "Estimation"]: string[] } = {
     "Our Products": ["ERP(Enterprise Resource Planning)", "EMS(Employee Management System)", "E-Commerce"],
@@ -277,6 +285,7 @@ const ChatbotButton = () => {
                   )}
                 </div>
               ))}
+              <div ref={chatMessagesEndRef} /> 
             </ChatMessages>
 
             <ChatInput
