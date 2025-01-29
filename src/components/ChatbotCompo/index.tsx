@@ -113,16 +113,20 @@ const ChatbotButton = () => {
         botReply = (
           <>
             We offer custom web development services to help you build a strong online presence.{" "}
-            <Link to="/service" style={{ color: "#00f", textDecoration: "underline" }}>
+            <Link
+              to="/service?service=web_development_services"
+              style={{ color: "#00f", textDecoration: "underline" }}
+            >
               Read More
             </Link>
           </>
         );
-      } else if (text === "Mobile App Development") {
+      }
+       else if (text === "Mobile App Development") {
         botReply = (
           <>
             Our mobile app development services help businesses reach customers on their mobile devices.{" "}
-            <Link to="/service" style={{ color: "#00f", textDecoration: "underline" }}>
+            <Link to="/service?service=mobile_app_development_services" style={{ color: "#00f", textDecoration: "underline" }}>
               Read More
             </Link>
           </>
@@ -131,7 +135,7 @@ const ChatbotButton = () => {
         botReply = (
           <>
             We provide cybersecurity solutions to keep your business safe from online threats.{" "}
-            <Link to="/service" style={{ color: "#00f", textDecoration: "underline" }}>
+            <Link to="/service?service=cybersecurity_services" style={{ color: "#00f", textDecoration: "underline" }}>
               Read More
             </Link>
           </>
@@ -140,7 +144,7 @@ const ChatbotButton = () => {
         botReply = (
           <>
             Our SEO services help improve your website's visibility and ranking in search engines.{" "}
-            <Link to="/service" style={{ color: "#00f", textDecoration: "underline" }}>
+            <Link to="/service?service=seo_optimization" style={{ color: "#00f", textDecoration: "underline" }}>
               Read More
             </Link>
           </>
@@ -149,7 +153,7 @@ const ChatbotButton = () => {
         botReply = (
           <>
             We provide data analytics services to help you make informed business decisions.{" "}
-            <Link to="/service" style={{ color: "#00f", textDecoration: "underline" }}>
+            <Link to="/service?service=data_analytics" style={{ color: "#00f", textDecoration: "underline" }}>
               Read More
             </Link>
           </>
@@ -158,7 +162,7 @@ const ChatbotButton = () => {
         botReply = (
           <>
             Our graphic design services help you create visually stunning content for your brand.{" "}
-            <Link to="/service" style={{ color: "#00f", textDecoration: "underline" }}>
+            <Link to="/service?service=graphic_design_services" style={{ color: "#00f", textDecoration: "underline" }}>
               Read More
             </Link>
           </>
