@@ -77,23 +77,22 @@ export const ContentContainer = styled.div`
   text-align: left;
   margin-right:5%;
 
-  
   h2, h3, p {
     margin-bottom: 10px;
   }
-    p{
+  p {
     margin-right:2%;
     text-align:justify;
     line-height: 1.7rem;
-    }
-    h2{
+  }
+  h2 {
     color:black;
     font-weight:900;
-    }
-    h3{
+  }
+  h3 {
     color:blue;
     font-weight:700;
-    }
+  }
 `;
 
 export const TextWrapper = styled.div`
@@ -131,6 +130,25 @@ export const TextContainer = styled.div`
     line-height: 1.6;
     color: #333;
   }
+
+  /* New styles for the skills */
+  
+
+  .skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .skill {
+    display: inline-block;
+    font-size:16px;
+    font-weight:900;
+    padding: 3px 6px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color:rgb(229, 233, 240);
+  }
 `;
 
 export const Technologi = styled.h4`
@@ -146,6 +164,7 @@ export const Roll = styled.h5`
   font-weight: normal; /* Makes the text regular weight */
   margin-bottom: 10px; /* Adds spacing below the element */
 `;
+
 export const ButtonContainers = styled.button`
   color: white;
   background-color: blue;
@@ -162,11 +181,7 @@ export const ButtonContainers = styled.button`
     background-color: darkblue;  
   }
 `;
+
 export const Link = styled.button`
-link-decrator:none;
+  link-decrator:none;
 `;
-
-
-
-
-

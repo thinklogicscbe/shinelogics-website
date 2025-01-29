@@ -62,10 +62,10 @@ const navigationLinks = [
   { path: "/home", label: "Home" },
   { path: "/about", label: "About" },
   { path: "/service", label: "Service" },
-  { path: "/career", label: "Career" },
   { path: "/product", label: "Product", hasDropdown: true },
+  { path: "/career", label: "Career" },
   { path: "/contact", label: "Contact" },
-  /* { path: "/job1", label: "Job1" }, */
+  
 ];
 
 const productDropdownLinks = [
