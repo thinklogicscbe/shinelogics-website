@@ -7,19 +7,20 @@ export const HeaderSection = styled.header`
   z-index: 1000;
   display: flex;
   justify-content: space-between;
-  align-items: left;
+  align-items: center; /* Ensures vertical alignment */
   background-color: #fff;
   padding: 20px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 
   @media (max-width: 768px) {
     flex-direction: column; 
-    padding: 15px; 
-    text-align: left; 
+    padding: 15px;
+    text-align: left;
+    align-items: flex-start; /* Align left for mobile */
   }
   
   @media (max-width: 480px) {
-    padding: 10px; 
+    padding: 10px;
   }
 `;
 
@@ -28,36 +29,39 @@ export const LogoContainer = styled(NavLink)`
   display: flex;
   align-items: center;
   text-decoration: none;
-  
-  /* Set default padding and font size */
+  margin-bottom: 10px
+
+  /* Default styling */
   padding: 0.5rem;
   font-size: 1.5rem;
 
-  /* For tablets and smaller screens (max-width: 1024px) */
+  /* For tablets and smaller screens */
   @media (max-width: 1024px) {
     font-size: 1.3rem;
-    padding: 0.35rem;
+    padding: 0.4rem;
   }
 
-  /* For mobile screens (max-width: 768px) */
+  /* For mobile screens */
   @media (max-width: 768px) {
     font-size: 1.2rem;
-    padding: 0.25rem;
+    padding: 0.3rem;
   }
 
-  /* For very small screens (max-width: 480px) */
+  /* For small screens */
   @media (max-width: 480px) {
     font-size: 1rem;
-    padding: 0.15rem;
+    padding: 0.2rem;
   }
 
-  /* For extremely small screens (max-width: 320px) */
+  /* For extra small screens */
   @media (max-width: 320px) {
-    font-size: 0.2rem;  /* Further reduced font size */
-    padding: 0.1rem;    /* Even smaller padding */
-    
+    font-size: 0.8rem;
+    padding: 0.15rem;
   }
 `;
+
+
+
 
 
 export const Burger = styled.div`
