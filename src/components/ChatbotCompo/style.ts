@@ -8,7 +8,7 @@ const waveAnimation = keyframes`
 
 export const ChatbotIcon = styled.div`
   position: fixed;
-  bottom: 10px;
+  bottom: 1px;
   right: 10px;
   width: 160px;
   height: 200px;
@@ -18,7 +18,7 @@ export const ChatbotIcon = styled.div`
 
 export const PopupWrapper = styled.div`
   position: fixed;
-  bottom: 180px;
+  bottom: 160px;
   right: 40px;
   width: 300px;
   z-index: 1000;
@@ -101,7 +101,7 @@ export const ChatHeader = styled.div`
 `;
 export const ChatMessages = styled.div`
   padding: 15px;
-  max-height: 250px;
+  max-height: 320px;
   overflow-y: auto;
   background: #f7f8fc;
   display: flex;
