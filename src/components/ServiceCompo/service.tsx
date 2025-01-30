@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useLocation } from "react-router-dom"; // Import useLocation
 import {
   SectionContainer,
   SliderContainer,
@@ -12,7 +11,7 @@ import {
   DescriptionText1,
   DescriptionBox,
 } from "./style";
-import { serviceData } from "./servicesData";
+import { serviceData } from "./servicesData"; // Importing the service data
 
 const keys = [
   "web_development_services",
@@ -24,27 +23,14 @@ const keys = [
 ];
 
 const Service = () => {
-  const location = useLocation(); // Get the current location object
   const [selectedServiceKey, setSelectedServiceKey] = useState<string>(keys[0]);
   const [selectedService, setSelectedService] = useState(serviceData[keys[0]]);
   const sliderContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Get the query parameter from the URL
-    const queryParams = new URLSearchParams(location.search);
-    const service = queryParams.get("service");
-
-    if (service && keys.includes(service)) {
-      setSelectedServiceKey(service);
-      setSelectedService(serviceData[service]);
-    }
-  }, [location]);
 
   const handleServiceClick = (key: string) => {
     setSelectedServiceKey(key);
     setSelectedService(serviceData[key]);
   };
-
   const handleWheel = (event: WheelEvent) => {
     if (sliderContainerRef.current) {
       // If the scroll is vertical (deltaY), scroll horizontally

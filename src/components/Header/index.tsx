@@ -63,9 +63,7 @@ const navigationLinks = [
   { path: "/about", label: "About" },
   { path: "/service", label: "Service" },
   { path: "/product", label: "Product", hasDropdown: true },
-  { path: "/career", label: "Career" },
   { path: "/contact", label: "Contact" },
-  
 ];
 
 const productDropdownLinks = [
