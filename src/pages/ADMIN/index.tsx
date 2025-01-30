@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Container,
-  Sidebar,
-  Nav,
-  NavItem,
-  NavLink,
-  MobileSidebar,
+ 
   MainContent,
   Header,
   HeaderLeft,
@@ -14,78 +10,55 @@ import {
   Main,
   Title,
   Subtitle,
-  Paragraph,
+ 
+  FormContainer,
+  FormColumn,
+  FormGroup,
+  Label,
+  Input,
+  TextArea,
+  SubmitButton,
 } from "./style";
 
 const ADMIN: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
-  // Handle window resize to detect mobile view dynamically
+  // Job-related state
+  const [jobTitle, setJobTitle] = useState("");
+  const [jobShortDescription, setJobShortDescription] = useState("");
+  const [skills, setSkills] = useState("");
+  const [requirements, setRequirements] = useState("");
+  const [qualifications, setQualifications] = useState("");
+
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log({
+      jobTitle,
+      jobShortDescription,
+      skills,
+      requirements,
+      qualifications,
+    });
+  };
 
   return (
     <Container>
-      {/* Sidebar */}
-      {!isMobile && (
-        <Sidebar>
-          <h2 style={{ fontSize: "1.5rem", fontWeight: "700", marginBottom: "1.5rem" }}>
-            Admin Dashboard
-          </h2>
-          <Nav>
-            <ul>
-              <NavItem>
-                <NavLink href="#">Dashboard</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="#">Users</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="#">Settings</NavLink>
-              </NavItem>
-            </ul>
-          </Nav>
-        </Sidebar>
-      )}
+   
 
-      {/* Mobile Sidebar */}
-      {isMenuOpen && isMobile && (
-        <MobileSidebar>
-          <h2 style={{ fontSize: "1.5rem", fontWeight: "700", marginBottom: "1.5rem" }}>
-            Admin Dashboard
-          </h2>
-          <Nav>
-            <ul>
-              <NavItem>
-                <NavLink href="#">Dashboard</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="#">Users</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="#">Settings</NavLink>
-              </NavItem>
-            </ul>
-          </Nav>
-        </MobileSidebar>
-      )}
-
-      {/* Main Content Area */}
       <MainContent>
-        {/* Header */}
         <Header>
           <HeaderLeft>Welcome, Admin</HeaderLeft>
           <HeaderRight>
-            <span>John Doe</span>
+            {/* <span>John Doe</span>
             <span>Notifications</span>
-            <span>Logout</span>
+            <span>Logout</span> */}
             {isMobile && (
               <ToggleButton onClick={() => setIsMenuOpen(!isMenuOpen)}>
                 {isMenuOpen ? "Close Menu" : "Open Menu"}
@@ -94,15 +67,54 @@ const ADMIN: React.FC = () => {
           </HeaderRight>
         </Header>
 
-        {/* Main Content */}
         <Main>
-          <Title>Dashboard Overview</Title>
-          <Subtitle>Recent Activity</Subtitle>
-          <Paragraph>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur nec arcu nec
-            odio feugiat ultricies. Donec nec tortor vitae ante interdum tincidunt.
-            Vestibulum euismod sapien et cursus scelerisque.
-          </Paragraph>
+          <Title>Job Management</Title>
+          <Subtitle>Enter Job Details</Subtitle>
+
+          <FormContainer onSubmit={handleSubmit}>
+            {/* Left Side */}
+            <FormColumn>
+              <FormGroup>
+                <Label>Job Title</Label>
+                <Input type="text" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} required />
+              </FormGroup>
+
+              <FormGroup>
+                <Label>Job Short Description</Label>
+                <TextArea value={jobShortDescription} onChange={(e) => setJobShortDescription(e.target.value)} required />
+              </FormGroup>
+
+              <FormGroup>
+                <Label>Skills</Label>
+                <Input type="text" value={skills} onChange={(e) => setSkills(e.target.value)} required />
+              </FormGroup>
+            </FormColumn>
+
+            {/* Right Side */}
+            <FormColumn>
+              <FormGroup>
+                <Label>Job Title (Prefilled)</Label>
+                <Input type="text" value={jobTitle} readOnly />
+              </FormGroup>
+
+              <FormGroup>
+                <Label>Job Description (Prefilled)</Label>
+                <TextArea value={jobShortDescription} readOnly />
+              </FormGroup>
+
+              <FormGroup>
+                <Label>Requirements</Label>
+                <TextArea value={requirements} onChange={(e) => setRequirements(e.target.value)} required />
+              </FormGroup>
+
+              <FormGroup>
+                <Label>Qualifications</Label>
+                <TextArea value={qualifications} onChange={(e) => setQualifications(e.target.value)} required />
+              </FormGroup>
+
+              <SubmitButton type="submit">Submit</SubmitButton>
+            </FormColumn>
+          </FormContainer>
         </Main>
       </MainContent>
     </Container>
