@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom"; // For redirecting to home page
+import { useNavigate } from "react-router-dom"; // For redirecting to home page
 import { LoginSignupContainer } from "./style"; // Importing the CSS file
 import { log } from "console";
 import { loginUser } from "../API/LoginUser";
@@ -8,7 +8,7 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState(""); // To track the email input
   const [password, setPassword] = useState(""); // To track the password input
   const [errorMessage, setErrorMessage] = useState(""); // To store error messages
-  const history = useHistory(); // Hook for redirecting
+  const naviagte = useNavigate(); // Hook for redirecting
 
   useEffect(() => {
     // Ensure fields are cleared on page load
@@ -24,7 +24,7 @@ const Login: React.FC = () => {
 
     if (result.success) {
       localStorage.setItem("user", JSON.stringify(result.user));
-      history.push("/admin");
+      naviagte("/admin");
     } else {
       setErrorMessage(result.message || "Invalid login credentials");
     }
