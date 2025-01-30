@@ -21,7 +21,7 @@ export const jobData = [
       id: "jobThree",
       technology: "Backend Development",
       position: "Node.js Developer",
-      role: "Full-time",
+      role: "Full-time",  
       description:
         "Be a part of our backend team as a Node.js Developer. Build scalable server-side applications.",
       skills: ["Node.js", "Express.js", "MongoDB", "REST API"],
