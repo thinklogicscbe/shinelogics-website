@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom"; // For redirecting to home page
 import { LoginSignupContainer } from "./style"; // Importing the CSS file
+import { log } from "console";
+import { loginUser } from "../API/LoginUser";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState(""); // To track the email input
@@ -18,35 +20,16 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      // Send email and password to backend API
-      const response = await fetch("http://localhost:3006/api/logins/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          emailId: email,
-          password: password,
-        }),
-      });
+    const result = await loginUser(email, password);
 
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        // Save user data to localStorage or sessionStorage if needed
-        localStorage.setItem("user", JSON.stringify(data.user));
-
-        // Redirect to admin page on successful login
-        history.push("/admin");
-      } else {
-        setErrorMessage(data.message || "Invalid login credentials");
-      }
-    } catch (error) {
-      setErrorMessage("An error occurred. Please try again later.");
-      console.error("Login error:", error);
+    if (result.success) {
+      localStorage.setItem("user", JSON.stringify(result.user));
+      history.push("/admin");
+    } else {
+      setErrorMessage(result.message || "Invalid login credentials");
     }
   };
+  
 
   return (
     <LoginSignupContainer>

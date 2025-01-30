@@ -26,13 +26,13 @@ export const BannerContainer = styled.div`
       width: 100%;
       height: 100%;
       background: rgba(255, 255, 255, 0.5); /* Semi-transparent white overlay */
-      z-index: 1;
+      // z-index: 1;
     }
   }
 
   .heading-content {
     position: relative;
-    z-index: 2; /* Ensure the content is above the overlay */
+    // z-index: 2; /* Ensure the content is above the overlay */
     text-align: center;
     
     padding: 20px;
