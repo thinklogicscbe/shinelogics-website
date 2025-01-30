@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // For redirecting to home page
 import { LoginSignupContainer } from "./style"; // Importing the CSS file
-import { log } from "console";
 import { loginUser } from "../API/LoginUser";
 
 const Login: React.FC = () => {
