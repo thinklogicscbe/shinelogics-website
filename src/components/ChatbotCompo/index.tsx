@@ -255,7 +255,53 @@ const ChatbotButton = () => {
         />
       </ChatbotIcon>
 
- 
+      {isPopupOpen && (
+        <PopupWrapper>
+          <PopupContent>
+            <ChatHeader>
+              <div className="profile-picture">
+                <img src={logo} alt="Profile" />
+              </div>
+              <div className="header-text">
+                <h3>Shinelogics</h3>
+                <p><span className="status-indicator"></span>Online!</p>
+              </div>
+              <span className="close-button" onClick={togglePopup}>
+                &times;
+              </span>
+            </ChatHeader>
+
+            <ChatMessages>
+              {messages.map((msg, index) => (
+                <div
+                  key={index}
+                  className={msg.sender === "user" ? "user-message" : "bot-message"}
+                >
+                  {msg.text}
+                  {msg.queries && (
+                    <QueryButtonsWrapper>
+                      {msg.queries.map((query, idx) => (
+                        <QueryButton key={idx} onClick={() => handleQueryClick(query)}>
+                          {query}
+                        </QueryButton>
+                      ))}
+                    </QueryButtonsWrapper>
+                  )}
+                </div>
+              ))}
+              <div ref={chatMessagesEndRef} /> 
+            </ChatMessages>
+
+            <ChatInput
+              type="text"
+              value={inputValue}
+              onChange={handleInputChange}
+              placeholder="Type a message..."
+              onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
+            />
+          </PopupContent>
+        </PopupWrapper>
+      )}
     </>
   );
 };
