@@ -277,6 +277,7 @@ const ChatbotButton = () => {
                   )}
                 </div>
               ))}
+              <div ref={chatMessagesEndRef} /> 
             </ChatMessages>
 
             <ChatInput
