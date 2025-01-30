@@ -109,9 +109,13 @@ export const Leftsidecontent = styled.div`
 `;
 export const Title = styled.h1`
   h1{
+  color:blue;
+  font-family: "Inder", serif;
+  font-weight: 900;
+  font-style: normal;
   padding:5px;
-  font-size:40px;
-  font-weight:400;
+  font-size:32px;
+  margin-left:5%;
    
   }
 `;
