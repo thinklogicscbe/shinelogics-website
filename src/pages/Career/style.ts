@@ -13,10 +13,10 @@ export const Heading = styled.div`
 
 export const Title = styled.h2`
   color: #fff;
-  font-size: 42px;
+  font-size: 37px;
   font-weight: bold;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  margin-bottom: 10px;
+   margin-top:-1%;
 
   @media screen and (max-width: 1024px) {
     font-size: 36px;
@@ -28,10 +28,12 @@ export const Title = styled.h2`
 `;
 
 export const Subtitle = styled.h3`
-  color: #fff;
-  font-size: 28px;
+  /* color: #fff; */
+  font-size: 50px;
   font-weight: normal;
-  margin-bottom: 20px;
+   font-family: "Inder", serif;
+  margin-bottom: 50px;
+  color:white;
 
   @media screen and (max-width: 1024px) {
     font-size: 24px;
@@ -53,6 +55,17 @@ export const TopContent = styled.div`
     flex-direction: column;
     align-items: center;
   }
+`;
+export const  MiddleContent = styled.div`
+p{
+text-align:justify;
+padding:5px;
+line-height:2.4rem;
+align-items: center;
+margin-left:3%;
+margin-right:5%;
+font-family: "Inder", serif;
+}
 `;
 
 export const ImageContainer = styled.div`
@@ -83,15 +96,20 @@ export const ContentContainer = styled.div`
   p {
     margin-right:2%;
     text-align:justify;
-    line-height: 1.7rem;
+    line-height: 2.4rem;
+     font-family: "Inder", serif;
   }
   h2 {
+    font-size:55px;
     color:black;
     font-weight:900;
+     font-family: "Inder", serif;
   }
   h3 {
     color:blue;
-    font-weight:700;
+    /* font-weight:700;
+    font-size:47px;
+    font-family: "Inder", serif; */
   }
 `;
 
@@ -126,6 +144,7 @@ export const TextContainer = styled.div`
   text-align: left;
 
   p {
+  text-align:justify;
     font-size: 16px;
     line-height: 1.6;
     color: #333;
@@ -140,7 +159,7 @@ export const TextContainer = styled.div`
     gap: 10px;
   }
 
-  .skill {
+  .skill{
     display: inline-block;
     font-size:16px;
     font-weight:900;
@@ -174,8 +193,10 @@ export const ButtonContainers = styled.button`
   border-radius: 5px;  
   cursor: pointer;  
   font-size: 14px;
-  font-weight:900;
   margin-left: auto;
+   font-family: "Inder", serif;
+  font-weight: 400;
+  font-style: normal;
 
   &:hover {
     background-color: darkblue;  

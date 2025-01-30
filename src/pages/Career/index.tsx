@@ -11,6 +11,7 @@ import {
   TextWrapper,
   Technologi,
   Roll,
+  MiddleContent,
   ButtonContainers,
 } from "./style";
 import { jobData } from "./jobdata"; // Importing job openings dynamically
@@ -37,8 +38,12 @@ const Career = () => {
             groundbreaking projects.
           </p>
         </ContentContainer>
+         
       </TopContent>
-
+      <MiddleContent>
+      <p>Whether you're an experienced professional looking to take your career to the next level or a fresh graduate ready to start your journey, we offer a dynamic and collaborative work environment that fosters growth, learning, and innovation. You’ll have the opportunity to work with industry experts, cutting-edge technologies, and global clients, gaining invaluable experience while making meaningful contributions.</p>
+      <p>At Shinelogics,<b> we don’t just offer jobs—we offer careers </b>that inspire, challenge, and reward. Join us and be part of a forward-thinking team where your skills, ideas, and passion will be valued and nurtured. Let’s create the future together!</p>
+      </MiddleContent>
       <Heading>
         <Title>Job Aspirants</Title>
         <Subtitle>Our Current Openings</Subtitle>

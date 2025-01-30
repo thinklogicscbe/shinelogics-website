@@ -7,6 +7,7 @@ export const Destinationcontiner = styled.div`
   color: black;
   padding: 20px;
   width: 100%;
+  text-align:justify;
   justify-content: center;
   align-items: center;
 `;
@@ -21,6 +22,7 @@ export const Destination = styled.div`
 export const Destinationcontent = styled.p`
   font-size: 16px;
   line-height: 1.5;
+  text-align:justify;
 `;
 
 

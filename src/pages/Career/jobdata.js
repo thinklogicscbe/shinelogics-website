@@ -26,5 +26,6 @@ export const jobData = [
         "Be a part of our backend team as a Node.js Developer. Build scalable server-side applications.",
       skills: ["Node.js", "Express.js", "MongoDB", "REST API"],
     },
+    
   ];
   
