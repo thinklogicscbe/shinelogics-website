@@ -21,14 +21,10 @@ export const Sidebar = styled.aside`
     display: none;
   }
 
-  h2{
-
-  font-size: 1.6rem
- 
-  
+  h2 {
+    font-size: 1.6rem;
   }
 `;
-
 
 export const MobileSidebar = styled.div`
   background-color: #1e293b;
@@ -99,6 +95,7 @@ export const HeaderLeft = styled.div`
   font-size: 1.5rem;
   font-weight: 700;
 `;
+
 export const HeaderRight = styled.div`
   display: flex;
   gap: 2rem;
@@ -142,10 +139,14 @@ export const Subtitle = styled.h2`
 export const FormContainer = styled.form`
   display: flex;
   gap: 3rem;
+  flex-wrap: wrap; /* Allows content to wrap on smaller screens */
 `;
 
 export const FormColumn = styled.div`
   flex: 1;
+  min-width: 280px; /* Ensures minimum column width on smaller screens */
+  display: flex;
+  flex-direction: column;
 `;
 
 export const FormGroup = styled.div`
@@ -190,4 +191,59 @@ export const SubmitButton = styled.button`
   &:hover {
     background-color: #374151;
   }
+
+  /* Wrapper for two columns */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Add space between columns */
+  justify-content: space-between;
+}
+
+/* Left Column - Job Title, Small Description, Skills */
+.form-column-left {
+  flex: 1 1 48%; /* Allow the column to take up 48% of the available width */
+  padding: 10px;
+}
+
+/* Right Column - Full Details */
+.form-column-right {
+  flex: 1 1 48%; /* Allow the column to take up 48% of the available width */
+  padding: 10px;
+}
+
+/* You can add more specific styles to each section as needed, e.g. */
+.form-column-left h3 {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.form-column-right p {
+  font-size: 16px;
+  color: #555;
+}
+
+
+
+  
 `;
+
+
+export const FormRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+`;
+
+export const FormColumnLeft = styled.div`
+  flex: 1 1 48%;
+  padding: 1rem;
+`;
+
+export const FormColumnRight = styled.div`
+  flex: 1 1 48%;
+  padding: 1rem;
+`;
+
+
