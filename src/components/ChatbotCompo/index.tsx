@@ -12,6 +12,8 @@ import {
 } from "./style";
 import chatIconGif from "../../assets/botimg.png"; // Replace with your GIF file
 import logo from "../../assets/logo.png";
+import sendSound from "../../assets/audio/send.mp3"; // Sending sound
+import receiveSound from "../../assets/audio/receive.mp3"; // Receiving sound
 
 // Define a TypeScript interface for message objects
 interface Message {
@@ -34,7 +36,8 @@ const ChatbotButton = () => {
     contactDetails: "",
   });
   const  chatMessagesEndRef = useRef<HTMLDivElement | null>(null);
-
+  const sendSoundRef = useRef(new Audio(sendSound));
+  const receiveSoundRef = useRef(new Audio(receiveSound));
   useEffect(() => {
     // Ensure that the reference is not null before calling scrollIntoView
     if (chatMessagesEndRef.current) {
@@ -60,11 +63,19 @@ const ChatbotButton = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
+  const playSendSound = () => {
+    sendSoundRef.current.currentTime = 0; // Reset for consecutive plays
+    sendSoundRef.current.play();
+  };
 
+  const playReceiveSound = () => {
+    receiveSoundRef.current.currentTime = 0;
+    receiveSoundRef.current.play();
+  };
   const handleSendMessage = (query: string | null = null) => {
     const text = query || inputValue.trim();
     if (text === "") return;
-
+    playSendSound();
     // Add user's message
     setMessages((prevMessages) => [
       ...prevMessages,
@@ -81,7 +92,7 @@ const ChatbotButton = () => {
       if (followUpQueries[text as "Our Products" | "Our Services" | "Estimation"]) {
         queries = followUpQueries[text as "Our Products" | "Our Services" | "Estimation"];
       }
-    
+      playReceiveSound();
       if (text === "ERP(Enterprise Resource Planning)") {
         botReply = (
           <>

@@ -8,20 +8,28 @@ const waveAnimation = keyframes`
 
 export const ChatbotIcon = styled.div`
   position: fixed;
-  bottom: 10px;
-  right: 10px;
+  bottom: 1px;
+  right: 18px;
   width: 160px;
-  height: 200px;
+  height: 170px;
   cursor: pointer;
   animation: ${waveAnimation} 2s ease-in-out infinite;
+
+  @media (max-width: 768px) {
+    right: 2px;
+  }
 `;
 
 export const PopupWrapper = styled.div`
   position: fixed;
-  bottom: 180px;
+  bottom: 130px;
   right: 40px;
   width: 350px;
   z-index: 1000;
+  
+   @media (max-width: 768px) {
+    width: 300px;
+  }
 `;
 
 export const PopupContent = styled.div`
@@ -101,7 +109,7 @@ export const ChatHeader = styled.div`
 `;
 export const ChatMessages = styled.div`
   padding: 15px;
-  max-height: 250px;
+  max-height: 320px;
   overflow-y: auto;
   background: #f7f8fc;
   display: flex;
