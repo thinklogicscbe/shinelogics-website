@@ -101,6 +101,7 @@ export const StyledButton = styled.button`
   border: none;
   padding: 10px 15px;
   cursor: pointer;
+  font-weight: bold;
   font-size: 16px;
   color: #333;
   position: relative;
