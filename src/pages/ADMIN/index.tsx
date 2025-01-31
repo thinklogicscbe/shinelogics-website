@@ -108,6 +108,8 @@ const ADMIN = () => {
                 <Label>Job Type</Label>
                 <Input type="text" value={jobType} onChange={(e) => setJobType(e.target.value)} required />
               </FormGroup>
+
+            
             </FormColumn>
 
             <FormColumn>
