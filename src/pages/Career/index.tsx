@@ -15,6 +15,7 @@ import {
   ButtonContainers,
 } from "./style";
 import { jobData } from "./jobdata"; // Importing job openings dynamically
+import career from "../../assets/careers.jpg"
 
 const Career = () => {
   // const [selectedJob, setSelectedJob] = useState(null);
@@ -23,7 +24,7 @@ const Career = () => {
     <>
       <TopContent>
         <ImageContainer>
-          <img src="/img/career/careerimg.jpg" alt="career exploration" />
+          <img src={career} alt="career exploration" />
         </ImageContainer>
 
         <ContentContainer>
