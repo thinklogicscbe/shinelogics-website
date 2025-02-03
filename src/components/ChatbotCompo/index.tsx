@@ -34,6 +34,9 @@ const ChatbotButton = () => {
     projectDescription: "",
     projectTime: "",
     contactDetails: "",
+    technologiesShown: false,
+    budgetEstimated: "", 
+    projectDetails: "", 
   });
   const  chatMessagesEndRef = useRef<HTMLDivElement | null>(null);
   const sendSoundRef = useRef(new Audio(sendSound));
@@ -212,29 +215,68 @@ const ChatbotButton = () => {
     }, 1500);
   };
 
+  const calculateBudget = (projectTime: number): string => {
+    const employeeCost = 3 * 3000 * projectTime; // 3 developers, $3000 per month
+    const databaseCost = 2000;
+    const cloudCost = 3000;
+    const serverCost = 4000;
+  
+    const totalBudget = employeeCost + databaseCost + cloudCost + serverCost;
+    return `$${totalBudget.toLocaleString()}`;
+  };
+  
+  
   const handleEstimationFlow = (text: string): React.ReactNode => {
     // Step 1: Get project description
     if (!estimationData.projectDescription) {
-      setEstimationData((prev) => ({ ...prev, projectDescription: text }));
-      return "Great! Please describe the project.";
+      setEstimationData(prev => ({ ...prev, projectDescription: text }));
+      return "Great! Can you provide more details about the project? (e.g., key features, target users, specific requirements)";
     }
   
-    // Step 2: Get project time
+    // Step 2: Show list of technologies, cloud, database, and server
+    if (!estimationData.technologiesShown) {
+      setEstimationData(prev => ({ ...prev, technologiesShown: true }));
+    
+      return [
+        "For your project, we will use the following technologies:",
+        "**Frontend:** Angular",
+        "**Backend:** Node.js",
+        "**Database:** MongoDB",
+        "**Cloud Services:** AWS",
+        "**Server & Hosting:** Nginx"
+      ].join("\n\n");
+    }
+    
+  
+    // Step 3: Ask for project duration
     if (!estimationData.projectTime) {
-      setEstimationData((prev) => ({ ...prev, projectTime: text }));
-      return "Thanks! How much time do you expect the project to take?";
+      setEstimationData(prev => ({ ...prev, projectTime: text }));
+      return "How much time (in months) do you think will be needed to complete the project?";
     }
   
-    // Step 3: Get contact details from user
+    // Step 4: Calculate budget dynamically
+    if (!estimationData.budgetEstimated) {
+      const projectTime = parseInt(text);
+      if (isNaN(projectTime) || projectTime <= 0) return "Please enter a valid number of months.";
+  
+      const budget = calculateBudget(projectTime);
+      setEstimationData(prev => ({ ...prev, budgetEstimated: budget }));
+  
+      return `Based on your timeline, the estimated budget is **${budget}**. Finally, please provide your contact details (email and phone).`;
+    }
+  
+    // Step 5: Get contact details
     if (!estimationData.contactDetails) {
-      setEstimationData((prev) => ({ ...prev, contactDetails: text }));
-      return "Thank you! Please provide your contact details (email and phone number).";
+      setEstimationData(prev => ({ ...prev, contactDetails: text }));
+      return "Thank you! We’ll get in touch soon.";
     }
   
-    // After collecting all details, end the estimation process
-    setIsInEstimationFlow(false); // End estimation flow
-    return "Thank you for your estimation request! We will get in touch soon.";
+    setIsInEstimationFlow(false);
+    return "Estimation complete!";
   };
+  
+  
+  
   
   
 

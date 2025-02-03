@@ -22,16 +22,19 @@ const Header = () => {
   const [productDropdownVisible, setProductDropdownVisible] = useState(false);
   const [insightDropdownVisible, setInsightDropdownVisible] = useState(false);
   const [mobileDropdownVisible, setMobileDropdownVisible] = useState(false);
+  const [mobileInsightDropdownVisible, setMobileInsightDropdownVisible] = useState(false);
   const [, setIsMobile] = useState(window.innerWidth <= 768); // Track if the screen is mobile
 
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      setProductDropdownVisible(false);
+      setInsightDropdownVisible(false);
+      setMobileDropdownVisible(false);
+      setMobileInsightDropdownVisible(false);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
   const toggleDrawer = () => {
     setVisibility(!visible);
     setMobileDropdownVisible(false);
@@ -43,6 +46,7 @@ const Header = () => {
     setMobileDropdownVisible(false);
     setProductDropdownVisible(false);
     setInsightDropdownVisible(false);
+    setMobileInsightDropdownVisible(false);
   };
 
   // Product Dropdown Handlers
@@ -149,12 +153,14 @@ const Header = () => {
               <StyledButton1
                 className={activeLink === link.path ? "active" : ""}
                 onClick={(e) => {
-                  if (link.hasDropdown) {
+                  if (link.path === "/product") {
                     e.preventDefault();
-                    handleMobileDropdownToggle();
+                    setMobileDropdownVisible(!mobileDropdownVisible);
+                  } else if (link.path === "/career") {
+                    e.preventDefault();
+                    setMobileInsightDropdownVisible(!mobileInsightDropdownVisible);
                   } else {
                     handleLinkClick(link.path);
-                    toggleDrawer();
                   }
                 }}
               >
@@ -175,7 +181,7 @@ const Header = () => {
             )}
 
             {/* Mobile Insights Dropdown */}
-            {link.path === "/career" && mobileDropdownVisible && (
+            {link.path === "/career" && mobileInsightDropdownVisible && (
               <DropdownWrapperMobile className="visible">
                 <DropdownArrow />
                 {insightDropdownLinks.map((sublink) => (
