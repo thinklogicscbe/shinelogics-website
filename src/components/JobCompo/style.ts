@@ -107,86 +107,6 @@ export const Leftsidecontent = styled.div`
     width: 100%;
   }
 `;
-export const Title = styled.h1`
-  h1{
-  padding:5px;
-  font-size:40px;
-  font-weight:400;
-   
-  }
-`;
-
-
-// Right section content
-export const Rightsidecontent = styled.div`
-  border: 2px solid rgb(217, 223, 237);
-  padding:  8px;
-  border-radius: 8px;
-  background-color: #f0f0f0;
-  flex: 0 0 35%;
-  display: flex;
-  flex-direction: column;
-  margin-top: 0;  /* Remove any margin pushing the container down */
-  margin-bottom: 0;  /* Ensure no bottom margin */
-  width:100%;
-  height: 30%;  /* Let the container expand only as needed */
-  
-  @media (max-width: 768px) {
-    flex: 1;
-    width: 100%;
-    margin-top: 10px;  /* Optional: keep space for smaller screens */
-  }
-
-  h4 {
-    font-size: 22px;
-    color: blue;
-  }
-
-  p {
-    color: black;
-    font-family: Tahoma, Verdana, sans-serif;
-    font-size: 28px;
-  }
-`;
-
-
-// Section title
-export const SectionTitle = styled.h4`
-  font-size: 20px;
-  font-weight: bold;
-  margin-top: 15px;
-`;
-
-// List
-export const List = styled.ul`
-  padding-left: 20px;
-  
-  li {
-    margin-bottom: 8px;
-    font-size: 19px;
-    line-height: 1.4;
-  }
-`;
-
-// Job summary details
-export const Jobsummery = styled.div`
-  
-  margin-bottom: 20px;
-  font-size: 16px;
-  h4,p{
-  margin-left:14%;
-  }
-
-  h4{
-  font-size:20px;
-  color:black;
-  font-weight:100;
-  }
-  p{
-  color:blue;
-  font-size:22px;
-  }
-`;
 
 export const Location = styled.div`
   margin-bottom: 10px;
@@ -220,3 +140,107 @@ export const StyledHr = styled.hr`
   margin: 10px 0;
 `;
 
+
+
+// Job Summary Container (More Compact)
+export const Rightsidecontent = styled.div`
+  border: 1px solid rgb(200, 200, 200);
+  padding: 10px;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  flex: 0 0 30%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: auto; /* Adjusts to content */
+  margin-right: 20px; /* Moves it slightly to the left */
+
+  @media (max-width: 768px) {
+    flex: 1;
+    width: 100%;
+    margin-right: 0; /* Reset for small screens */
+  }
+
+  h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  p {
+    font-size: 15px;
+    font-weight: 500;
+    color: #0073e6;
+  }
+`;
+
+
+// Job Summary Section (Better Spacing)
+export const Jobsummery = styled.div`
+  padding: 10px;
+  font-size: 14px;
+
+  h4, p {
+    margin-left: 10%;
+  }
+
+  h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #222;
+  }
+
+  p {
+    font-size: 15px;
+    color: #0056b3;
+  }
+`;
+
+// Reduce Font Sizes in List Sections
+export const List = styled.ul`
+  padding-left: 15px;
+
+  li {
+    margin-bottom: 6px;
+    font-size: 15px;
+    line-height: 1.3;
+  }
+`;
+
+// Reduce Font Sizes in Job Title & Description
+export const Title = styled.h1`
+  h1 {
+    font-size: 28px;
+    font-weight: 500;
+    padding: 5px;
+  }
+`;
+
+export const SectionTitle = styled.h4`
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 10px;
+`;
+
+export const ApplyButton = styled.button`
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 30px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff; /* Primary blue color */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: scale(1.05);
+  }
+
+  &:active {
+    background-color: #004494; /* Even darker blue when clicked */
+    transform: scale(0.98);
+  }
+`;
