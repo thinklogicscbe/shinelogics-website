@@ -15,7 +15,6 @@ import logo from "../../assets/logo.png";
 import sendSound from "../../assets/audio/send.mp3"; // Sending sound
 import receiveSound from "../../assets/audio/receive.mp3"; // Receiving sound
 
-// Define a TypeScript interface for message objects
 interface Message {
   sender: string;
   text: React.ReactNode; // Change 'text' to React.ReactNode to handle both strings and JSX elements
