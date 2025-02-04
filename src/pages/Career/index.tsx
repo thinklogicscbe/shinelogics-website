@@ -1,5 +1,4 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import {
   Heading,
   Title,
@@ -13,15 +12,70 @@ import {
   Roll,
   MiddleContent,
   ButtonContainers,
+  DescriptionContainer,
+  ReadMoreButton,
 } from "./style";
-import { jobData } from "./jobdata"; // Importing job openings dynamically
-import career from "../../assets/careers.jpg"
+import { getAllJobs } from "../API/AdminUser"; // Import API function
+import career from "../../assets/careers.jpg";
+import Job from "../Jobs"; // Import Job component
+
+// Define the job structure
+interface JobType {
+  _id: string;
+  jobTitle: string;
+  jobDescription: string;
+  skills: string[];
+  summary?: { jobType?: string };
+}
 
 const Career = () => {
-  // const [selectedJob, setSelectedJob] = useState(null);
+  // State to hold job data
+  const [jobData, setJobData] = useState<JobType[]>([]);
+
+  // State to track selected job
+  const [selectedJob, setSelectedJob] = useState<JobType | null>(null);
+
+  // Fetch jobs on component mount
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await getAllJobs();
+
+        // Ensure response has "result" array
+        if (response.result && Array.isArray(response.result)) {
+          setJobData(response.result); // Update state with correct array
+        } else {
+          console.error("Invalid response format:", response);
+          setJobData([]);
+        }
+      } catch (error) {
+        console.error("Error fetching jobs:", error);
+        setJobData([]); // Ensure jobData is always an array
+      }
+    };
+
+    fetchJobs();
+  }, []);
+
+  // State to manage Read More/Read Less for each job
+  const [expandedJobs, setExpandedJobs] = useState<{ [key: string]: boolean }>({});
+
+  const toggleReadMore = (jobId: string) => {
+    setExpandedJobs((prev) => ({
+      ...prev,
+      [jobId]: !prev[jobId],
+    }));
+  };
+
+  // If a job is selected, display the Job component
+  if (selectedJob) {
+    return <Job job={selectedJob} onBack={() => setSelectedJob(null)} />;
+  }
+  
 
   return (
     <>
+      {/* Top Section */}
       <TopContent>
         <ImageContainer>
           <img src={career} alt="career exploration" />
@@ -39,39 +93,80 @@ const Career = () => {
             groundbreaking projects.
           </p>
         </ContentContainer>
-         
       </TopContent>
+
+      {/* Middle Section */}
       <MiddleContent>
-      <p>Whether you're an experienced professional looking to take your career to the next level or a fresh graduate ready to start your journey, we offer a dynamic and collaborative work environment that fosters growth, learning, and innovation. You’ll have the opportunity to work with industry experts, cutting-edge technologies, and global clients, gaining invaluable experience while making meaningful contributions.</p>
-      <p>At Shinelogics,<b> we don’t just offer jobs—we offer careers </b>that inspire, challenge, and reward. Join us and be part of a forward-thinking team where your skills, ideas, and passion will be valued and nurtured. Let’s create the future together!</p>
+        <p>
+          Whether you're an experienced professional looking to take your career
+          to the next level or a fresh graduate ready to start your journey, we
+          offer a dynamic and collaborative work environment that fosters
+          growth, learning, and innovation.
+        </p>
+        <p>
+          At Shinelogics, <b>we don’t just offer jobs—we offer careers</b> that
+          inspire, challenge, and reward. Join us and be part of a
+          forward-thinking team where your skills, ideas, and passion will be
+          valued and nurtured.
+        </p>
       </MiddleContent>
+
+      {/* Job Listings Section */}
       <Heading>
         <Title>Job Aspirants</Title>
         <Subtitle>Our Current Openings</Subtitle>
 
         <TextWrapper>
-          {jobData.map((job, index) => (
-            <TextContainer key={index}>
-              <Technologi>{job.position}</Technologi>
-              <Roll>{job.role}</Roll>
-              <p>{job.description}</p>
-              <p> 
+          {jobData.length > 0 ? (
+            jobData.map((job) => (
+              <TextContainer key={job._id}>
+                {/* Job Title */}
+                <Technologi>{job.jobTitle}</Technologi>
+
+                {/* Job Type */}
+                <p style={{ color: "blue", fontWeight: "bolder" }}>
+                  {job.summary?.jobType || "Not specified"}
+                </p>
+
+                {/* Job Description with Read More */}
+                <DescriptionContainer>
+                  {expandedJobs[job._id] ? (
+                    <>
+                      <span>{job.jobDescription}</span>
+                      <ReadMoreButton onClick={() => toggleReadMore(job._id)}>
+                        Read Less
+                      </ReadMoreButton>
+                    </>
+                  ) : (
+                    <>
+                      <Roll>{job.jobDescription}</Roll>
+                      <ReadMoreButton onClick={() => toggleReadMore(job._id)}>
+                        Read More
+                      </ReadMoreButton>
+                    </>
+                  )}
+                </DescriptionContainer>
+
+                {/* Skills */}
+                {job.skills && job.skills.length > 0 && (
                   <div className="skills">
                     {job.skills.map((skill, idx) => (
-                      <span key={idx} className="skill">{skill}</span>
+                      <span key={idx} className="skill" style={{ color: "black", fontSize: "14px" }}>
+                        {skill}
+                      </span>
                     ))}
                   </div>
-                </p>
-              <ButtonContainers>
-                <Link
-                  to={`/Jobs?job=${job.id}`}
-                  style={{ textDecoration: "none", color: "inherit" }}
-                >
-                  View Job
-                </Link>
-              </ButtonContainers>
-            </TextContainer>
-          ))}
+                )}
+
+                {/* View Job Button */}
+                <ButtonContainers>
+                  <button onClick={() => setSelectedJob(job)}>View Job</button>
+                </ButtonContainers>
+              </TextContainer>
+            ))
+          ) : (
+            <p>No job openings available at the moment.</p>
+          )}
         </TextWrapper>
       </Heading>
     </>

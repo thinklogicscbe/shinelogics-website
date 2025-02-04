@@ -177,12 +177,33 @@ export const Technologi = styled.h4`
   margin-bottom: 5px; /* Adds spacing below the element */
 `;
 
-export const Roll = styled.h5`
-  color: blue; /* Sets the text color to blue */
-  font-size: 16px; /* Adjusts the font size */
-  font-weight: normal; /* Makes the text regular weight */
-  margin-bottom: 10px; /* Adds spacing below the element */
+export const DescriptionContainer = styled.div`
+  display: inline; /* Keeps text and button inline */
+  font-size: 16px;
+  font-weight: 300;
+  color: gray;
+  line-height: 1.4;
 `;
+
+export const Roll = styled.span`
+  display: inline;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Limits to 2 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%; /* Prevents overflowing */
+`;
+
+export const ReadMoreButton = styled.button`
+  background: none;
+  border: none;
+  color: blue;
+  cursor: pointer;
+  font-size: 14px;
+  padding-left: 5px;
+`;
+
 
 export const ButtonContainers = styled.button`
   color: white;
