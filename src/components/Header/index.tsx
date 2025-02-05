@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { Drawer } from "antd";
-// import { SvgIcon } from "../../common/SvgIcon";
+import { SvgIcon } from "../../common/SvgIcon";
 
 import {
   HeaderSection,
@@ -22,19 +22,16 @@ const Header = () => {
   const [productDropdownVisible, setProductDropdownVisible] = useState(false);
   const [insightDropdownVisible, setInsightDropdownVisible] = useState(false);
   const [mobileDropdownVisible, setMobileDropdownVisible] = useState(false);
-  const [mobileInsightDropdownVisible, setMobileInsightDropdownVisible] = useState(false);
   const [, setIsMobile] = useState(window.innerWidth <= 768); // Track if the screen is mobile
 
   useEffect(() => {
     const handleResize = () => {
-      setProductDropdownVisible(false);
-      setInsightDropdownVisible(false);
-      setMobileDropdownVisible(false);
-      setMobileInsightDropdownVisible(false);
+      setIsMobile(window.innerWidth <= 768);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
   const toggleDrawer = () => {
     setVisibility(!visible);
     setMobileDropdownVisible(false);
@@ -46,7 +43,6 @@ const Header = () => {
     setMobileDropdownVisible(false);
     setProductDropdownVisible(false);
     setInsightDropdownVisible(false);
-    setMobileInsightDropdownVisible(false);
   };
 
   // Product Dropdown Handlers
@@ -94,7 +90,7 @@ const Header = () => {
   return (
     <HeaderSection>
       <LogoContainer to="/" aria-label="homepage">
-        <img  src="Group 450 (1).png" width="500px" height="60px" />
+        <SvgIcon src="shinelogics-logo.svg" width="300px" height="60px" />
       </LogoContainer>
 
       <Burger onClick={toggleDrawer}>
@@ -153,14 +149,12 @@ const Header = () => {
               <StyledButton1
                 className={activeLink === link.path ? "active" : ""}
                 onClick={(e) => {
-                  if (link.path === "/product") {
+                  if (link.hasDropdown) {
                     e.preventDefault();
-                    setMobileDropdownVisible(!mobileDropdownVisible);
-                  } else if (link.path === "/career") {
-                    e.preventDefault();
-                    setMobileInsightDropdownVisible(!mobileInsightDropdownVisible);
+                    handleMobileDropdownToggle();
                   } else {
                     handleLinkClick(link.path);
+                    toggleDrawer();
                   }
                 }}
               >
@@ -181,7 +175,7 @@ const Header = () => {
             )}
 
             {/* Mobile Insights Dropdown */}
-            {link.path === "/career" && mobileInsightDropdownVisible && (
+            {link.path === "/career" && mobileDropdownVisible && (
               <DropdownWrapperMobile className="visible">
                 <DropdownArrow />
                 {insightDropdownLinks.map((sublink) => (
