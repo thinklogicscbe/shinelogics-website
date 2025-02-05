@@ -1,6 +1,8 @@
 import styled from "styled-components";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
-// Container styles for the form and page
+
 export const FormContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -41,6 +43,28 @@ export const InputField = styled.input`
   font-size: 14px;
 `;
 
+export const StyledPhoneInput = styled(PhoneInput)`
+  margin-top: 17px;
+  .form-control {
+    width: 100%;  /* Adjust width */
+    padding: 21px; /* Adjust padding */
+    font-size: 16px; /* Adjust font size */
+    border-radius: 6px; /* Rounded corners */
+    border: 1px solid #ccc; /* Border styling */
+    outline: none;
+    
+    &:focus {
+      border-color: #007bff; /* Change border color on focus */
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+  }
+
+  .flag-dropdown {
+    border-radius: 6px 0 0 6px; /* Adjust flag dropdown border-radius */
+    border-right: 1px solid #ccc; 
+  }
+`;
+
 export const SelectField = styled.select`
   width: 100%; /* Make select field take full width */
   padding: 10px;
@@ -67,7 +91,7 @@ export const SubmitButton = styled.button`
 `;
 
 export const FormGroup = styled.div`
-  margin-top: 90px;
+  margin-top: 20px;
 `;
 
 export const Label = styled.label`
@@ -103,4 +127,9 @@ export const Row = styled.div`
   div {
     flex: 1; /* Make fields take equal width */
   }
+`;
+export const SuccessMessage = styled.p`
+  color: green;
+  font-weight: bold;
+  margin-top: 5px;
 `;

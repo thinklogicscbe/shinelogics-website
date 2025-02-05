@@ -1,13 +1,15 @@
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
+const accessKey=process.env.REACT_APP_AWS_ACCESS_KEY_ID;
+const secretKey=process.env.REACT_APP_AWS_SECRET_ACCESS_KEY;
 const S3_BUCKET = "webscrapingfarm2bag";
 const REGION = "ap-south-1";
 
 const s3Client = new S3Client({
   region: REGION,
   credentials: {
-    accessKeyId: "AKIAQSNAUQE5MBTDHWHK",
-    secretAccessKey: "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",
+    accessKeyId: `${accessKey}`,
+    secretAccessKey: `${secretKey}`,
   },
 });
 
