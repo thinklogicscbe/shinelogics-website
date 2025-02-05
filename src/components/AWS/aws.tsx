@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 
 const accessKey=process.env.REACT_APP_AWS_ACCESS_KEY_ID;
 const secretKey=process.env.REACT_APP_AWS_SECRET_ACCESS_KEY;
