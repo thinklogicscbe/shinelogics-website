@@ -1,43 +1,41 @@
-import AWS from 'aws-sdk';
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
-const S3_BUCKET = 'webscrapingfarm2bag';
-const REGION = 'ap-south-1';
-const ACCESS_KEY = 'AKIAQSNAUQE5MBTDHWHK';
-const SECRET_ACCESS_KEY = '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';
+const S3_BUCKET = "webscrapingfarm2bag";
+const REGION = "ap-south-1";
 
-AWS.config.update({
-    accessKeyId: ACCESS_KEY,
-    secretAccessKey: SECRET_ACCESS_KEY,
-    region: REGION,
+const s3Client = new S3Client({
+  region: REGION,
+  credentials: {
+    accessKeyId: "AKIAQSNAUQE5MBTDHWHK",
+    secretAccessKey: "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",
+  },
 });
 
-const s3 = new AWS.S3();
-
 interface FileUpload {
-    name: string;
-    type: string;
-    [key: string]: any;
-
+  name: string;
+  type: string;
+  content: Blob; 
 }
 
-const uploadPdfToS3 = (file: FileUpload): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const params = {
-            Bucket: S3_BUCKET,
-            Key: `${file.name}`,
-            Body: file, 
-            ContentType: 'application/octet-stream',
-            // ACL: 'public-read',
-        };
+const uploadPdfToS3 = async (file: FileUpload): Promise<string> => {
+  try {
+    const arrayBuffer = await file.content.arrayBuffer(); 
+    const params = {
+      Bucket: S3_BUCKET,
+      Key: file.name,
+      Body: new Uint8Array(arrayBuffer),
+      ContentType: file.type || "application/pdf",
+    };
+console.log(params,"params");
 
-        s3.upload(params, (err:any, data:any) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(data.Location);  
-            }
-        });
-    });
+    const command = new PutObjectCommand(params);
+    await s3Client.send(command);
+
+    return `https://${S3_BUCKET}.s3.${REGION}.amazonaws.com/${file.name}`;
+  } catch (error) {
+    console.error("Upload failed:", error);
+    throw error;
+  }
 };
 
 export { uploadPdfToS3 };

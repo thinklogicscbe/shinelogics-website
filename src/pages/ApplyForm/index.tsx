@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm, FieldError } from "react-hook-form";
-import { uploadPdfToS3 } from "../../components/AWS/aws"; // Import the upload function
+import { uploadPdfToS3 } from "../../components/AWS/aws"; 
 import {
   FormContainer,
   FormWrapper,
@@ -32,14 +32,34 @@ const ApplyForm: React.FC = () => {
 
     if (!file) return;
 
+    // Simple validation: Check file size (5MB limit) and type (PDF)
+    if (file.size > 5 * 1024 * 1024) {
+      alert("File size should be less than 5MB");
+      return;
+    }
+
+    if (!["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "text/plain"].includes(file.type)) {
+      alert("Invalid file type. Only PDF, DOC, DOCX, and TXT are allowed.");
+      return;
+    }
+
+    const fileUpload = {
+      name: file.name,
+      type: file.type,
+      content: file, 
+    };
+
     setUploading(true);
 
     try {
-      const uploadedUrl = await uploadPdfToS3(file);
+      const uploadedUrl = await uploadPdfToS3(fileUpload);
+      console.log(uploadedUrl,"uploadedUrl");
+      
       setResumeUrl(uploadedUrl);
-      setValue("resumeUrl", uploadedUrl); // Store in form data
+      setValue("resumeUrl", uploadedUrl); // set resume URL in form data
     } catch (error) {
       console.error("File upload failed:", error);
+      alert("File upload failed. Please try again.");
     } finally {
       setUploading(false);
     }
@@ -53,6 +73,7 @@ const ApplyForm: React.FC = () => {
 
     const formData = { ...data, resumeUrl };
     console.log("Submitted Data:", formData);
+    // You can perform your API call here to submit form data
   };
 
   return (
