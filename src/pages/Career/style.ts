@@ -206,8 +206,8 @@ export const ReadMoreButton = styled.button`
 
 
 export const ButtonContainers = styled.button`
-  color: white;
-  background-color: blue;
+  color: black;
+  // background-color: blue;
   width: 80px; /* Set a fixed width */
   height: 30px; /* Set a fixed height */
   border: none;  
@@ -219,9 +219,9 @@ export const ButtonContainers = styled.button`
   font-weight: 400;
   font-style: normal;
 
-  &:hover {
-    background-color: darkblue;  
-  }
+  // &:hover {
+  //   background-color: darkblue;  
+  // }
 `;
 
 export const Link = styled.button`

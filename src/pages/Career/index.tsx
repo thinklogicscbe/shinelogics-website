@@ -25,8 +25,18 @@ interface JobType {
   jobTitle: string;
   jobDescription: string;
   skills: string[];
-  summary?: { jobType?: string };
+  requirements: string;
+  qualifications: string;
+  summary: {
+    location: string;
+    jobType: string;
+    numberOfPositions: number;
+    qualifications: string;
+    experience: string;
+    datePosted: string;
+  };
 }
+
 
 const Career = () => {
   // State to hold job data
@@ -160,7 +170,7 @@ const Career = () => {
 
                 {/* View Job Button */}
                 <ButtonContainers>
-                  <button onClick={() => setSelectedJob(job)}>View Job</button>
+                  <button style={{background:"white", cursor: "pointer"}} onClick={() => setSelectedJob(job)}>View Job</button>
                 </ButtonContainers>
               </TextContainer>
             ))
