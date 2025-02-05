@@ -3,7 +3,7 @@ const headers = {
     'Content-Type': 'application/json',
 };
 
-export const createJob = async (jobData: any) => {
+export const createForm = async (jobData: any) => {
     const response = await fetch(`${backendUrl}/form/create`, {
         method: 'POST',
         headers,
