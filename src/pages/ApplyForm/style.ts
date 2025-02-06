@@ -10,7 +10,14 @@ export const FormContainer = styled.div`
   height: 90vh;
   background-color: #f0f8ff; /* Light blue background */
   padding: 20px;
+
+  @media (max-width: 768px) {
+    height: auto; /* Allow height to adjust dynamically */
+    padding: 10px; /* Reduce padding for smaller screens */
+    align-items: flex-start; /* Align content to the top for better spacing */
+  }
 `;
+
 
 export const FormWrapper = styled.div`
   width: 100%;
@@ -127,7 +134,13 @@ export const Row = styled.div`
   div {
     flex: 1; /* Make fields take equal width */
   }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 10px; /* Reduce gap between fields in mobile view */
+  }
 `;
+
 export const SuccessMessage = styled.p`
   color: green;
   font-weight: bold;

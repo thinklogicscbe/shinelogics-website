@@ -1,9 +1,13 @@
-import styled from 'styled-components';
-import background from '../../assets/bg-hero.png';
+import styled from "styled-components";
+import background from "../../assets/bg-hero.png";
 
 export const Heading = styled.div`
-  background: linear-gradient(135deg, rgba(31, 101, 206, 0.9), rgba(10, 80, 180, 0.9)), 
-              url(${background}) no-repeat center center;
+  background: linear-gradient(
+      135deg,
+      rgba(31, 101, 206, 0.9),
+      rgba(10, 80, 180, 0.9)
+    ),
+    url(${background}) no-repeat center center;
   background-size: cover;
   text-align: center;
   padding: 60px 0;
@@ -16,7 +20,7 @@ export const Title = styled.h2`
   font-size: 37px;
   font-weight: bold;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-   margin-top:-1%;
+  margin-top: -1%;
 
   @media screen and (max-width: 1024px) {
     font-size: 36px;
@@ -31,9 +35,9 @@ export const Subtitle = styled.h3`
   /* color: #fff; */
   font-size: 50px;
   font-weight: normal;
-   font-family: "Inder", serif;
+  font-family: "Inder", serif;
   margin-bottom: 50px;
-  color:white;
+  color: white;
 
   @media screen and (max-width: 1024px) {
     font-size: 24px;
@@ -54,18 +58,9 @@ export const TopContent = styled.div`
   @media screen and (max-width: 768px) {
     flex-direction: column;
     align-items: center;
+    text-align: center;
+    margin: 10px; /* Add margin for better spacing */
   }
-`;
-export const  MiddleContent = styled.div`
-p{
-text-align:justify;
-padding:5px;
-line-height:2.4rem;
-align-items: center;
-margin-left:3%;
-margin-right:5%;
-font-family: "Inder", serif;
-}
 `;
 
 export const ImageContainer = styled.div`
@@ -74,42 +69,78 @@ export const ImageContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin-right: 20px; /* Space between image and content */
-  
+
   img {
     margin-top: 2%;
-    width: 100%;
-    max-width: 500px;
+    width: 90%; /* Make it responsive */
+    max-width: 400px; /* Reduce size on mobile */
     height: auto;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+
+    @media screen and (max-width: 768px) {
+      max-width: 300px; /* Smaller image on mobile */
+      margin-bottom: 15px; /* Space between image and text */
+    }
   }
 `;
 
 export const ContentContainer = styled.div`
   flex: 1;
   text-align: left;
-  margin-right:5%;
+  margin-right: 5%;
 
-  h2, h3, p {
+  h2,
+  h3,
+  p {
     margin-bottom: 10px;
   }
+
   p {
-    margin-right:2%;
-    text-align:justify;
-    line-height: 2.4rem;
-     font-family: "Inder", serif;
+    margin-right: 2%;
+    text-align: justify;
+    line-height: 2rem; /* Reduced for better spacing */
+    font-family: "Inder", serif;
   }
+
   h2 {
-    font-size:55px;
-    color:black;
-    font-weight:900;
-     font-family: "Inder", serif;
+    font-size: 45px;
+    color: black;
+    font-weight: 900;
+    font-family: "Inder", serif;
+
+    @media screen and (max-width: 768px) {
+      font-size: 35px; /* Reduce size on mobile */
+      text-align: center;
+    }
   }
+
   h3 {
-    color:blue;
-    /* font-weight:700;
-    font-size:47px;
-    font-family: "Inder", serif; */
+    color: blue;
+    font-size: 30px;
+
+    @media screen and (max-width: 768px) {
+      font-size: 25px;
+      text-align: center;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    text-align: center; /* Center text on mobile */
+    margin-right: 0; /* Remove extra margin */
+    padding: 0 15px; /* Add padding for better spacing */
+  }
+`;
+
+export const MiddleContent = styled.div`
+  p {
+    text-align: justify;
+    padding: 5px;
+    line-height: 2.4rem;
+    align-items: center;
+    margin-left: 3%;
+    margin-right: 5%;
+    font-family: "Inder", serif;
   }
 `;
 
@@ -119,8 +150,8 @@ export const TextWrapper = styled.div`
   justify-content: space-between; /* Distributes items evenly */
   gap: 20px; /* Adds spacing between the containers */
   margin-top: 20px;
-  margin-right:3%;
-  margin-left:3%;
+  margin-right: 3%;
+  margin-left: 3%;
 
   /* Ensure all TextContainer components maintain their size on smaller screens */
   @media screen and (max-width: 768px) {
@@ -133,25 +164,24 @@ export const TextContainer = styled.div`
   display: flex;
   flex-direction: column; /* Ensure children are stacked vertically */
   justify-content: space-between; /* Push the button to the bottom */
-  flex-basis: 30%; 
-  max-width: 30%; 
-  min-width: 250px; 
+  flex-basis: 30%;
+  max-width: 30%;
+  min-width: 250px;
   border: 2px solid white;
   background-color: white;
   border-radius: 5px;
   padding: 20px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); 
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   text-align: left;
 
   p {
-  text-align:justify;
+    text-align: justify;
     font-size: 16px;
     line-height: 1.6;
     color: #333;
   }
 
   /* New styles for the skills */
-  
 
   .skills {
     display: flex;
@@ -159,14 +189,14 @@ export const TextContainer = styled.div`
     gap: 10px;
   }
 
-  .skill{
+  .skill {
     display: inline-block;
-    font-size:16px;
-    font-weight:900;
+    font-size: 16px;
+    font-weight: 900;
     padding: 3px 6px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background-color:rgb(229, 233, 240);
+    background-color: rgb(229, 233, 240);
   }
 `;
 
@@ -204,26 +234,25 @@ export const ReadMoreButton = styled.button`
   padding-left: 5px;
 `;
 
-
 export const ButtonContainers = styled.button`
   color: black;
   // background-color: blue;
   width: 80px; /* Set a fixed width */
   height: 30px; /* Set a fixed height */
-  border: none;  
-  border-radius: 5px;  
-  cursor: pointer;  
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
   font-size: 14px;
   margin-left: auto;
-   font-family: "Inder", serif;
+  font-family: "Inder", serif;
   font-weight: 400;
   font-style: normal;
 
   // &:hover {
-  //   background-color: darkblue;  
+  //   background-color: darkblue;
   // }
 `;
 
 export const Link = styled.button`
-  link-decrator:none;
+  link-decrator: none;
 `;
