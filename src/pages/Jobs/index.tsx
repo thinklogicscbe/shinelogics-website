@@ -64,7 +64,6 @@ const Jobs: React.FC<JobProps> = ({ job, onBack }) => {
 
       <ButtonStyle
         onClick={onBack}
-    
       >
         ← 
       </ButtonStyle>

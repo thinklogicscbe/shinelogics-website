@@ -21,14 +21,18 @@ export const Destination = styled.div`
 
 
 export const ButtonStyle = styled.button`
-  padding: "10px 20px",
-    marginRight: "1460px",
-          background: "#007bff",
-          color: "#fff",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-          fontSize: "16px"
+    padding: "10px 20px",
+    marginLeft: "20px", // Adjust this to move it left
+    background: "#007bff",
+    color: "#fff",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    fontSize: "16px",
+    display: "flex", // Use flexbox
+    alignItems: "center", // Aligns items vertically
+    justifyContent: "flex-start", // Aligns content to the left
+    gap: "8px", // Adds spacing between icon and text
 
 
   /* Responsive Design */
