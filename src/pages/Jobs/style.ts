@@ -19,6 +19,43 @@ export const Destination = styled.div`
   }
 `;
 
+
+export const ButtonStyle = styled.button`
+  padding: "10px 20px",
+    marginRight: "1460px",
+          background: "#007bff",
+          color: "#fff",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+          fontSize: "16px"
+
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    /* Tablets */
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  @media (max-width: 768px) {
+    /* Mobile Devices */
+    font-size: 12px;
+    padding: 6px 12px;
+    width: 40px;
+    height: 40px;
+  }
+
+  @media (max-width: 480px) {
+    /* Small Mobile Screens */
+    font-size: 10px;
+    padding: 5px 10px;
+    width: 35px;
+    height: 35px;
+  }
+`;
+
+
 export const Destinationcontent = styled.p`
   font-size: 16px;
   line-height: 1.5;
@@ -217,9 +254,12 @@ export const Title = styled.h1`
 `;
 
 export const SectionTitle = styled.h4`
-  font-size: 18px;
-  font-weight: bold;
-  margin-top: 10px;
+  font-size: 18px;  /* Increased font size for better readability */
+  line-height: 1.8; /* Improved line spacing */
+  text-align: justify;
+  font-family: "Arial", "Helvetica", sans-serif; /* Professional, clean font */
+  font-weight: 500; /* Slightly bolder for clarity */
+  color: #333; /* Darker text for better contrast */
 `;
 
 export const ApplyButton = styled.button`

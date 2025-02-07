@@ -218,9 +218,9 @@ const ApplyForm: React.FC = () => {
                     name: "phone",
                     required: true,
                   }}
-                  value={watch("phone")} // Use watch from react-hook-form to track value
-                  onChange={(value) => setValue("phone", value)} // Update form value
-                  enableSearch={true} // Enables searching for other countries if needed
+                  value={watch("phone")} 
+                  onChange={(value: unknown) => setValue("phone", value as string)}
+                  enableSearch={true}
                 />
                 {errors.phone && (
                   <ErrorMessage>
