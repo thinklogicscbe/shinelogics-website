@@ -1,4 +1,4 @@
-import React from 'react';
+// import React from 'react';
 import { ServiceContainer, ServiceCard, Title } from './style';
 
 const OurService = () => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import pdaasimg from '../../assets/home-image/pdaas.webp';
 import { PdaasContainer, AnimatedImage, PdaasContent } from './style';
 

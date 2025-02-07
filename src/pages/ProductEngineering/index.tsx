@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Container, Heading, Section, Subheading, Text, List, ListItem } from "./style";
 
 const ProductEngineering = () => {

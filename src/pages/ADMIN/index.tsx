@@ -25,6 +25,7 @@ const ADMIN = () => {
 
   // Job-related state
   const [jobTitle, setJobTitle] = useState("");
+  const [shortDescription, setShortDescription] = useState(""); // New state
   const [jobDescription, setJobDescription] = useState("");
   const [location, setLocation] = useState("");
   const [jobType, setJobType] = useState("");
@@ -41,11 +42,12 @@ const ADMIN = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     const jobData = {
       jobTitle,
+      shortDescription, // Include short description
       jobDescription,
       summary: {
         location,
@@ -68,7 +70,8 @@ const ADMIN = () => {
       console.error("Error creating job:", error);
       alert("Failed to create job!");
     }
-};
+  };
+
   return (
     <Container>
       <MainContent>
@@ -95,6 +98,11 @@ const ADMIN = () => {
               </FormGroup>
 
               <FormGroup>
+                <Label>Short Description</Label> {/* New input */}
+                <TextArea value={shortDescription} onChange={(e) => setShortDescription(e.target.value)} required />
+              </FormGroup>
+
+              <FormGroup>
                 <Label>Job Description</Label>
                 <TextArea value={jobDescription} onChange={(e) => setJobDescription(e.target.value)} required />
               </FormGroup>
@@ -108,8 +116,6 @@ const ADMIN = () => {
                 <Label>Job Type</Label>
                 <Input type="text" value={jobType} onChange={(e) => setJobType(e.target.value)} required />
               </FormGroup>
-
-            
             </FormColumn>
 
             <FormColumn>

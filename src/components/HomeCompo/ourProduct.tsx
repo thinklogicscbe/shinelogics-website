@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import  { useEffect, useRef } from 'react';
 import { ProductContainer, ProductCard, ProductTitle, Video, BannerImage, TechnologiesHeading, TechnologiesParagraph } from './style';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import EMS from '../../assets/video/EMSvideo.mp4';

@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import React from "react";
 import {
   Destinationcontiner,
@@ -21,7 +22,8 @@ import {
   Title,
   StyledHr,
   Posted,
-  ApplyButton
+  ApplyButton,
+  ButtonStyle
 } from './style';
 
 // Define the JobType interface based on Mongoose Schema
@@ -48,12 +50,25 @@ interface JobProps {
   onBack: () => void;
 }
 
-const Job: React.FC<JobProps> = ({ job, onBack }) => {
+const Jobs: React.FC<JobProps> = ({ job, onBack }) => {
+  const navigate = useNavigate(); // Initialize navigate
 
-  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+
+
   return (
     <Destinationcontiner>
-      
+
+      <ButtonStyle
+        onClick={onBack}
+    
+      >
+        ← 
+      </ButtonStyle>
+
       {/* Top Section: Image + Main Content */}
       <TopSection>
         <ImageContainer>
@@ -72,30 +87,94 @@ const Job: React.FC<JobProps> = ({ job, onBack }) => {
       <BottomSection>
         {/* Left Content */}
         <Leftsidecontent>
-          <SectionTitle style={{ marginLeft: "3%", fontSize: "36px" }}>
+          {/* <SectionTitle style={{ marginLeft: "3%", fontSize: "36px", color: "black", fontWeight: "bold" }}>
             {job.jobTitle}
+          </SectionTitle> */}
+
+          <SectionTitle
+            style={{
+              marginLeft: "6%",
+              color: "blue",
+              fontSize: "24px",
+              fontWeight: "bold"
+            }}
+          >
+            Job Description:
           </SectionTitle>
-
-          <SectionTitle style={{ marginLeft: "6%" }}>Job Description:</SectionTitle>
           <List style={{ marginLeft: "12%" }}>
-            <li>{job.jobDescription}</li>
+            <li
+              className="desc"
+              style={{
+                fontSize: "16px",
+                lineHeight: "1.8",
+                textAlign: "justify",
+                fontFamily: '"Poppins", "Roboto", sans-serif',
+                fontWeight: "500",
+                color: "#333"
+              }}
+            >
+              {job.jobDescription}
+            </li>
           </List>
 
-          <SectionTitle style={{ marginLeft: "6%" }}>Requirements:</SectionTitle>
+          <SectionTitle style={{
+            marginLeft: "6%",
+            color: "blue",
+            fontSize: "24px",
+            fontWeight: "bold"
+          }}>Requirements:</SectionTitle>
           <List style={{ marginLeft: "12%" }}>
-            <li>{job.requirements}</li>
+            <li
+              className="desc"
+              style={{
+                fontSize: "16px",
+                lineHeight: "1.8",
+                textAlign: "justify",
+                fontFamily: '"Poppins", "Roboto", sans-serif',
+                fontWeight: "500",
+                color: "#333"
+              }}
+            >{job.requirements}</li>
           </List>
 
-          <SectionTitle style={{ marginLeft: "6%" }}>Skills:</SectionTitle>
+          <SectionTitle style={{
+            marginLeft: "6%",
+            color: "blue",
+            fontSize: "24px",
+            fontWeight: "bold"
+          }}>Skills:</SectionTitle>
+
           <List style={{ marginLeft: "12%" }}>
             {job.skills.map((skill, index) => (
-              <li key={index}>{skill}</li>
+              <li className="desc"
+                style={{
+                  fontSize: "16px",
+                  lineHeight: "1.8",
+                  textAlign: "justify",
+                  fontFamily: '"Poppins", "Roboto", sans-serif',
+                  fontWeight: "500",
+                  color: "#333"
+                }} key={index}>{skill}</li>
             ))}
           </List>
 
-          <SectionTitle style={{ marginLeft: "6%" }}>Qualifications:</SectionTitle>
+          <SectionTitle style={{
+            marginLeft: "6%",
+            color: "blue",
+            fontSize: "24px",
+            fontWeight: "bold"
+          }}>Qualifications:</SectionTitle>
+
           <List style={{ marginLeft: "12%" }}>
-            <li>{job.qualifications}</li>
+            <li className="desc"
+              style={{
+                fontSize: "16px",
+                lineHeight: "1.8",
+                textAlign: "justify",
+                fontFamily: '"Poppins", "Roboto", sans-serif',
+                fontWeight: "500",
+                color: "#333"
+              }}>{job.qualifications}</li>
           </List>
         </Leftsidecontent>
 
@@ -158,4 +237,4 @@ const Job: React.FC<JobProps> = ({ job, onBack }) => {
   );
 };
 
-export default Job;
+export default Jobs;

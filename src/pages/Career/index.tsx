@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Heading,
   Title,
@@ -23,7 +24,8 @@ import Job from "../Jobs"; // Import Job component
 interface JobType {
   _id: string;
   jobTitle: string;
-  jobDescription: string;
+  shortDescription: string;
+  jobDescription: string; // Use shortDescription instead of jobDescription
   skills: string[];
   requirements: string;
   qualifications: string;
@@ -81,7 +83,7 @@ const Career = () => {
   if (selectedJob) {
     return <Job job={selectedJob} onBack={() => setSelectedJob(null)} />;
   }
-  
+
 
   return (
     <>
@@ -138,18 +140,18 @@ const Career = () => {
                   {job.summary?.jobType || "Not specified"}
                 </p>
 
-                {/* Job Description with Read More */}
+                {/* Job Short Description */}
                 <DescriptionContainer>
                   {expandedJobs[job._id] ? (
                     <>
-                      <span>{job.jobDescription}</span>
+                      <span>{job.shortDescription}</span>
                       <ReadMoreButton onClick={() => toggleReadMore(job._id)}>
                         Read Less
                       </ReadMoreButton>
                     </>
                   ) : (
                     <>
-                      <Roll>{job.jobDescription}</Roll>
+                      <Roll>{job.shortDescription}</Roll>
                       <ReadMoreButton onClick={() => toggleReadMore(job._id)}>
                         Read More
                       </ReadMoreButton>
@@ -169,9 +171,12 @@ const Career = () => {
                 )}
 
                 {/* View Job Button */}
-                <ButtonContainers>
-                  <button style={{background:"white", cursor: "pointer"}} onClick={() => setSelectedJob(job)}>View Job</button>
+
+                <ButtonContainers
+                  onClick={() => setSelectedJob(job)}>View Job
                 </ButtonContainers>
+
+
               </TextContainer>
             ))
           ) : (

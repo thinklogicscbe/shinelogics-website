@@ -216,14 +216,15 @@ export const DescriptionContainer = styled.div`
 `;
 
 export const Roll = styled.span`
-  display: inline;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* Limits to 2 lines */
+  -webkit-line-clamp: 4; /* Limits to 4 lines */
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%; /* Prevents overflowing */
+  line-height: 1.4rem; /* Adjust line height for better spacing */
 `;
+
 
 export const ReadMoreButton = styled.button`
   background: none;
@@ -235,8 +236,8 @@ export const ReadMoreButton = styled.button`
 `;
 
 export const ButtonContainers = styled.button`
-  color: black;
-  // background-color: blue;
+  color: white;
+  background-color: blue;
   width: 80px; /* Set a fixed width */
   height: 30px; /* Set a fixed height */
   border: none;
@@ -247,10 +248,9 @@ export const ButtonContainers = styled.button`
   font-family: "Inder", serif;
   font-weight: 400;
   font-style: normal;
-
-  // &:hover {
-  //   background-color: darkblue;
-  // }
+  &:hover {
+    background-color: darkblue;
+  }
 `;
 
 export const Link = styled.button`
