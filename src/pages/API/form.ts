@@ -11,3 +11,11 @@ export const createForm = async (jobData: any) => {
     });
     return response.json();
 };
+
+export const viewProfiles = async () => {
+    const response = await fetch(`${backendUrl}/form/getall`, {
+        method: 'GET',
+        headers,
+    });
+    return response.json();
+};

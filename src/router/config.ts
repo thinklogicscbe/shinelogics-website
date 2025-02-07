@@ -13,6 +13,7 @@ const routes = [
   { path: "/productEngineering", exact: true, component: "ProductEngineering" },
   { path: "/resourseEngineering", exact: true, component: "ResourseEngineering" },
   { path: "/admin", exact: true, component: "ADMIN" },
+  { path: "/viewProfile", exact: true, component: "ViewProfile" },
   { path: "/Jobs", exact: true, component: "Jobs" },
   { path: "applyForm", exact: true, component: "ApplyForm" },
   { path: "**", exact: true, component: "NotFoundPage" },

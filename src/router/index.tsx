@@ -15,8 +15,9 @@ import {
   GlobalStyle,
 } from "./style";
 import NotFoundPage from "../components/NotFoundCompo";
+import PathTracker from "../router/PathTracker"; // Import PathTracker
 
-const AppRouter = () => {
+const AppRouter: React.FC = () => {
   return (
     <Suspense
       fallback={
@@ -47,11 +48,22 @@ const AppRouter = () => {
             <Route
               key={routeItem.component}
               path={routeItem.path}
-              element={<LazyComponent />}
+              element={
+                <PathTracker path={routeItem.path}>
+                  <LazyComponent />
+                </PathTracker>
+              }
             />
           );
         })}
-        <Route path="*" element={<NotFoundPage />} />
+        <Route
+          path="*"
+          element={
+            <PathTracker path="*">
+              <NotFoundPage />
+            </PathTracker>
+          }
+        />
       </Routes>
       <Footer />
       <ChatbotButton />
