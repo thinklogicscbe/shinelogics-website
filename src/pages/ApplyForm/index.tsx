@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { useForm, FieldError } from "react-hook-form";
 import { uploadPdfToS3 } from "../../components/AWS/aws";
 import { createForm } from "../API/form";
@@ -19,7 +20,7 @@ import {
   FileInputField,
   ErrorMessage,
   Row,
-  SuccessMessage, // Styled component for green success text
+  SuccessMessage, 
 } from "./style";
 
 const ApplyForm: React.FC = () => {
@@ -34,6 +35,13 @@ const ApplyForm: React.FC = () => {
   const [uploading, setUploading] = useState(false);
   const [resumeUploaded, setResumeUploaded] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+
+  const location = useLocation();
+  const jobId = location.state?.jobId;
+  console.log("JobID",jobId);
+  
+  
 
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -90,9 +98,14 @@ const ApplyForm: React.FC = () => {
       toast.error("Please enter a valid phone number.");
       return;
     }
-
+  
     try {
-      const response = await createForm({ ...data, resume: data.resume });
+      const response = await createForm({
+        ...data,
+        jobId: jobId, // Ensure jobId is explicitly passed
+        resume: data.resume,
+      });
+  
       if (response?.success) {
         toast.success("Application submitted successfully!");
         setSubmitted(true);
@@ -106,6 +119,7 @@ const ApplyForm: React.FC = () => {
       toast.error("Something went wrong. Please try again later.");
     }
   };
+  
 
   return (
     <FormContainer>

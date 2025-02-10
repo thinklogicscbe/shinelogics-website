@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
 import {
   Table,
   Thead,
@@ -21,7 +21,8 @@ import DownloadIcon from "@mui/icons-material/Download";
 const ViewProfile: React.FC = () => {
   const [profiles, setProfiles] = useState<any[]>([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5); // Default 5 rows per page
+  const [rowsPerPage, setRowsPerPage] = useState(10); // Default 5 rows per page
+
 
   useEffect(() => {
     const fetchProfiles = async () => {
@@ -78,6 +79,7 @@ const ViewProfile: React.FC = () => {
               <Th style={{ color: "#fff", padding: "12px", fontSize: "16px", width: "10%" }}>Gender</Th>
               <Th style={{ color: "#fff", padding: "12px", fontSize: "16px", width: "20%" }}>Email</Th>
               <Th style={{ color: "#fff", padding: "12px", fontSize: "16px", width: "15%" }}>Phone</Th>
+              <Th style={{ color: "#fff", padding: "12px", fontSize: "16px", width: "15%" }}>Job Title</Th>
               <Th style={{ color: "#fff", padding: "12px", fontSize: "16px", width: "10%" }}>Resume</Th>
             </Tr>
           </Thead>
@@ -93,6 +95,7 @@ const ViewProfile: React.FC = () => {
                   <Td>{profile.gender}</Td>
                   <Td>{profile.email}</Td>
                   <Td>{profile.phone}</Td>
+                  <Td>{profile.jobId?.jobTitle || "-"}</Td>
                   <Td style={{ textAlign: "center" }}>
                     {profile.resume || profile.resumeUrl ? (
                       <a
