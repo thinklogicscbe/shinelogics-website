@@ -1,161 +1,176 @@
 import React, { useState, useEffect } from "react";
-import { createJob } from "../API/AdminUser"; // Import API function
+import { getAllJobs, updateJobById, deleteJobById } from "../API/AdminUser";
 import {
-  Container,
-  MainContent,
-  Header,
-  HeaderLeft,
-  HeaderRight,
-  ToggleButton,
-  Main,
-  Title,
-  Subtitle,
-  FormContainer,
-  FormColumn,
-  FormGroup,
-  Label,
-  Input,
-  TextArea,
-  SubmitButton,
+    Modal,
+    ModalContent,
+    ModalHeader,
+    Input,
+    BtnContainer,
+    Btn,
+    Container,
+    Table,
+    TableHead,
+    TableRow,
+    TableHeader,
+    TableData,
+    Button,
+    ReadMoreButton,
+    JobListingsHeading
 } from "./style";
 
-const ADMIN = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+interface Job {
+    _id: string;
+    jobTitle: string;
+    jobDescription: string;
+    shortDescription: string;
+    summary: {
+        location: string;
+        jobType: string;
+        numberOfPositions: number;
+        qualifications: string;
+        experience: string;
+        datePosted: string;
+    };
+    requirements: string;
+    qualifications: string;
+    skills: string[];
+}
 
-  // Job-related state
-  const [jobTitle, setJobTitle] = useState("");
-  const [shortDescription, setShortDescription] = useState(""); // New state
-  const [jobDescription, setJobDescription] = useState("");
-  const [location, setLocation] = useState("");
-  const [jobType, setJobType] = useState("");
-  const [numberOfPositions, setNumberOfPositions] = useState("");
-  const [qualifications, setQualifications] = useState("");
-  const [experience, setExperience] = useState("");
-  const [datePosted, setDatePosted] = useState("");
-  const [requirements, setRequirements] = useState("");
-  const [skills, setSkills] = useState("");
+const ViewJobs: React.FC = () => {
+    const [jobs, setJobs] = useState<Job[]>([]);
+    const [editingJob, setEditingJob] = useState<Job | null>(null);
+    const [formData, setFormData] = useState<Job | null>(null);
 
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
-  const handleSubmit = async (e:React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
 
-    const jobData = {
-      jobTitle,
-      shortDescription, // Include short description
-      jobDescription,
-      summary: {
-        location,
-        jobType,
-        numberOfPositions: parseInt(numberOfPositions, 10),
-        qualifications,
-        experience,
-        datePosted: new Date(datePosted),
-      },
-      requirements,
-      qualifications,
-      skills: skills.split(",").map((skill) => skill.trim()), // Convert skills to an array
+    useEffect(() => {
+        fetchJobs();
+    }, []);
+
+    const fetchJobs = async () => {
+        try {
+            const data = await getAllJobs();
+            setJobs(Array.isArray(data.result) ? data.result : []);
+        } catch (error) {
+            console.error("Error fetching jobs:", error);
+        }
     };
 
-    try {
-      const response = await createJob(jobData);
-      console.log("Job Created Successfully:", response);
-      alert("Job Created Successfully!");
-    } catch (error) {
-      console.error("Error creating job:", error);
-      alert("Failed to create job!");
-    }
-  };
+    const handleEdit = (job: Job) => {
+        setEditingJob(job);
+        setFormData({ ...job });
+    };
 
-  return (
-    <Container>
-      <MainContent>
-        <Header>
-          <HeaderLeft>Welcome, Admin</HeaderLeft>
-          <HeaderRight>
-            {isMobile && (
-              <ToggleButton onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                {isMenuOpen ? "Close Menu" : "Open Menu"}
-              </ToggleButton>
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        if (!formData) return;
+
+        if (name.startsWith("summary.")) {
+            const field = name.split(".")[1];
+            setFormData({
+                ...formData,
+                summary: { ...formData.summary, [field]: value },
+            });
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
+    };
+
+    const handleUpdate = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!editingJob || !formData) return;
+        try {
+            await updateJobById(editingJob._id, formData);
+            setEditingJob(null);
+            fetchJobs();
+        } catch (error) {
+            console.error("Error updating job:", error);
+        }
+    };
+
+    const handleDelete = async (jobId: string) => {
+        try {
+            await deleteJobById(jobId);
+            fetchJobs();
+        } catch (error) {
+            console.error("Error deleting job:", error);
+        }
+    };
+
+  
+
+    return (
+        <Container>
+            <JobListingsHeading>Job Listings</JobListingsHeading>
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableHeader>Title</TableHeader>
+                      
+                        <TableHeader>Location</TableHeader>
+                        <TableHeader>Job Type</TableHeader>
+                        <TableHeader>No. of Positions</TableHeader>
+                        <TableHeader>Qualifications</TableHeader>
+                        <TableHeader>Experience</TableHeader>
+                        <TableHeader>Date Posted</TableHeader>
+                        <TableHeader>Requirements</TableHeader>
+                        <TableHeader>Skills</TableHeader>
+                        <TableHeader>Actions</TableHeader>
+                    </TableRow>
+                </TableHead>
+                <tbody>
+                    {jobs.map((job) => (
+                        <TableRow key={job._id}>
+                            <TableData>{job.jobTitle}</TableData>
+                            
+
+                            <TableData>{job.summary.location}</TableData>
+                            <TableData>{job.summary.jobType}</TableData>
+                            <TableData>{job.summary.numberOfPositions}</TableData>
+                            <TableData>{job.summary.qualifications}</TableData>
+                            <TableData>{job.summary.experience}</TableData>
+                            <TableData>{new Date(job.summary.datePosted).toLocaleDateString()}</TableData>
+                            <TableData>{job.requirements}</TableData>
+                            <TableData>{job.skills.join(", ")}</TableData>
+                            <TableData>
+                                <Button className="edit" onClick={() => handleEdit(job)}>
+                                    Edit
+                                </Button>
+                                <Button className="delete" onClick={() => handleDelete(job._id)}>
+                                    Delete
+                                </Button>
+                            </TableData>
+                        </TableRow>
+                    ))}
+                </tbody>
+            </Table>
+
+            {editingJob && formData && (
+                <Modal>
+                    <ModalContent>
+                        <ModalHeader>Edit Job</ModalHeader>
+                        <form onSubmit={handleUpdate}>
+                            <Input type="text" name="jobTitle" value={formData.jobTitle} onChange={handleChange} />
+                          
+                            <Input type="text" name="summary.location" value={formData.summary.location} onChange={handleChange} />
+                            <Input type="text" name="summary.jobType" value={formData.summary.jobType} onChange={handleChange} />
+                            <Input type="number" name="summary.numberOfPositions" value={formData.summary.numberOfPositions} onChange={handleChange} />
+                            <Input type="text" name="summary.qualifications" value={formData.summary.qualifications} onChange={handleChange} />
+                            <Input type="text" name="summary.experience" value={formData.summary.experience} onChange={handleChange} />
+                            <Input type="date" name="summary.datePosted" value={formData.summary.datePosted} onChange={handleChange} />
+                            <Input type="text" name="requirements" value={formData.requirements} onChange={handleChange} />
+                            <Input type="text" name="qualifications" value={formData.qualifications} onChange={handleChange} />
+                            <Input type="text" name="skills" value={formData.skills.join(", ")} onChange={(e) => setFormData({ ...formData, skills: e.target.value.split(", ") })} />
+                            <BtnContainer>
+                                <Btn className="update" type="submit">Update</Btn>
+                                <Btn className="close" onClick={() => setEditingJob(null)}>Cancel</Btn>
+                            </BtnContainer>
+                        </form>
+                    </ModalContent>
+                </Modal>
             )}
-          </HeaderRight>
-        </Header>
-
-        <Main>
-          <Title>Job Management</Title>
-          <Subtitle>Enter Job Details</Subtitle>
-
-          <FormContainer onSubmit={handleSubmit}>
-            <FormColumn>
-              <FormGroup>
-                <Label>Job Title</Label>
-                <Input type="text" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} required />
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Short Description</Label> {/* New input */}
-                <TextArea value={shortDescription} onChange={(e) => setShortDescription(e.target.value)} required />
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Job Description</Label>
-                <TextArea value={jobDescription} onChange={(e) => setJobDescription(e.target.value)} required />
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Location</Label>
-                <Input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Job Type</Label>
-                <Input type="text" value={jobType} onChange={(e) => setJobType(e.target.value)} required />
-              </FormGroup>
-            </FormColumn>
-
-            <FormColumn>
-              <FormGroup>
-                <Label>Number of Positions</Label>
-                <Input type="number" value={numberOfPositions} onChange={(e) => setNumberOfPositions(e.target.value)} required />
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Qualifications</Label>
-                <TextArea value={qualifications} onChange={(e) => setQualifications(e.target.value)} required />
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Experience</Label>
-                <Input type="text" value={experience} onChange={(e) => setExperience(e.target.value)} required />
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Date Posted</Label>
-                <Input type="date" value={datePosted} onChange={(e) => setDatePosted(e.target.value)} required />
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Requirements</Label>
-                <TextArea value={requirements} onChange={(e) => setRequirements(e.target.value)} required />
-              </FormGroup>
-
-              <FormGroup>
-                <Label>Skills (comma-separated)</Label>
-                <Input type="text" value={skills} onChange={(e) => setSkills(e.target.value)} required />
-              </FormGroup>
-
-              <SubmitButton type="submit">Submit</SubmitButton>
-            </FormColumn>
-          </FormContainer>
-        </Main>
-      </MainContent>
-    </Container>
-  );
+        </Container>
+    );
 };
 
-export default ADMIN;
+export default ViewJobs;

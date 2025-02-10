@@ -95,9 +95,9 @@ const Header = () => {
 
 
   const navigationLinks =
-    currentPath === "/admin" || currentPath === "/viewProfile"
+    currentPath === "/admin" || currentPath === "/viewProfile" || currentPath === "/viewJobs"
       ? [
-          { path: "/admin", label: "Post Job" },
+          { path: "/viewJobs", label: "Post Job" },
           { path: "/viewProfile", label: "Resumes" },
         ]
       : [

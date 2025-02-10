@@ -21,18 +21,27 @@ export const Destination = styled.div`
 
 
 export const ButtonStyle = styled.button`
-    padding: "10px 20px",
-    marginLeft: "20px", // Adjust this to move it left
-    background: "#007bff",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    fontSize: "16px",
-    display: "flex", // Use flexbox
-    alignItems: "center", // Aligns items vertically
-    justifyContent: "flex-start", // Aligns content to the left
-    gap: "8px", // Adds spacing between icon and text
+  position: absolute;
+  top: 110px;  /* Ensures it's at the top of the page */
+  left: 20px;
+  font-size: 28px;
+  background: transparent;
+  border: 2px solid #b0b0b0;
+  border-radius: 50px;
+  padding: 8px 16px;
+  cursor: pointer;
+  color: black;
+  z-index: 9999; /* Ensures visibility above all elements */
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    color: #333;
+    border-color: #666;
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+
+
 
 
   /* Responsive Design */

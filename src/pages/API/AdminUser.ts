@@ -30,7 +30,9 @@ export const getJobById = async (jobId: string) => {
 export const updateJobById = async (jobId: string, jobData: any) => {
     const response = await fetch(`${backendUrl}/jobs/details/${jobId}`, {
         method: 'PUT',
-        headers,
+        headers: {
+            'Content-Type': 'application/json',
+        },
         body: JSON.stringify(jobData),
     });
     return response.json();
@@ -39,7 +41,9 @@ export const updateJobById = async (jobId: string, jobData: any) => {
 export const deleteJobById = async (jobId: string) => {
     const response = await fetch(`${backendUrl}/jobs/details/${jobId}`, {
         method: 'DELETE',
-        headers,
+        headers: {
+            'Content-Type': 'application/json',
+        },
     });
     return response.json();
 };

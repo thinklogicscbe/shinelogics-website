@@ -15,6 +15,8 @@ import {
   ButtonContainers,
   DescriptionContainer,
   ReadMoreButton,
+  CenteredMessage,
+  CenteredMessageContainer
 } from "./style";
 import { getAllJobs } from "../API/AdminUser"; // Import API function
 import career from "../../assets/careers.jpg";
@@ -171,18 +173,19 @@ const Career = () => {
                 )}
 
                 {/* View Job Button */}
-
-                <ButtonContainers
-                  onClick={() => setSelectedJob(job)}>View Job
-                </ButtonContainers>
-
-
+                <ButtonContainers onClick={() => setSelectedJob(job)}>View Job</ButtonContainers>
               </TextContainer>
             ))
           ) : (
-            <p>No job openings available at the moment.</p>
+
+            <CenteredMessageContainer>
+            <CenteredMessage>No job openings available at the moment.</CenteredMessage>
+          </CenteredMessageContainer>
+
+
           )}
         </TextWrapper>
+
       </Heading>
     </>
   );

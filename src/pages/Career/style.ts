@@ -235,6 +235,24 @@ export const ReadMoreButton = styled.button`
   padding-left: 5px;
 `;
 
+export const CenteredMessageContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90%; /* Make sure the parent container takes up space */
+  width: 100%;
+  min-height: 300px; /* Set a minimum height to ensure visibility */
+`;
+
+export const CenteredMessage = styled.p`
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  padding: 20px;
+`;
+
+
 export const ButtonContainers = styled.button`
   color: white;
   background-color: blue;
