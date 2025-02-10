@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { Drawer } from "antd";
-import { SvgIcon } from "../../common/SvgIcon";
+// import { SvgIcon } from "../../common/SvgIcon";
 
 import {
   HeaderSection,
@@ -95,9 +95,9 @@ const Header = () => {
 
 
   const navigationLinks =
-    currentPath === "/admin" || currentPath === "/viewProfile"
+    currentPath === "/admin" || currentPath === "/viewProfile" || currentPath === "/viewJobs"
       ? [
-          { path: "/admin", label: "Post Job" },
+          { path: "/viewJobs", label: "Post Job" },
           { path: "/viewProfile", label: "Resumes" },
         ]
       : [
@@ -124,7 +124,7 @@ const Header = () => {
   return (
     <HeaderSection>
       <LogoContainer to="/" aria-label="homepage">
-        <SvgIcon src="shinelogics-logo.svg" width="300px" height="60px" />
+        <img src="Group 450 (1).png" width="500px" height="60px" />
       </LogoContainer>
 
       <Burger onClick={toggleDrawer}>

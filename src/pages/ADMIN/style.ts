@@ -1,249 +1,179 @@
+
+
 import styled from "styled-components";
 
-export const Container = styled.div`
-  display: flex;
-  height: 100vh;
-  background-color: #f8f9fa;
-  overflow: hidden;
-`;
 
-export const Sidebar = styled.aside`
-  background-color: #1e293b; /* Dark navy background */
-  color: #ffffff; /* White text for readability */
-  width: 22rem;
-  padding: 2.5rem;
-  height: 100vh;
-  box-shadow: 4px 0px 12px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
-  border-right: 2px solid rgba(255, 255, 255, 0.2); /* Subtle border */
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-
-  h2 {
-    font-size: 1.6rem;
-  }
-`;
-
-export const MobileSidebar = styled.div`
-  background-color: #1e293b;
-  color: white;
-  width: 20rem;
-  padding: 2rem;
-  position: absolute;
+export const Modal = styled.div`
+  position: fixed;
   top: 0;
   left: 0;
-  z-index: 100;
-  height: 100vh;
-  box-shadow: 4px 0px 8px rgba(0, 0, 0, 0.2);
-  transform: translateX(-100%);
-  transition: transform 0.3s ease;
-  display: block;
-
-  &.active {
-    transform: translateX(0);
-  }
-
-  @media (min-width: 769px) {
-    display: none;
-  }
-`;
-
-export const Nav = styled.nav`
-  margin-top: 2rem;
-`;
-
-export const NavItem = styled.li`
-  list-style: none;
-  margin-bottom: 1.2rem;
-`;
-
-export const NavLink = styled.a`
-  display: block;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  transition: background 0.3s ease;
-
-  &:hover {
-    background-color: #475569;
-  }
-`;
-
-export const MainContent = styled.div`
-  flex: 1;
-  padding: 3rem;
-  overflow-y: auto;
-  height: 100vh;
-  background-color: #ffffff;
-`;
-
-export const Header = styled.header`
-  background-color: white;
-  padding: 2rem;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Dark overlay */
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid #e2e8f0;
+  z-index: 1000; /* Ensures modal is on top */
 `;
 
-export const HeaderLeft = styled.div`
-  font-size: 1.5rem;
-  font-weight: 700;
-`;
-
-export const HeaderRight = styled.div`
-  display: flex;
-  gap: 2rem;
-  font-size: 1.1rem;
-  align-items: center;
-`;
-
-export const ToggleButton = styled.button`
-  padding: 1rem;
-  background-color: #1e293b;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 0.5rem;
-  transition: background 0.3s ease;
-
-  &:hover {
-    background-color: #374151;
-  }
-`;
-
-export const Main = styled.main`
-  padding: 2rem;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  min-height: 80vh;
-`;
-
-export const Title = styled.h1`
-  font-size: 2.2rem;
+export const JobListingsHeading = styled.h2`
+  font-size: 28px;
   font-weight: bold;
-  margin-bottom: 2rem;
-`;
-
-export const Subtitle = styled.h2`
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-`;
-
-export const FormContainer = styled.form`
+  color: #333;
+  text-align: center;
+  margin: 20px auto;
+  padding-bottom: 10px;
+  border-bottom: 3px solid #007bff;
   display: flex;
-  gap: 3rem;
-  flex-wrap: wrap; /* Allows content to wrap on smaller screens */
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
 `;
 
-export const FormColumn = styled.div`
-  flex: 1;
-  min-width: 280px; /* Ensures minimum column width on smaller screens */
+
+
+
+export const ReadMoreButton = styled.button`
+  background: none;
+  border: none;
+  color: blue;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 5px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+export const ModalContent = styled.div`
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  width: 600px; /* Increased width */
+  max-height: 85vh; /* Prevents overflow */
+  overflow-y: auto; /* Enables scrolling */
   display: flex;
   flex-direction: column;
+  gap: 18px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3); /* Smooth shadow */
+  border-radius: 8px;
 `;
 
-export const FormGroup = styled.div`
-  margin-bottom: 1.5rem;
-`;
-
-export const Label = styled.label`
-  display: block;
-  font-weight: 700;
-  margin-bottom: 0.7rem;
+/* Heading for modal */
+export const ModalHeader = styled.h2`
+  font-size: 18px; /* Smaller heading size */
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 10px;
   color: #333;
 `;
 
 export const Input = styled.input`
-  width: 100%;
-  padding: 1rem;
+  padding: 12px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  font-size: 1rem;
+  width: 100%;
+  font-size: 14px;
 `;
 
 export const TextArea = styled.textarea`
-  width: 100%;
-  height: 120px;
-  padding: 1rem;
+  padding: 12px;
   border: 1px solid #ccc;
   border-radius: 6px;
-  font-size: 1rem;
+  width: 100%;
+  height: 120px; /* Fixed height for better UI */
+  font-size: 14px;
 `;
 
-export const SubmitButton = styled.button`
-  padding: 1rem 2rem;
-  background-color: #1e293b;
-  color: white;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: background 0.3s ease;
-  font-weight: 600;
+export const BtnContainer = styled.div`
+  display: flex;
+  gap: 12px;
+`;
 
-  &:hover {
-    background-color: #374151;
+export const Btn = styled.button`
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+  transition: all 0.2s ease-in-out;
+
+  &.update {
+    background: #007bff;
+    color: white;
   }
 
-  /* Wrapper for two columns */
-.form-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px; /* Add space between columns */
-  justify-content: space-between;
-}
+  &.close {
+    background: #dc3545;
+    color: white;
+  }
 
-/* Left Column - Job Title, Small Description, Skills */
-.form-column-left {
-  flex: 1 1 48%; /* Allow the column to take up 48% of the available width */
-  padding: 10px;
-}
-
-/* Right Column - Full Details */
-.form-column-right {
-  flex: 1 1 48%; /* Allow the column to take up 48% of the available width */
-  padding: 10px;
-}
-
-/* You can add more specific styles to each section as needed, e.g. */
-.form-column-left h3 {
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.form-column-right p {
-  font-size: 16px;
-  color: #555;
-}
-
-
-
-  
+  &:hover {
+    opacity: 0.85;
+  }
 `;
 
 
-export const FormRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: space-between;
+
+export const Container = styled.div`
+  padding: 20px;
+  max-width: 100%;
+  overflow-x: auto;
 `;
 
-export const FormColumnLeft = styled.div`
-  flex: 1 1 48%;
-  padding: 1rem;
+export const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
-export const FormColumnRight = styled.div`
-  flex: 1 1 48%;
-  padding: 1rem;
+export const TableHead = styled.thead`
+  background: #007bff;
+  color: white;
 `;
 
+export const TableRow = styled.tr`
+  &:nth-child(even) {
+    background: #f8f9fa;
+  }
+`;
 
+export const TableHeader = styled.th`
+  padding: 15px;
+  text-align: left;
+  border-bottom: 2px solid #ddd;
+`;
+
+export const TableData = styled.td`
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  white-space: nowrap;
+`;
+
+export const Button = styled.button`
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-right: 5px;
+
+  &.edit {
+    background: #28a745;
+    color: white;
+  }
+  &.delete {
+    background: #dc3545;
+    color: white;
+  }
+  &:hover {
+    opacity: 0.8;
+  }
+`;
