@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 import {
   Heading,
   Title,
@@ -16,9 +16,8 @@ import {
   DescriptionContainer,
   ReadMoreButton,
 } from "./style";
-import { getAllJobs } from "../API/AdminUser"; // Import API function
+import { getAllJobs } from "../API/AdminUser"; 
 import career from "../../assets/careers.jpg";
-import Job from "../Jobs"; // Import Job component
 
 // Define the job structure
 interface JobType {
@@ -38,14 +37,13 @@ interface JobType {
     datePosted: string;
   };
 }
-
-
 const Career = () => {
   // State to hold job data
   const [jobData, setJobData] = useState<JobType[]>([]);
 
   // State to track selected job
   const [selectedJob, setSelectedJob] = useState<JobType | null>(null);
+  const navigate = useNavigate();
 
   // Fetch jobs on component mount
   useEffect(() => {
@@ -70,7 +68,9 @@ const Career = () => {
   }, []);
 
   // State to manage Read More/Read Less for each job
-  const [expandedJobs, setExpandedJobs] = useState<{ [key: string]: boolean }>({});
+  const [expandedJobs, setExpandedJobs] = useState<{ [key: string]: boolean }>(
+    {}
+  );
 
   const toggleReadMore = (jobId: string) => {
     setExpandedJobs((prev) => ({
@@ -78,12 +78,6 @@ const Career = () => {
       [jobId]: !prev[jobId],
     }));
   };
-
-  // If a job is selected, display the Job component
-  if (selectedJob) {
-    return <Job job={selectedJob} onBack={() => setSelectedJob(null)} />;
-  }
-
 
   return (
     <>
@@ -163,7 +157,11 @@ const Career = () => {
                 {job.skills && job.skills.length > 0 && (
                   <div className="skills">
                     {job.skills.map((skill, idx) => (
-                      <span key={idx} className="skill" style={{ color: "black", fontSize: "14px" }}>
+                      <span
+                        key={idx}
+                        className="skill"
+                        style={{ color: "black", fontSize: "14px" }}
+                      >
                         {skill}
                       </span>
                     ))}
@@ -173,10 +171,13 @@ const Career = () => {
                 {/* View Job Button */}
 
                 <ButtonContainers
-                  onClick={() => setSelectedJob(job)}>View Job
+                  onClick={() => {
+                    setSelectedJob(job); 
+                    navigate("/Jobs", { state: { job } });
+                  }}
+                >
+                  View Job
                 </ButtonContainers>
-
-
               </TextContainer>
             ))
           ) : (
