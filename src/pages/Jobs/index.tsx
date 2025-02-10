@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate,useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import React from "react";
 import {
@@ -44,37 +44,33 @@ interface JobType {
   skills: string[];
 }
 
-// Define props for the Job component
-interface JobProps {
-  job: JobType;
-  onBack: () => void;
-}
 
-const Jobs: React.FC<JobProps> = ({ job, onBack }) => {
-  const navigate = useNavigate(); // Initialize navigate
+
+const Jobs: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Retrieve job data from state or fallback to localStorage
+  const job = location.state?.job || JSON.parse(localStorage.getItem("job") || "{}");
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-
+  const handleApply = () => {
+    console.log("Navigating with Job ID:", job._id);
+    navigate("/applyForm", { state: { jobId: job._id } });
+  };
 
   return (
     <Destinationcontiner>
-
-      <ButtonStyle
-        onClick={onBack}
-    
-      >
-        ← 
-      </ButtonStyle>
+      <ButtonStyle onClick={() => navigate(-1)}>←</ButtonStyle>
 
       {/* Top Section: Image + Main Content */}
       <TopSection>
         <ImageContainer>
           <img src="/img/career/uiux.jpg" alt={job.jobTitle} />
         </ImageContainer>
-
         <ContentWrapper>
           <Destination>
             <h2>{job.jobTitle}</h2>
@@ -85,96 +81,37 @@ const Jobs: React.FC<JobProps> = ({ job, onBack }) => {
 
       {/* Bottom Section with Left and Right Content */}
       <BottomSection>
-        {/* Left Content */}
         <Leftsidecontent>
-          {/* <SectionTitle style={{ marginLeft: "3%", fontSize: "36px", color: "black", fontWeight: "bold" }}>
-            {job.jobTitle}
-          </SectionTitle> */}
-
-          <SectionTitle
-            style={{
-              marginLeft: "6%",
-              color: "blue",
-              fontSize: "24px",
-              fontWeight: "bold"
-            }}
-          >
+          <SectionTitle style={{ marginLeft: "6%", color: "blue", fontSize: "24px", fontWeight: "bold" }}>
             Job Description:
           </SectionTitle>
           <List style={{ marginLeft: "12%" }}>
-            <li
-              className="desc"
-              style={{
-                fontSize: "16px",
-                lineHeight: "1.8",
-                textAlign: "justify",
-                fontFamily: '"Poppins", "Roboto", sans-serif',
-                fontWeight: "500",
-                color: "#333"
-              }}
-            >
+            <li className="desc" style={{ fontSize: "16px", lineHeight: "1.8", textAlign: "justify", fontWeight: "500", color: "#333" }}>
               {job.jobDescription}
             </li>
           </List>
 
-          <SectionTitle style={{
-            marginLeft: "6%",
-            color: "blue",
-            fontSize: "24px",
-            fontWeight: "bold"
-          }}>Requirements:</SectionTitle>
+          <SectionTitle style={{ marginLeft: "6%", color: "blue", fontSize: "24px", fontWeight: "bold" }}>Requirements:</SectionTitle>
           <List style={{ marginLeft: "12%" }}>
-            <li
-              className="desc"
-              style={{
-                fontSize: "16px",
-                lineHeight: "1.8",
-                textAlign: "justify",
-                fontFamily: '"Poppins", "Roboto", sans-serif',
-                fontWeight: "500",
-                color: "#333"
-              }}
-            >{job.requirements}</li>
+            <li className="desc" style={{ fontSize: "16px", lineHeight: "1.8", textAlign: "justify", fontWeight: "500", color: "#333" }}>
+              {job.requirements}
+            </li>
           </List>
 
-          <SectionTitle style={{
-            marginLeft: "6%",
-            color: "blue",
-            fontSize: "24px",
-            fontWeight: "bold"
-          }}>Skills:</SectionTitle>
-
+          <SectionTitle style={{ marginLeft: "6%", color: "blue", fontSize: "24px", fontWeight: "bold" }}>Skills:</SectionTitle>
           <List style={{ marginLeft: "12%" }}>
-            {job.skills.map((skill, index) => (
-              <li className="desc"
-                style={{
-                  fontSize: "16px",
-                  lineHeight: "1.8",
-                  textAlign: "justify",
-                  fontFamily: '"Poppins", "Roboto", sans-serif',
-                  fontWeight: "500",
-                  color: "#333"
-                }} key={index}>{skill}</li>
+            {job.skills?.map((skill:any, index:any ) => (
+              <li className="desc" key={index} style={{ fontSize: "16px", lineHeight: "1.8", textAlign: "justify", fontWeight: "500", color: "#333" }}>
+                {skill}
+              </li>
             ))}
           </List>
 
-          <SectionTitle style={{
-            marginLeft: "6%",
-            color: "blue",
-            fontSize: "24px",
-            fontWeight: "bold"
-          }}>Qualifications:</SectionTitle>
-
+          <SectionTitle style={{ marginLeft: "6%", color: "blue", fontSize: "24px", fontWeight: "bold" }}>Qualifications:</SectionTitle>
           <List style={{ marginLeft: "12%" }}>
-            <li className="desc"
-              style={{
-                fontSize: "16px",
-                lineHeight: "1.8",
-                textAlign: "justify",
-                fontFamily: '"Poppins", "Roboto", sans-serif',
-                fontWeight: "500",
-                color: "#333"
-              }}>{job.qualifications}</li>
+            <li className="desc" style={{ fontSize: "16px", lineHeight: "1.8", textAlign: "justify", fontWeight: "500", color: "#333" }}>
+              {job.qualifications}
+            </li>
           </List>
         </Leftsidecontent>
 
@@ -185,54 +122,40 @@ const Jobs: React.FC<JobProps> = ({ job, onBack }) => {
               <h1>Job Summary</h1>
             </Title>
             <Location>
-              <h4>
-                <img src="/img/job icon/location.png" width="20" height="20" alt="Location Icon" /> Location
-              </h4>
-              <p>{job.summary.location}</p>
+              <h4><img src="/img/job icon/location.png" width="20" height="20" alt="Location Icon" /> Location</h4>
+              <p>{job.summary?.location}</p>
             </Location>
             <StyledHr />
             <JobType>
-              <h4>
-                <img src="/img/job icon/job.png" width="20" height="20" alt="Job Type Icon" /> Job Type
-              </h4>
-              <p>{job.summary.jobType}</p>
+              <h4><img src="/img/job icon/job.png" width="20" height="20" alt="Job Type Icon" /> Job Type</h4>
+              <p>{job.summary?.jobType}</p>
             </JobType>
             <StyledHr />
             <Positionscount>
-              <h4>
-                <img src="/img/job icon/people.png" width="20" height="20" alt="Positions Icon" /> No. of Positions
-              </h4>
-              <p>{job.summary.numberOfPositions}</p>
+              <h4><img src="/img/job icon/people.png" width="20" height="20" alt="Positions Icon" /> No. of Positions</h4>
+              <p>{job.summary?.numberOfPositions}</p>
             </Positionscount>
             <StyledHr />
             <Qualification>
-              <h4>
-                <img src="/img/job icon/qualification.png" width="20" height="20" alt="Qualification Icon" /> Qualification
-              </h4>
-              <p>{job.summary.qualifications}</p>
+              <h4><img src="/img/job icon/qualification.png" width="20" height="20" alt="Qualification Icon" /> Qualification</h4>
+              <p>{job.summary?.qualifications}</p>
             </Qualification>
             <StyledHr />
             <Experience>
-              <h4>
-                <img src="/img/job icon/exp.png" width="20" height="20" alt="Experience Icon" /> Experience
-              </h4>
-              <p>{job.summary.experience}</p>
+              <h4><img src="/img/job icon/exp.png" width="20" height="20" alt="Experience Icon" /> Experience</h4>
+              <p>{job.summary?.experience}</p>
             </Experience>
             <StyledHr />
             <Posted>
-              <h4>
-                <img src="/img/job icon/time.png" width="20" height="20" alt="Posted Icon" /> Posted
-              </h4>
-              <p>{new Date(job.summary.datePosted).toDateString()}</p>
+              <h4><img src="/img/job icon/time.png" width="20" height="20" alt="Posted Icon" /> Posted</h4>
+              <p>{job.summary?.datePosted ? new Date(job.summary.datePosted).toDateString() : "N/A"}</p>
             </Posted>
           </Jobsummery>
         </Rightsidecontent>
       </BottomSection>
 
       {/* Apply Button */}
-      <Link to="/applyForm">
-        <ApplyButton as="button">Apply</ApplyButton>
-      </Link>
+      <ApplyButton onClick={handleApply}>Apply</ApplyButton>
     </Destinationcontiner>
   );
 };
