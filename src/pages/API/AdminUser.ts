@@ -22,6 +22,11 @@ export const getAllJobs = async () => {
     return response.json();
 };
 
+export const getAllWithCount = async () => {
+    const response = await fetch(`${backendUrl}/jobs/detailsCount`, { headers });
+    return response.json();
+};
+
 export const getJobById = async (jobId: string) => {
     const response = await fetch(`${backendUrl}/jobs/details/${jobId}`, { headers });
     return response.json();

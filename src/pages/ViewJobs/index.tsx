@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { getAllJobs, updateJobById, deleteJobById } from "../API/AdminUser";
+import { getAllWithCount, updateJobById, deleteJobById } from "../API/AdminUser";
+
+import { MdDelete, MdEdit, MdClose } from "react-icons/md";
+
+
 import {
     Modal,
     ModalContent,
@@ -13,7 +17,8 @@ import {
     TableRow,
     TableHeader,
     TableData,
-    Button,
+
+
     JobListingsHeading,
     Heading
 } from "./style";
@@ -35,6 +40,8 @@ interface Job {
     requirements: string;
     qualifications: string;
     skills: string[];
+    status: number;
+    applicantCount: number;
 }
 
 const ViewJobs: React.FC = () => {
@@ -53,7 +60,7 @@ const ViewJobs: React.FC = () => {
 
     const fetchJobs = async () => {
         try {
-            const data = await getAllJobs();
+            const data = await getAllWithCount();
             setJobs(Array.isArray(data.result) ? data.result : []);
         } catch (error) {
             console.error("Error fetching jobs:", error);
@@ -92,6 +99,18 @@ const ViewJobs: React.FC = () => {
         }
     };
 
+    const handleCloseJob = async (jobId: string) => {
+        try {
+            const updatedData = { status: 0 }; // Set status to 0 for closing the job
+
+            await updateJobById(jobId, updatedData);
+            fetchJobs(); // Refresh job list after update
+        } catch (error) {
+            console.error("Error closing job:", error);
+        }
+    };
+
+
     const handleDelete = async (jobId: string) => {
         try {
             await deleteJobById(jobId);
@@ -124,7 +143,9 @@ const ViewJobs: React.FC = () => {
                         <TableHeader>Experience</TableHeader>
                         <TableHeader>Date Posted</TableHeader>
                         <TableHeader>Requirements</TableHeader>
-                        <TableHeader>Skills</TableHeader>
+                        {/* <TableHeader>Skills</TableHeader> */}
+                        <TableHeader>Applicants</TableHeader>
+                        <TableHeader>Status</TableHeader>
                         <TableHeader>Actions</TableHeader>
                     </TableRow>
                 </TableHead>
@@ -139,7 +160,7 @@ const ViewJobs: React.FC = () => {
                             <TableData>{job.summary.experience}</TableData>
                             <TableData>{new Date(job.summary.datePosted).toLocaleDateString()}</TableData>
                             <TableData>{job.requirements}</TableData>
-                            <TableData>
+                            {/* <TableData>
                                 {expandedSkills[job._id]
                                     ? job.skills.join(", ")
                                     : job.skills.slice(0, 3).join(", ")}
@@ -162,10 +183,36 @@ const ViewJobs: React.FC = () => {
                                         {expandedSkills[job._id] ? "Show Less" : "Show More"}
                                     </button>
                                 )}
-                            </TableData>
+                            </TableData> */}
+                            <TableData>{job.applicantCount}</TableData>
+                            <TableData>{job.status === 1 ? "Active" : "Inactive"}</TableData> {/* Add this */}
                             <TableData>
-                                <Button className="edit" onClick={() => handleEdit(job)}>Edit</Button>
-                                <Button className="delete" onClick={() => handleDelete(job._id)}>Delete</Button>
+                                <button
+                                    onClick={() => handleEdit(job)}
+                                    style={{ background: "none", border: "none", cursor: "pointer" }}
+                                       title="Edit"
+                                >
+                                    <MdEdit style={{ color: "blue", fontSize: "20px" }} />
+                                </button>
+
+                                <button
+                                    onClick={() => handleDelete(job._id)}
+                                    style={{ background: "none", border: "none", cursor: "pointer" }}
+                                       title="Delete"
+                                >
+                                    <MdDelete style={{ color: "red", fontSize: "20px" }} />
+                                </button>
+                                <button
+                                    onClick={() => handleCloseJob(job._id)}
+                                    style={{ background: "none", border: "none", cursor: "pointer" }}
+                                    title="Close"
+                                >
+                                    <MdClose style={{ color: "brown", fontSize: "20px" }} />
+                                </button>
+
+
+
+
                             </TableData>
                         </TableRow>
                     ))}
@@ -226,6 +273,7 @@ const ViewJobs: React.FC = () => {
                                 value={formData.skills.slice(0, 3).join(", ") + (formData.skills.length > 3 ? ", ..." : "")}
                                 onChange={(e) => setFormData({ ...formData, skills: e.target.value.split(", ") })}
                             />
+
 
                             <BtnContainer>
                                 <Btn className="update" type="submit">Update</Btn>
