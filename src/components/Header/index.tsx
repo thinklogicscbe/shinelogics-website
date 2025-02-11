@@ -24,23 +24,6 @@ const Header = () => {
   const [mobileDropdownVisible, setMobileDropdownVisible] = useState(false);
   const [mobileInsightDropdownVisible, setMobileInsightDropdownVisible] = useState(false);
   const [, setIsMobile] = useState(window.innerWidth <= 768); 
-  const [currentPath, setCurrentPath] = useState(localStorage.getItem("currentPath") || "/");
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const newPath = localStorage.getItem("currentPath") || "/";
-      if (newPath !== currentPath) {
-        setCurrentPath(newPath);
-        if (newPath === "/admin" || newPath === "/viewProfile") {
-          window.location.reload(); // Force reload only if needed
-        }
-      }
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, [currentPath]);
-
 
   useEffect(() => {
     const handleResize = () => {
@@ -94,18 +77,13 @@ const Header = () => {
 
 
 
-  const navigationLinks =
-    currentPath === "/admin" || currentPath === "/viewProfile" || currentPath === "/viewJobs"
-      ? [
-          { path: "/viewJobs", label: "Post Job" },
-          { path: "/viewProfile", label: "Resumes" },
-        ]
-      : [
-          { path: "/product", label: "Product",hasDropdown: true, showDropdown: showProductDropdown, hideDropdown: hideProductDropdown },
-          { path: "/service", label: "Service" },
-          { path: "/career", label: "Insights",hasDropdown: true, showDropdown: showInsightDropdown, hideDropdown: hideInsightDropdown },
-          { path: "/about", label: "About" },
-        ];
+  const navigationLinks = [
+    { path: "/product", label: "Product", hasDropdown: true, showDropdown: showProductDropdown, hideDropdown: hideProductDropdown },
+    { path: "/service", label: "Service" },
+    { path: "/career", label: "Insights", hasDropdown: true, showDropdown: showInsightDropdown, hideDropdown: hideInsightDropdown },
+    { path: "/about", label: "About" },
+  ];
+  
   
   console.log(navigationLinks);
   

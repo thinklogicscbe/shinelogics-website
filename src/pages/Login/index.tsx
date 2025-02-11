@@ -7,7 +7,7 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState(""); // To track the email input
   const [password, setPassword] = useState(""); // To track the password input
   const [errorMessage, setErrorMessage] = useState(""); // To store error messages
-  const naviagte = useNavigate(); // Hook for redirecting
+  const navigate = useNavigate(); // Hook for redirecting
 
   useEffect(() => {
     // Ensure fields are cleared on page load
@@ -15,15 +15,16 @@ const Login: React.FC = () => {
     setPassword("");
   }, []);
 
-  // Handle login form submission
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+// Handle login form submission
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    const result = await loginUser(email, password);
+  const result = await loginUser(email, password);
+  console.log(result);
 
     if (result.success) {
       localStorage.setItem("user", JSON.stringify(result.user));
-      naviagte("/SideBar");
+      navigate("/SideBar");
     } else {
       setErrorMessage(result.message || "Invalid login credentials");
     }
