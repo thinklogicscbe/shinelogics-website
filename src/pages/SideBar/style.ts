@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 // Sidebar container (default open on large screens)
 export const SidebarContainer = styled.div<{ open: boolean }>`
-    position: fixed;
+    position: absolute;
     top: 100px;
     left: 0;
     width: 20%;
