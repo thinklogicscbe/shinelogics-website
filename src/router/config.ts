@@ -12,11 +12,12 @@ const routes = [
   { path: "/privacyPolicy", exact: true, component: "PrivacyPolicy" },
   { path: "/productEngineering", exact: true, component: "ProductEngineering" },
   { path: "/resourseEngineering", exact: true, component: "ResourseEngineering" },
-  { path: "/admin", exact: true, component: "ADMIN" },
+  { path: "/PostJob", exact: true, component: "PostJob" },
   { path: "/viewProfile", exact: true, component: "ViewProfile" },
   { path: "/Jobs", exact: true, component: "Jobs" },
   { path: "applyForm", exact: true, component: "ApplyForm" },
   { path: "/viewJobs", exact: true, component: "ViewJobs" },
+  { path: "/SideBar", exact: true, component: "SideBar" },
   { path: "**", exact: true, component: "NotFoundPage" },
 
 ];

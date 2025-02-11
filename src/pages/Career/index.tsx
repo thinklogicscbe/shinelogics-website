@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Heading,
   Title,
@@ -18,7 +18,7 @@ import {
   CenteredMessage,
   CenteredMessageContainer
 } from "./style";
-import { getAllJobs } from "../API/AdminUser"; 
+import { getAllJobs } from "../API/AdminUser";
 import career from "../../assets/careers.jpg";
 
 // Define the job structure
@@ -158,7 +158,7 @@ const Career = () => {
                 {/* Skills */}
                 {job.skills && job.skills.length > 0 && (
                   <div className="skills">
-                    {job.skills.map((skill, idx) => (
+                    {job.skills.slice(0, 4).map((skill, idx) => (
                       <span
                         key={idx}
                         className="skill"
@@ -170,11 +170,12 @@ const Career = () => {
                   </div>
                 )}
 
+
                 {/* View Job Button */}
 
                 <ButtonContainers
                   onClick={() => {
-                    setSelectedJob(job); 
+                    setSelectedJob(job);
                     navigate("/Jobs", { state: { job } });
                   }}
                 >
@@ -185,8 +186,8 @@ const Career = () => {
           ) : (
 
             <CenteredMessageContainer>
-            <CenteredMessage>No job openings available at the moment.</CenteredMessage>
-          </CenteredMessageContainer>
+              <CenteredMessage>No job openings available at the moment.</CenteredMessage>
+            </CenteredMessageContainer>
 
 
           )}

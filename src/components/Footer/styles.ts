@@ -5,6 +5,7 @@ export const FooterSection = styled.footer`
   color: #f0f0f0;
   padding: 4rem 2rem;
   box-sizing: border-box;
+  position: sticky;
 
   @media screen and (max-width: 768px) {
     padding: 3rem 1rem;

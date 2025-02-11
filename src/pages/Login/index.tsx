@@ -22,15 +22,15 @@ const handleSubmit = async (e: React.FormEvent) => {
   const result = await loginUser(email, password);
   console.log(result);
 
-  if (result.success) {
-    localStorage.setItem("user", JSON.stringify(result.user));
-    console.log(result.user);
+    if (result.success) {
+      localStorage.setItem("user", JSON.stringify(result.user));
+      navigate("/SideBar");
+    } else {
+      setErrorMessage(result.message || "Invalid login credentials");
+    }
+  };
+  
 
-    navigate("/admin"); // Correct spelling
-  } else {
-    setErrorMessage(result.message || "Invalid login credentials");
-  }
-};
   return (
     <LoginSignupContainer>
       <div className="container">
