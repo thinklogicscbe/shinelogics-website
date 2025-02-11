@@ -1,35 +1,31 @@
 import { useState } from "react";
 import {
     SidebarContainer,
-   
     CloseButton,
     Backdrop,
     List,
     ListItem,
     ContentWrapper
-
-   
 } from "./style";
 
-  // Import the ViewJobs component
+// Import the components
 import ViewProfile from "../ViewProfile";
 import PostJob from "../PostJob";
 import ViewJobs from "../ViewJobs";
 
 const SideBar: React.FC = () => {
     const [open, setOpen] = useState<boolean>(false);
-    const [selectedComponent, setSelectedComponent] = useState<string>(""); // State to track the selected component
+    const [selectedComponent, setSelectedComponent] = useState<string>("");
 
     const toggleDrawer = () => {
         setOpen(!open);
     };
 
-   const handleNavigation = (component: string) => {
-    console.log("Navigating to:", component);
-    setSelectedComponent(component);
-    setOpen(false);
-};
-
+    const handleNavigation = (component: string) => {
+        console.log("Navigating to:", component);
+        setSelectedComponent(component);
+        setOpen(false); // Close sidebar after navigation
+    };
 
     const renderComponent = () => {
         switch (selectedComponent) {
@@ -40,15 +36,12 @@ const SideBar: React.FC = () => {
             case "ViewResumes":
                 return <ViewProfile />;
             default:
-                return <div>Welcome to the Dashboard</div>; // Default content
+                return <div>Welcome to the Dashboard</div>;
         }
     };
 
     return (
         <>
-            {/* Burger Icon (Only for mobile/tablet, positioned below navbar) */}
-            {/* <MenuButton onClick={toggleDrawer} open={open}>☰</MenuButton> */}
-
             {/* Sidebar Drawer */}
             <SidebarContainer open={open}>
                 {/* Close Button inside Sidebar */}
@@ -61,20 +54,13 @@ const SideBar: React.FC = () => {
                 </List>
             </SidebarContainer>
 
-            {/* Backdrop for overlay effect (only for mobile view) */}
+            {/* Backdrop */}
             {open && <Backdrop onClick={toggleDrawer} />}
 
             {/* Main Content Area */}
-
             <ContentWrapper>
-            {renderComponent()}  {/* Render the selected component dynamically */}
-
+                {renderComponent()} {/* Render selected component */}
             </ContentWrapper>
-            
-           
-                 
-                
-           
         </>
     );
 };

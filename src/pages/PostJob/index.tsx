@@ -96,7 +96,7 @@ const PostJob = () => {
     <Container>
       <MainContent>
         <Header>
-          <HeaderLeft>Welcome, Admin</HeaderLeft>
+          <HeaderLeft>Welcome, Senthil</HeaderLeft>
 
           <HeaderRight>
             {isMobile && (
