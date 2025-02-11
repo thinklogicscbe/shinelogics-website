@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
-import { useForm, FieldError } from "react-hook-form";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import { uploadPdfToS3 } from "../../components/AWS/aws";
 import { createForm } from "../API/form";
 import { toast } from "react-toastify";
@@ -20,7 +20,7 @@ import {
   FileInputField,
   ErrorMessage,
   Row,
-  SuccessMessage, 
+  SuccessMessage,
 } from "./style";
 
 const ApplyForm: React.FC = () => {
@@ -29,28 +29,24 @@ const ApplyForm: React.FC = () => {
     handleSubmit,
     setValue,
     watch,
-    formState: { errors },
-  } = useForm();
+    formState: { errors, isValid },
+  } = useForm({ mode: "onChange" });
 
   const [uploading, setUploading] = useState(false);
   const [resumeUploaded, setResumeUploaded] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-
   const location = useLocation();
   const jobId = location.state?.jobId;
-  console.log("JobID",jobId);
-  
-  
+  const navigate = useNavigate();
 
+  const watchFields = watch();
   const handleFileUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = event.target.files?.[0];
-
     if (!file) return;
 
-    // Simple validation: Check file size (5MB limit) and type (PDF, DOC, DOCX, TXT)
     if (file.size > 5 * 1024 * 1024) {
       toast.error("File size should be less than 5MB");
       return;
@@ -71,16 +67,14 @@ const ApplyForm: React.FC = () => {
     }
 
     setUploading(true);
-
     try {
       const uploadedUrl = await uploadPdfToS3({
         name: file.name,
         type: file.type,
         content: file,
       });
-
       setValue("resume", uploadedUrl);
-      setResumeUploaded(true); // Indicate successful upload
+      setResumeUploaded(true);
     } catch (error) {
       console.error("File upload failed:", error);
       setResumeUploaded(false);
@@ -94,21 +88,17 @@ const ApplyForm: React.FC = () => {
       toast.error("Please upload your resume before submitting.");
       return;
     }
-    if (!data.phone || data.phone.length < 10) {
-      toast.error("Please enter a valid phone number.");
-      return;
-    }
-  
+
     try {
       const response = await createForm({
         ...data,
-        jobId: jobId, // Ensure jobId is explicitly passed
+        jobId,
         resume: data.resume,
       });
-  
       if (response?.success) {
         toast.success("Application submitted successfully!");
         setSubmitted(true);
+        setTimeout(() => navigate("/"), 2000);
       } else {
         toast.error(
           response?.message || "Failed to submit application. Please try again."
@@ -119,7 +109,6 @@ const ApplyForm: React.FC = () => {
       toast.error("Something went wrong. Please try again later.");
     }
   };
-  
 
   return (
     <FormContainer>
@@ -129,9 +118,7 @@ const ApplyForm: React.FC = () => {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Row>
               <div>
-                <Label htmlFor="firstName">
-                  First Name <span>*</span>
-                </Label>
+                <Label htmlFor="firstName">First Name *</Label>
                 <InputField
                   type="text"
                   placeholder="First Name"
@@ -139,17 +126,15 @@ const ApplyForm: React.FC = () => {
                     required: "First Name is required",
                   })}
                 />
-                {errors.firstName && (
+                {errors.firstName?.message && (
                   <ErrorMessage>
-                    {(errors.firstName as FieldError).message}
+                    {String(errors.firstName.message)}
                   </ErrorMessage>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="lastName">
-                  Last Name <span>*</span>
-                </Label>
+                <Label htmlFor="lastName">Last Name *</Label>
                 <InputField
                   type="text"
                   placeholder="Last Name"
@@ -157,36 +142,28 @@ const ApplyForm: React.FC = () => {
                     required: "Last Name is required",
                   })}
                 />
-                {errors.lastName && (
-                  <ErrorMessage>
-                    {(errors.lastName as FieldError).message}
-                  </ErrorMessage>
+                {errors.lastName?.message && (
+                  <ErrorMessage>{String(errors.lastName.message)}</ErrorMessage>
                 )}
               </div>
             </Row>
 
             <Row>
               <div>
-                <Label htmlFor="dob">
-                  Date of Birth <span>*</span>
-                </Label>
+                <Label htmlFor="dob">Date of Birth *</Label>
                 <InputField
                   type="date"
                   {...register("dob", {
                     required: "Date of Birth is required",
                   })}
                 />
-                {errors.dob && (
-                  <ErrorMessage>
-                    {(errors.dob as FieldError).message}
-                  </ErrorMessage>
+                {errors.dob?.message && (
+                  <ErrorMessage>{String(errors.dob.message)}</ErrorMessage>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="gender">
-                  Gender <span>*</span>
-                </Label>
+                <Label htmlFor="gender">Gender *</Label>
                 <SelectField
                   {...register("gender", { required: "Gender is required" })}
                 >
@@ -195,62 +172,52 @@ const ApplyForm: React.FC = () => {
                   <option value="Female">Female</option>
                   <option value="Other">Other</option>
                 </SelectField>
-                {errors.gender && (
-                  <ErrorMessage>
-                    {(errors.gender as FieldError).message}
-                  </ErrorMessage>
+                {errors.gender?.message && (
+                  <ErrorMessage>{String(errors.gender.message)}</ErrorMessage>
                 )}
               </div>
             </Row>
 
             <Row>
               <div>
-                <Label htmlFor="email">
-                  Email Address <span>*</span>
-                </Label>
+                <Label htmlFor="email">Email Address *</Label>
                 <InputField
                   type="email"
                   placeholder="Email Address"
                   {...register("email", {
                     required: "Email Address is required",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "Enter a valid email",
+                    },
                   })}
                 />
-                {errors.email && (
-                  <ErrorMessage>
-                    {(errors.email as FieldError).message}
-                  </ErrorMessage>
+                {errors.email?.message && (
+                  <ErrorMessage>{String(errors.email.message)}</ErrorMessage>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="phone">
-                  Phone Number <span>*</span>
-                </Label>
+                <Label htmlFor="phone">Phone Number *</Label>
                 <StyledPhoneInput
-                  country={"in"} // Default country set to India
-                  inputProps={{
-                    name: "phone",
-                    required: true,
-                  }}
-                  value={watch("phone")} 
-                  onChange={(value: unknown) => setValue("phone", value as string)}
-                  enableSearch={true}
+                  country="in"
+                  inputProps={{ name: "phone", required: true }}
+                  value={watch("phone")}
+                  onChange={(value: unknown) =>
+                    setValue("phone", value as string)
+                  }
+                  enableSearch
                 />
-                {errors.phone && (
-                  <ErrorMessage>
-                    {(errors.phone as FieldError).message}
-                  </ErrorMessage>
+                {errors.phone?.message && (
+                  <ErrorMessage>{String(errors.phone.message)}</ErrorMessage>
                 )}
               </div>
             </Row>
 
             <FormGroup>
-              <Label htmlFor="resume">
-                Resume <span>*</span>
-              </Label>
+              <Label htmlFor="resume">Resume *</Label>
               <FileInputField
                 type="file"
-                id="resume"
                 accept=".pdf,.doc,.docx,.txt"
                 onChange={handleFileUpload}
               />
@@ -258,14 +225,15 @@ const ApplyForm: React.FC = () => {
               {resumeUploaded && (
                 <SuccessMessage>Uploaded Successfully!!!</SuccessMessage>
               )}
-              {errors.resume && (
-                <ErrorMessage>
-                  {(errors.resume as FieldError).message}
-                </ErrorMessage>
+              {errors.resume?.message && (
+                <ErrorMessage>{String(errors.resume.message)}</ErrorMessage>
               )}
             </FormGroup>
 
-            <SubmitButton type="submit" disabled={uploading || submitted}>
+            <SubmitButton
+              type="submit"
+              disabled={!isValid || uploading || submitted}
+            >
               {submitted ? "Submitted" : "Submit Application"}
             </SubmitButton>
           </form>
