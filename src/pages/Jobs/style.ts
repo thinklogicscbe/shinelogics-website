@@ -22,49 +22,48 @@ export const Destination = styled.div`
 
 export const ButtonStyle = styled.button`
   position: absolute;
-  top: 110px;  /* Ensures it's at the top of the page */
+  top: 120px;
   left: 20px;
-  font-size: 28px;
-  background: transparent;
-  border: 2px solid #b0b0b0;
-  border-radius: 50px;
-  padding: 8px 16px;
+  font-size: 18px;
+  font-weight: bold;
+  background: linear-gradient(135deg, #007bff, #00d4ff);
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
   cursor: pointer;
-  color: black;
-  z-index: 9999; /* Ensures visibility above all elements */
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+  color: white;
+  z-index: 9999;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
-    color: #333;
-    border-color: #666;
-    background-color: rgba(0, 0, 0, 0.08);
+    background: linear-gradient(135deg, #0056b3, #008cba);
+    transform: scale(1.05);
+    box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.3);
   }
 
-
-
+  &:active {
+    transform: scale(0.95);
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+  }
 
   /* Responsive Design */
   @media (max-width: 1024px) {
-    /* Tablets */
-    font-size: 14px;
-    padding: 8px 16px;
+    font-size: 16px;
+    padding: 8px 18px;
   }
 
   @media (max-width: 768px) {
-    /* Mobile Devices */
-    font-size: 12px;
-    padding: 6px 12px;
-    width: 40px;
-    height: 40px;
+    font-size: 14px;
+    padding: 6px 16px;
   }
 
   @media (max-width: 480px) {
-    /* Small Mobile Screens */
-    font-size: 10px;
-    padding: 5px 10px;
-    width: 35px;
-    height: 35px;
+    font-size: 12px;
+    padding: 5px 14px;
   }
 `;
 
@@ -198,17 +197,19 @@ export const Rightsidecontent = styled.div`
   padding: 10px;
   border-radius: 6px;
   background-color: #f9f9f9;
-  flex: 0 0 30%;
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: auto; /* Adjusts to content */
-  margin-right: 20px; /* Moves it slightly to the left */
+  max-width: 450px; /* Optional: Set a max width */
+  height: fit-content; /* Only take the height of content */
+  align-self: flex-start; /* Prevents stretching */
+  margin-right: 40px; /* Moves it slightly to the left */
 
   @media (max-width: 768px) {
     flex: 1;
     width: 100%;
-    margin-right: 0; /* Reset for small screens */
+    max-width: none; /* Allow full width on small screens */
+    margin-right: 0;
   }
 
   h4 {

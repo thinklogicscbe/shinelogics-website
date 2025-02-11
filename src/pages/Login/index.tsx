@@ -23,7 +23,7 @@ const Login: React.FC = () => {
 
     if (result.success) {
       localStorage.setItem("user", JSON.stringify(result.user));
-      naviagte("/admin");
+      naviagte("/SideBar");
     } else {
       setErrorMessage(result.message || "Invalid login credentials");
     }
