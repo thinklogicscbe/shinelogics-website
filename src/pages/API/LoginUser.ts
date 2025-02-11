@@ -9,16 +9,17 @@ export const loginUser = async (email: string, password: string) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        emailId: email,
-        password: password,
-      }),
+      body: JSON.stringify({ emailId: email, password: password }),
     });
 
     const data = await response.json();
+    console.log(data);
 
     if (response.ok && data.success) {
-      return { success: true, user: data.user };
+      return {
+        success: true,
+        user: data.result.user?.role?.role || "Unknown Role", // Avoids errors if user/role is undefined
+      };
     } else {
       return { success: false, message: data.message || "Invalid login credentials" };
     }
@@ -27,3 +28,5 @@ export const loginUser = async (email: string, password: string) => {
     return { success: false, message: "An error occurred. Please try again later." };
   }
 };
+
+
