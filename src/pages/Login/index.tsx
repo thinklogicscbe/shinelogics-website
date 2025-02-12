@@ -25,6 +25,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     if (result.success) {
       localStorage.setItem("user", JSON.stringify(result.user));
       navigate("/SideBar");
+      window.location.reload(); 
     } else {
       setErrorMessage(result.message || "Invalid login credentials");
     }
