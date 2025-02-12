@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getAllWithCount, updateJobById, deleteJobById } from "../API/AdminUser";
+import { Select, MenuItem } from "@mui/material";
 
 import { MdDelete, MdEdit, MdClose } from "react-icons/md";
 
@@ -23,6 +24,7 @@ import {
     Heading
 } from "./style";
 import TablePagination from '@mui/material/TablePagination'; // Import TablePagination from Material UI
+
 
 interface Job {
     _id: string;
@@ -129,6 +131,20 @@ const ViewJobs: React.FC = () => {
         setPage(0); // Reset to the first page when rows per page changes
     };
 
+    const handleStatusChange = async (jobId: string, newStatus: string) => {
+        try {
+            console.log(`Updating Job ID: ${jobId} to Status: ${newStatus}`);
+
+            const updatedData = { status: parseInt(newStatus, 10) }; // Convert status to number if needed
+            await updateJobById(jobId, updatedData); // Send API request to update status
+
+            fetchJobs(); // Refresh the job list after update
+        } catch (error) {
+            console.error("Error updating job status:", error);
+        }
+    };
+
+
     return (
         <Container>
             <JobListingsHeading>Job Listings</JobListingsHeading>
@@ -185,12 +201,23 @@ const ViewJobs: React.FC = () => {
                                 )}
                             </TableData> */}
                             <TableData>{job.applicantCount}</TableData>
-                            <TableData>{job.status === 1 ? "Active" : "Inactive"}</TableData> {/* Add this */}
+                            <TableData>
+                                <Select
+                                    value={job.status}
+                                    onChange={(e) => handleStatusChange(job._id, e.target.value as string)}
+                                    className="status-dropdown"
+                                    displayEmpty
+                                >
+                                    <MenuItem value="1">Active</MenuItem>
+                                    <MenuItem value="0">Inactive</MenuItem>
+                                </Select>
+                            </TableData>
+
                             <TableData>
                                 <button
                                     onClick={() => handleEdit(job)}
                                     style={{ background: "none", border: "none", cursor: "pointer" }}
-                                       title="Edit"
+                                    title="Edit"
                                 >
                                     <MdEdit style={{ color: "blue", fontSize: "20px" }} />
                                 </button>
@@ -198,7 +225,7 @@ const ViewJobs: React.FC = () => {
                                 <button
                                     onClick={() => handleDelete(job._id)}
                                     style={{ background: "none", border: "none", cursor: "pointer" }}
-                                       title="Delete"
+                                    title="Delete"
                                 >
                                     <MdDelete style={{ color: "red", fontSize: "20px" }} />
                                 </button>
