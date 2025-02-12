@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -18,8 +18,12 @@ import NotFoundPage from "../components/NotFoundCompo";
 
 const AppRouter: React.FC = () => {
   const location = useLocation();
-  const hideHeaderFooterPaths = ["/viewJobs", "/SideBar", "/viewProfile", "/PostJob","/login"];
+  const hideHeaderFooterPaths = ["/viewJobs", "/SideBar", "/viewProfile", "/PostJob", "/login"];
   const shouldHideHeaderFooter = hideHeaderFooterPaths.includes(location.pathname);
+
+  useEffect(() => {
+    console.log("Current Path:", location.pathname);
+  }, [location]);
 
   return (
     <Suspense
@@ -40,25 +44,33 @@ const AppRouter: React.FC = () => {
       <GlobalStyle />
       <Styles />
       <ScrollToTop />
-      {!shouldHideHeaderFooter && <Header />}
-      <Routes>
-        {routes.map((routeItem) => {
-          const LazyComponent = lazy(
-            () => import(`../pages/${routeItem.component}/index`)
-          );
 
-          return (
-            <Route
-              key={routeItem.component}
-              path={routeItem.path}
-              element={<LazyComponent />}
-            />
-          );
+      {!shouldHideHeaderFooter && <Header />}
+
+      <Routes key={location.pathname}>
+        {routes.map((routeItem) => {
+          try {
+            const LazyComponent = lazy(
+              () => import(`../pages/${routeItem.component}/index`)
+            );
+
+            return (
+              <Route
+                key={routeItem.component}
+                path={routeItem.path}
+                element={<LazyComponent />}
+              />
+            );
+          } catch (error) {
+            console.error("Error loading component:", routeItem.component, error);
+            return null;
+          }
         })}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+
       {!shouldHideHeaderFooter && <Footer />}
-      <ChatbotButton />
+      {!shouldHideHeaderFooter && <ChatbotButton />}
     </Suspense>
   );
 };
