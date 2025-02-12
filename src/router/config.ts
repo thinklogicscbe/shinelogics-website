@@ -18,6 +18,7 @@ const routes = [
   { path: "applyForm", exact: true, component: "ApplyForm" },
   { path: "/viewJobs", exact: true, component: "ViewJobs" },
   { path: "/SideBar", exact: true, component: "SideBar" },
+  { path: "/dashboard", exact: true, component: "Dashboard" },
   { path: "**", exact: true, component: "NotFoundPage" },
 
 ];

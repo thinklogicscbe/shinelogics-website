@@ -133,6 +133,7 @@ export const Container = styled.div`
   padding: 20px;
   max-width: 100%;
   overflow-x: auto;
+  margin-top: 60px
 `;
 
 export const Table = styled.table`

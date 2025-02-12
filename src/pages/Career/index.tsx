@@ -18,7 +18,7 @@ import {
   CenteredMessage,
   CenteredMessageContainer
 } from "./style";
-import { getAllJobs } from "../API/AdminUser";
+import { getAllWithCount  } from "../API/AdminUser";
 import career from "../../assets/careers.jpg";
 
 // Define the job structure
@@ -38,6 +38,7 @@ interface JobType {
     experience: string;
     datePosted: string;
   };
+  status: number;
 }
 const Career = () => {
   // State to hold job data
@@ -47,27 +48,29 @@ const Career = () => {
   const [selectedJob, setSelectedJob] = useState<JobType | null>(null);
   const navigate = useNavigate();
 
-  // Fetch jobs on component mount
   useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const response = await getAllJobs();
-
-        // Ensure response has "result" array
-        if (response.result && Array.isArray(response.result)) {
-          setJobData(response.result); // Update state with correct array
-        } else {
-          console.error("Invalid response format:", response);
-          setJobData([]);
-        }
-      } catch (error) {
-        console.error("Error fetching jobs:", error);
-        setJobData([]); // Ensure jobData is always an array
-      }
-    };
-
     fetchJobs();
-  }, []);
+
+    // Listen for job updates from ViewJobs page
+    window.addEventListener("jobStatusUpdated", fetchJobs);
+    
+    return () => {
+        window.removeEventListener("jobStatusUpdated", fetchJobs);
+    };
+}, []);
+
+const fetchJobs = async () => {
+    try {
+        const data = await getAllWithCount();
+        const activeJobs = data.result.filter((job: JobType) => job.status === 1);
+        setJobData(activeJobs);
+    } catch (error) {
+        console.error("Error fetching jobs:", error);
+    }
+};
+
+
+ 
 
   // State to manage Read More/Read Less for each job
   const [expandedJobs, setExpandedJobs] = useState<{ [key: string]: boolean }>(
