@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import routes from "./config";
@@ -15,9 +15,12 @@ import {
   GlobalStyle,
 } from "./style";
 import NotFoundPage from "../components/NotFoundCompo";
-import PathTracker from "../router/PathTracker"; // Import PathTracker
 
 const AppRouter: React.FC = () => {
+  const location = useLocation();
+  const hideHeaderFooterPaths = ["/viewJobs", "/SideBar", "/viewProfile", "/PostJob","/login"];
+  const shouldHideHeaderFooter = hideHeaderFooterPaths.includes(location.pathname);
+
   return (
     <Suspense
       fallback={
@@ -37,7 +40,7 @@ const AppRouter: React.FC = () => {
       <GlobalStyle />
       <Styles />
       <ScrollToTop />
-      <Header />
+      {!shouldHideHeaderFooter && <Header />}
       <Routes>
         {routes.map((routeItem) => {
           const LazyComponent = lazy(
@@ -48,24 +51,13 @@ const AppRouter: React.FC = () => {
             <Route
               key={routeItem.component}
               path={routeItem.path}
-              element={
-                <PathTracker path={routeItem.path}>
-                  <LazyComponent />
-                </PathTracker>
-              }
+              element={<LazyComponent />}
             />
           );
         })}
-        <Route
-          path="*"
-          element={
-            <PathTracker path="*">
-              <NotFoundPage />
-            </PathTracker>
-          }
-        />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
-      <Footer />
+      {!shouldHideHeaderFooter && <Footer />}
       <ChatbotButton />
     </Suspense>
   );
