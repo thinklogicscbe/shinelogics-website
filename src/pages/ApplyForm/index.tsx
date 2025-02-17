@@ -212,7 +212,66 @@ const ApplyForm: React.FC = () => {
                   <ErrorMessage>{String(errors.phone.message)}</ErrorMessage>
                 )}
               </div>
+
             </Row>
+
+            <Row>
+
+            <div>
+                <Label htmlFor="currentCTC">Current CTC *</Label>
+                <InputField
+                  type="text"
+                  placeholder="Current CTC"
+                  {...register("currentCTC", {
+                    required: "Current CTC is required",
+                  })}
+                />
+                {errors.currentCTC && (
+                  <ErrorMessage>{String(errors.currentCTC.message)}</ErrorMessage> // Ensure this is a string
+                )}
+              </div>
+
+              <div>
+                <Label htmlFor="expectedCTC">Expected CTC *</Label>
+                <InputField
+                  type="text"
+                  placeholder="Expected CTC"
+                  {...register("expectedCTC", {
+                    required: "Expected CTC is required",
+                  })}
+                />
+                {errors.expectedCTC && (
+                  <ErrorMessage>{String(errors.expectedCTC.message)}</ErrorMessage> // Ensure this is a string
+                )}
+              </div>
+
+            </Row>
+
+
+            <Row>
+
+            <div>
+                <Label htmlFor="noticePeriod">Notice Period *</Label>
+                <InputField
+                  type="text"
+                  placeholder="Notice Period"
+                  {...register("noticePeriod", {
+                    required: "Notice Period is required",
+                  })}
+                />
+                {errors.noticePeriod && (
+                  <ErrorMessage>{String(errors.noticePeriod.message)}</ErrorMessage> // Ensure this is a string
+                )}
+              </div>
+
+
+            </Row>
+
+
+          
+
+
+         
 
             <FormGroup>
               <Label htmlFor="resume">Resume *</Label>

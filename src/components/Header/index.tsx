@@ -14,6 +14,7 @@ import {
   DropdownArrow,
   DropdownWrapperMobile,
   StyledButton1,
+  ActiveLink
 } from "./styles";
 
 const Header = () => {
@@ -23,7 +24,7 @@ const Header = () => {
   const [insightDropdownVisible, setInsightDropdownVisible] = useState(false);
   const [mobileDropdownVisible, setMobileDropdownVisible] = useState(false);
   const [mobileInsightDropdownVisible, setMobileInsightDropdownVisible] = useState(false);
-  const [, setIsMobile] = useState(window.innerWidth <= 768); 
+  const [, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
     const handleResize = () => {
@@ -83,10 +84,10 @@ const Header = () => {
     { path: "/career", label: "Insights", hasDropdown: true, showDropdown: showInsightDropdown, hideDropdown: hideInsightDropdown },
     { path: "/about", label: "About" },
   ];
-  
-  
+
+
   console.log(navigationLinks);
-  
+
   const productDropdownLinks = [
     { path: "/productcompo/erp", label: "ERP (Enterprise Resource Planning)" },
     { path: "/productcompo/ems", label: "EMS (Employee Management System)" },
@@ -121,19 +122,28 @@ const Header = () => {
             style={{ position: "relative" }}
           >
             <NavLink to={link.path} onClick={(e) => link.hasDropdown && e.preventDefault()}>
-              <StyledButton className={activeLink === link.path ? "active" : ""}>
+              <StyledButton
+                className={activeLink === link.path ? "active" : ""}
+                onClick={() => handleLinkClick(link.path)}
+              >
                 {link.label}
               </StyledButton>
             </NavLink>
 
             {/* Product Dropdown */}
+          
             {link.path === "/product" && productDropdownVisible && (
               <DropdownWrapper className="visible">
                 <DropdownArrow />
                 {productDropdownLinks.map((sublink) => (
-                  <NavLink key={sublink.path} to={sublink.path} onClick={() => handleLinkClick(sublink.path)}>
+                  <ActiveLink
+                    key={sublink.path}
+                    to={sublink.path}
+                    onClick={() => handleLinkClick("/product")} // Ensure that Product remains active when a dropdown item is clicked
+                    className={({ isActive }) => (isActive ? "active" : "")}
+                  >
                     <DropdownContent>{sublink.label}</DropdownContent>
-                  </NavLink>
+                  </ActiveLink>
                 ))}
               </DropdownWrapper>
             )}
@@ -143,12 +153,19 @@ const Header = () => {
               <DropdownWrapper className="visible">
                 <DropdownArrow />
                 {insightDropdownLinks.map((sublink) => (
-                  <NavLink key={sublink.path} to={sublink.path} onClick={() => handleLinkClick(sublink.path)}>
+                  <ActiveLink
+                    key={sublink.path}
+                    to={sublink.path}
+                    onClick={() => handleLinkClick("/career")}
+                    className={({ isActive }) => (isActive ? "active" : "")}
+                  >
                     <DropdownContent>{sublink.label}</DropdownContent>
-                  </NavLink>
+                  </ActiveLink>
                 ))}
               </DropdownWrapper>
             )}
+
+
           </div>
         ))}
       </NavLinks>
