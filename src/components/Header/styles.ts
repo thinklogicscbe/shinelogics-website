@@ -25,6 +25,32 @@ export const HeaderSection = styled.header`
 `;
 
 
+
+export const ActiveLink = styled(NavLink)`
+  color: green;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 25px;
+
+  &.active {
+    text-decoration: underline;
+    text-decoration-thickness: 2px; /* Adjust thickness */
+    text-underline-offset: 4px; /* Add space between text and underline */
+    color: green;
+  }
+
+  &:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px; /* Adjust thickness */
+    text-underline-offset: 4px; /* Add space between text and underline */
+    color: green;
+  }
+`;
+
+
+
+
+
 export const LogoContainer = styled(NavLink)`
   display: flex;
   align-items: center;
@@ -97,39 +123,24 @@ export const NavLinks = styled.div`
 `;
 
 export const StyledButton = styled.button`
-  background: none;
+  background: transparent;
   border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  font-weight: bold;
+  padding: 10px;
   font-size: 16px;
   color: #333;
-  position: relative;
-  transition: all 0.3s ease;
-  text-decoration: none; /* No underline by default */
-  border-bottom: 2px solid transparent; /* Underline effect */
+  cursor: pointer;
 
+  /* Apply active underline */
   &.active {
-    font-weight: bold;
-    color: #007bff;
-    border-bottom-color: #007bff; /* Show underline when active */
+    border-bottom: 2px solid #007bff;  /* Blue underline */
   }
 
+  /* Add hover effect */
   &:hover {
-    color: #555;
-    border-bottom-color: #555; /* Underline on hover */
-  }
-
-  &.light-theme {
-    background: #f9f9f9;
-    color: #333;
-
-    &:hover {
-      color: #007bff;
-      border-bottom-color: #007bff;
-    }
+    color: #007bff;  /* Blue color on hover */
   }
 `;
+
 export const StyledButton1 = styled.button`
   background: none;
   border: none;
