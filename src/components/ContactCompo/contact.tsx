@@ -1,73 +1,89 @@
-import React, { ChangeEvent } from "react";
-import { SectionContainer, ImageContainer, FormContainer } from './style';
-import Box from '@mui/material/Box';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import FilledInput from '@mui/material/FilledInput';
-import FormHelperText from '@mui/material/FormHelperText';
+import React from "react";
+import {
+  PageWrapper,
+  Header,
+  Title,
+  Subtitle,
+  InfoGrid,
+  InfoCard,
+  InfoLabel,
+  InfoValue,
+  FormWrapper,
+  Form,
+  Input,
+  TextArea,
+  Select,
+  SubmitButton,
+  CTASection,
+  CTAButton,
+  SocialSection,
+  SocialLink,
+} from "./styles";
 
 const Contact: React.FC = () => {
-
-  const handleNumberInput = (event: ChangeEvent<HTMLInputElement>) => {
-    let value = event.target.value;
-    value = value.replace(/[^0-9]/g, '');
-    value = value.slice(0, 10);
-    event.target.value = value;
-  };
-
   return (
-    <SectionContainer>
-      <ImageContainer>
-        <img src="/img/Aiimage/AI.jpg" alt="AI Tech" />
-      </ImageContainer>
+    <PageWrapper>
+      {/* ================= HEADER ================= */}
+      <Header>
+        <Title>CONTACT US</Title>
+        <Subtitle>
+          Let&apos;s Build Secure & Intelligent Solutions Together
+        </Subtitle>
+      </Header>
 
-      <FormContainer>
-        <span>ShineLogics.AI</span>
-        <h1>Please use this form to ask any inquiries that you may have.</h1>
+      {/* ================= CONTACT INFO ================= */}
+      <InfoGrid>
+        <InfoCard>
+          <InfoLabel>Email</InfoLabel>
+          <InfoValue>support@shinelogics.com</InfoValue>
+        </InfoCard>
 
-        <Box component="form" noValidate autoComplete="off">
-          {/* FullName Field */}
-          <FormControl variant="filled" fullWidth sx={{ mb: 2 }}>
-            <InputLabel htmlFor="name">FullName<span>*</span></InputLabel>
-            <FilledInput id="name" placeholder="Enter your FullName" required />
-          </FormControl>
+        <InfoCard>
+          <InfoLabel>Phone</InfoLabel>
+          <InfoValue>+91-9500037221</InfoValue>
+        </InfoCard>
 
-          {/* Email Field */}
-          <FormControl variant="filled" fullWidth sx={{ mb: 2 }}>
-            <InputLabel htmlFor="email">Email<span>*</span></InputLabel>
-            <FilledInput id="email" placeholder="Enter your Email" required />
-            <FormHelperText>Please enter a valid email.</FormHelperText>
-          </FormControl>
+        <InfoCard>
+          <InfoLabel>Address</InfoLabel>
+          <InfoValue>Chennai, India</InfoValue>
+        </InfoCard>
+      </InfoGrid>
 
-          {/* Phone Number Field */}
-          <FormControl variant="filled" fullWidth sx={{ mb: 2 }}>
-            <InputLabel htmlFor="phone-number">Phone Number<span>*</span></InputLabel>
-            <FilledInput
-              id="phone-number"
-              type="text"
-              placeholder="Enter your number"
-              onInput={handleNumberInput}
-              required
-            />
-            <FormHelperText>Max 10 digits.</FormHelperText>
-          </FormControl>
+      {/* ================= FORM ================= */}
+      <FormWrapper>
+        <Form>
+          <Input placeholder="Name" />
+          <Input placeholder="Email" />
+          <Input placeholder="Phone" />
+          <Input placeholder="Company" />
 
-          {/* Message Field */}
-          <FormControl variant="filled" fullWidth sx={{ mb: 2 }}>
-            <InputLabel htmlFor="message">Message<span>*</span></InputLabel>
-            <FilledInput
-              id="message"
-              placeholder="Write your Queries"
-              multiline
-              rows={4}
-              required
-            />
-          </FormControl>
+          <Select>
+            <option>Service Interest</option>
+            <option>Custom Software Development</option>
+            <option>Application Security Testing</option>
+            <option>AI / ML Integration</option>
+            <option>IoT & Embedded Systems</option>
+            <option>Data Engineering</option>
+            <option>Staff Augmentation</option>
+          </Select>
 
-          <button type="submit">Send ✉️</button>
-        </Box>
-      </FormContainer>
-    </SectionContainer>
+          <TextArea placeholder="Message" rows={4} />
+
+          <SubmitButton>Get in Touch</SubmitButton>
+        </Form>
+      </FormWrapper>
+
+      {/* ================= STRATEGY CTA ================= */}
+      <CTASection>
+        <CTAButton>Book a Strategy Call</CTAButton>
+      </CTASection>
+
+      {/* ================= SOCIAL ================= */}
+      <SocialSection>
+        <SocialLink href="#">LinkedIn: Shinelogics</SocialLink>
+        <SocialLink href="#">Twitter: @shinelogics</SocialLink>
+      </SocialSection>
+    </PageWrapper>
   );
 };
 

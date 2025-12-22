@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Heading, Title, PolicyContent, SubHeading, Paragraph, H6 } from './privacystyle';
 
 const PrivacyPolicy = () => {
