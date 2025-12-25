@@ -20,7 +20,9 @@ const routes = [
   { path: "/SideBar", exact: true, component: "SideBar" },
   { path: "/dashboard", exact: true, component: "Dashboard" },
   { path: "**", exact: true, component: "NotFoundPage" },
-
+  { path: "/quickmvp", exact: true, component: "Quickmvp" },
+  { path: "/engagementModels", exact: true, component: "Engagement-Models" },
+  { path: "/Blog-Resource", exact: true, component: "Blog-Resource" }
 ];
 
 export default routes;

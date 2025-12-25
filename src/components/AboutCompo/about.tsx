@@ -1,81 +1,219 @@
-import React, { useEffect } from 'react';
-import { SectionContainer, DivisionContainer } from './style';
+import React from "react";
+import {
+  Section,
+  Intro,
+  Title,
+  TitleSmall,
+  Description,
+  Grid,
+  Card,
+  CardTitle,
+  CardText,
+  Testimonials,
+  TestimonialGrid,
+  Quote,
+  CTA,
+  IndustriesSection,
+  IndustriesHeader,
+  IndustriesGrid,
+  IndustryCard,
+  IndustriesCTA,
+
+
+  /* What We Do */
+  ServicesSection,
+  ServicesHeader,
+  ServicesGrid,
+  ServiceCard,
+} from "./styles";
 
 const About: React.FC = () => {
-  useEffect(() => {
-    const lines = document.querySelectorAll('.line');
-    lines.forEach((line, index) => {
-      (line as HTMLElement).style.animationDelay = `${index * 0.2}s`;
-    });
-  }, []);
-
-  const getAnimatedText = (text: string) => {
-    return text.split('. ').map((sentence, index) => (
-      <span key={index} className="line">
-        {sentence}.
-      </span>
-    ));
-  };
-
   return (
-    <SectionContainer>
-      <DivisionContainer>
-        {/* Row 1 */}
-        <div className="row row-1">
-          <div>
-          <img src='/img/apimage/aboutimg5.jpg' alt='about us'></img>
-          </div>
-          <div>
-            <p>
-              {getAnimatedText(
-                "At Shinelogics, we pride ourselves on being a pioneering Product Development as a Service (PDaaS) company. Our primary goal is to empower businesses by delivering innovative solutions tailored to address the unique challenges that arise in a rapidly evolving technological landscape. In an age where digital transformation is crucial to staying competitive, we offer comprehensive strategies that help businesses scale effectively and efficiently. By leveraging cutting-edge technology, we assist our clients in navigating complex challenges and capturing new opportunities."
-              )}
-              </p>
-          </div>
-        </div>  
+    <Section>
+      {/* Intro */}
+      <Intro>
+        {/* <Eyebrow>About Us</Eyebrow> */}
+        <Title>Secure Technology. Built to Scale.</Title>
+        <Description>
+          Shinelogics is a secure technology solutions company delivering
+          scalable, AI-powered digital products for startups, SMEs, and
+          enterprises. Based in Chennai, we follow secure-by-design engineering
+          with global compliance standards.
+        </Description>
+      </Intro>
 
-        <div className="row row-2">
-          <div>
-             <img src='/img/apimage/aboutimg6.jpg' alt='about us'></img>
-          </div>
-          <div>
-            <p>
-              {getAnimatedText(
-                "Our commitment to innovation and excellence is the cornerstone of everything we do. We understand that each business has its own set of needs, which is why we offer customized solutions that align with their specific goals. Whether it’s building a product from the ground up or enhancing an existing solution, we focus on delivering results that drive growth and foster long-term success. We believe that innovation is not just about new ideas, but also about bringing those ideas to life in a way that makes a real difference."
-              )}
-              </p>
-          </div>
-        </div>  
+      {/* Mission & Vision */}
+      <Grid>
+        <Card>
+          <CardTitle>Our Mission</CardTitle>
+          <CardText>
+            Empower businesses with secure, intelligent technology that
+            accelerates growth and delivers measurable impact.
+          </CardText>
+        </Card>
 
-        <div className="row row-1">
-          <div>
-          <img src='/img/apimage/aboutimg3.jpg' alt='about us'></img>
-          </div>
-          <div>
-            <p>
-              {getAnimatedText(
-                "At Shinelogics, we blend creativity with technology to design products that are not only functional but also forward-thinking. Our team of experts combines technical proficiency with a passion for design to create products that stand out in the marketplace. We work closely with our clients to understand their vision, ensuring that the final product is a seamless reflection of their business objectives. We believe that every product we create should help our clients stay ahead of the competition, giving them the tools they need to succeed in today’s fast-paced market."
-              )}
-              </p>
-          </div>
-        </div>  
+        <Card>
+          <CardTitle>Our Vision</CardTitle>
+          <CardText>
+            To be a global leader in secure digital transformation where
+            innovation and security coexist seamlessly.
+          </CardText>
+        </Card>
+      </Grid>
 
-        <div className="row row-2">
-          <div>
-          <img src='/img/apimage/aboutimg4.jpg' alt='about us'></img>
-          </div>
-          <div>
-            <p>
-              {getAnimatedText(
-                "Above all, we are dedicated to fostering sustainable growth for our clients. We believe that technology should be an enabler of progress, not just a tool for solving immediate problems. Our solutions are designed with scalability in mind, ensuring that as our clients grow, their technology infrastructure grows with them. By partnering with businesses to create long-lasting, adaptable products, we help them maintain a competitive edge while ensuring that they can continue to evolve and thrive in the ever-changing digital world."
-              )}
-              </p>
-          </div>
-        </div>  
+      {/* What We Do */}
+      <ServicesSection>
+        <ServicesHeader>
+          <TitleSmall>What We Do</TitleSmall>
+          <Description>
+            We build secure, scalable, and intelligent technology solutions that
+            help organizations innovate faster and operate with confidence.
+          </Description>
+        </ServicesHeader>
 
-         
-      </DivisionContainer>
-    </SectionContainer>
+        <ServicesGrid>
+          <ServiceCard>
+            <h4>Software Development</h4>
+            <p>
+              Secure, scalable web and mobile applications built using modern
+              frameworks and best practices.
+            </p>
+          </ServiceCard>
+
+          <ServiceCard>
+            <h4>Application Security</h4>
+            <p>
+              Secure-by-design engineering, vulnerability assessments, and
+              compliance-aligned development.
+            </p>
+          </ServiceCard>
+
+          <ServiceCard>
+            <h4>AI & Machine Learning</h4>
+            <p>
+              Intelligent automation, predictive analytics, and AI-driven
+              business insights.
+            </p>
+          </ServiceCard>
+
+          <ServiceCard>
+            <h4>IoT Engineering</h4>
+            <p>
+              Connected device platforms, real-time monitoring, and smart
+              automation solutions.
+            </p>
+          </ServiceCard>
+
+          <ServiceCard>
+            <h4>Data Platforms</h4>
+            <p>
+              Data pipelines, dashboards, and scalable analytics architectures
+              for informed decision-making.
+            </p>
+          </ServiceCard>
+
+          <ServiceCard>
+            <h4>Cloud & DevOps</h4>
+            <p>
+              Cloud-native architectures, CI/CD pipelines, and secure
+              infrastructure automation.
+            </p>
+          </ServiceCard>
+        </ServicesGrid>
+      </ServicesSection>
+
+      {/* Testimonials */}
+      <Testimonials>
+        <TitleSmall>Trusted by Clients</TitleSmall>
+        <TestimonialGrid>
+          <Quote>
+            “Secure e-commerce with seamless POS integration.”
+            <strong>Farm2Bag</strong>
+            <span>E-Commerce</span>
+          </Quote>
+
+          <Quote>
+            “AI automation reduced downtime by 35%.”
+            <strong>Manufacturing ERP</strong>
+            <span>Industrial</span>
+          </Quote>
+
+          <Quote>
+            “Security built-in without slowing development.”
+            <strong>FinTech Startup</strong>
+            <span>FinTech</span>
+          </Quote>
+        </TestimonialGrid>
+      </Testimonials>
+
+      {/* CTA */}
+      <CTA>
+        <h3>See how we deliver real-world impact</h3>
+        <button>View Case Studies</button>
+      </CTA>
+
+
+
+
+      {/* Industries We Serve */}
+<IndustriesSection>
+  <IndustriesHeader>
+    <TitleSmall>Industries We Serve</TitleSmall>
+    <Description>
+      We partner with organizations across industries to build secure,
+      scalable, and intelligent digital solutions tailored to real-world
+      challenges.
+    </Description>
+  </IndustriesHeader>
+
+  <IndustriesGrid>
+    <IndustryCard>
+      <h4>FinTech</h4>
+      <p>Payment platforms, digital wallets, trading systems</p>
+    </IndustryCard>
+
+    <IndustryCard>
+      <h4>HealthTech</h4>
+      <p>Medical platforms, patient management, HIPAA compliance</p>
+    </IndustryCard>
+
+    <IndustryCard>
+      <h4>E-Commerce</h4>
+      <p>Secure shopping platforms, POS integration</p>
+    </IndustryCard>
+
+    <IndustryCard>
+      <h4>Manufacturing & Industrial IoT</h4>
+      <p>Smart factories, production automation</p>
+    </IndustryCard>
+
+    <IndustryCard>
+      <h4>EdTech</h4>
+      <p>Learning management systems, student data protection</p>
+    </IndustryCard>
+
+    <IndustryCard>
+      <h4>Logistics & Supply Chain</h4>
+      <p>Real-time tracking, optimization</p>
+    </IndustryCard>
+
+    <IndustryCard>
+      <h4>SaaS & Product Startups</h4>
+      <p>Scalable, secure platforms</p>
+    </IndustryCard>
+
+    <IndustryCard>
+      <h4>Retail & Consumer Tech</h4>
+      <p>Omnichannel solutions, customer data security</p>
+    </IndustryCard>
+  </IndustriesGrid>
+
+  <IndustriesCTA>
+    <button>See Industry Use Cases</button>
+  </IndustriesCTA>
+</IndustriesSection>
+
+    </Section>
   );
 };
 
