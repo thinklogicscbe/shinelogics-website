@@ -157,6 +157,7 @@ const Header = () => {
             </NavLink>
 
             {/* Product Dropdown */}
+          
             {link.path === "/product" && productDropdownVisible && (
               <DropdownWrapper className="visible">
                 <DropdownArrow />
@@ -167,7 +168,7 @@ const Header = () => {
                     onClick={() => handleLinkClick(sublink.path)}
                   >
                     <DropdownContent>{sublink.label}</DropdownContent>
-                  </NavLink>
+                  </ActiveLink>
                 ))}
               </DropdownWrapper>
             )}
@@ -184,10 +185,12 @@ const Header = () => {
                     onClick={() => handleLinkClick(sublink.path)}
                   >
                     <DropdownContent>{sublink.label}</DropdownContent>
-                  </NavLink>
+                  </ActiveLink>
                 ))}
               </DropdownWrapper>
             )}
+
+
           </div>
         ))}
       </NavLinks>
