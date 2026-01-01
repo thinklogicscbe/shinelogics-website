@@ -341,3 +341,75 @@ export const IndustriesCTA = styled.div`
   }
 `;
 
+
+/* ===== Experts Section ===== */
+
+export const ExpertsSection = styled.section`
+  margin-top: 7rem;
+  padding: 4.5rem 4rem;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #ffffff, #f1f5ff);
+  box-shadow: 0 30px 80px rgba(2, 6, 23, 0.08);
+  text-align: center;
+
+  @media (max-width: 768px) {
+    padding: 3rem 1.5rem;
+  }
+`;
+
+export const ExpertsGrid = styled.div`
+  margin-top: 3.5rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2.5rem;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+export const ExpertCard = styled.div`
+  padding: 2.5rem 2rem;
+  border-radius: 24px;
+  background: #ffffff;
+  box-shadow: 0 25px 60px rgba(2, 6, 23, 0.1);
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 45px 90px rgba(2, 6, 23, 0.18);
+  }
+`;
+
+export const ExpertImage = styled.img`
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 1.4rem;
+  border: 4px solid #e0e7ff;
+`;
+
+export const ExpertName = styled.h4`
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #020617;
+  margin-bottom: 0.4rem;
+`;
+
+export const ExpertRole = styled.p`
+  font-size: 0.95rem;
+  color: #475569;
+`;
+
+
+
+

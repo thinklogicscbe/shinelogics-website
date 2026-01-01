@@ -70,7 +70,7 @@ const Quickmvp: React.FC = () => {
       </HeroSection>
 
       {/* WHAT WE OFFER */}
-      <OfferSection>
+      {/* <OfferSection>
         <OfferTitle>What We Offer</OfferTitle>
 
         <OfferGrid>
@@ -111,10 +111,10 @@ const Quickmvp: React.FC = () => {
             <p>Easily extend your MVP as your business grows</p>
           </OfferCard>
         </OfferGrid>
-      </OfferSection>
+      </OfferSection> */}
 
       {/* USE CASES */}
-      <UseCaseSection>
+      {/* <UseCaseSection>
         <UseCaseTitle>Use Cases</UseCaseTitle>
 
         <UseCaseGrid>
@@ -148,10 +148,10 @@ const Quickmvp: React.FC = () => {
             <p>Deploy localized versions to assess market demand</p>
           </UseCaseCard>
         </UseCaseGrid>
-      </UseCaseSection>
+      </UseCaseSection> */}
 
       {/* WHY CHOOSE SHINELOGICS */}
-      <WhySection>
+      {/* <WhySection>
         <WhyTitle>Why Choose Shinelogics?</WhyTitle>
 
         <WhyGrid>
@@ -185,7 +185,7 @@ const Quickmvp: React.FC = () => {
             <p>Proven track record with startups and enterprises</p>
           </WhyCard>
         </WhyGrid>
-      </WhySection>
+      </WhySection> */}
 
       {/* MVP PLANS HEADER */}
       <MvpHeaderSection>

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   PageSection,
   Header,
@@ -14,10 +15,37 @@ import {
   CTAButton,
 } from "./styles";
 
+interface Resource {
+  _id: string;
+  title: string;
+  description?: string;
+  type: "CHECKLIST" | "WEBINAR" | "BLOG";
+  items?: string[];
+  ctaText?: string;
+  ctaLink?: string;
+}
+
+const API_URL = "http://localhost:3006/api/resources";
+
 const Resources: React.FC = () => {
+  const [resources, setResources] = useState<Resource[]>([]);
+
+  useEffect(() => {
+    const fetchResources = async () => {
+      try {
+        const res = await axios.get(API_URL);
+        setResources(res.data.data || []);
+      } catch (error) {
+        console.error("Failed to fetch resources", error);
+      }
+    };
+
+    fetchResources();
+  }, []);
+
   return (
     <PageSection>
-      {/* Header */}
+      {/* ===== HEADER ===== */}
       <Header>
         <Title>Resources & Blog</Title>
         <Subtitle>
@@ -26,47 +54,42 @@ const Resources: React.FC = () => {
         </Subtitle>
       </Header>
 
-      {/* Content Grid */}
+      {/* ===== CONTENT GRID ===== */}
       <Grid>
-        {/* Security Checklist */}
-        <Card>
-          <CardTitle>Free Security Checklist Download</CardTitle>
-          <CardText>
-            Essential AppSec best practices designed for modern product teams.
-            Identify risks early and build secure-by-design applications.
-          </CardText>
-        </Card>
+        {resources.map(resource => (
+          <Card key={resource._id}>
+            <CardTitle>{resource.title}</CardTitle>
 
-        {/* Webinar */}
-        <Card>
-          <CardTitle>Webinar: AI Security Trends 2025</CardTitle>
-          <CardText>
-            Live session covering emerging AI threats, adversarial attacks, and
-            next-generation defensive strategies.
-          </CardText>
-        </Card>
+            {resource.description && (
+              <CardText>{resource.description}</CardText>
+            )}
 
-        {/* Blogs */}
-        <Card>
-          <CardTitle>Blog Articles</CardTitle>
-          <List>
-            <ListItem>
-              “Why Secure-by-Design Saves Millions”
-            </ListItem>
-            <ListItem>
-              “AI-Powered Threat Detection: What Works”
-            </ListItem>
-            <ListItem>
-              “IoT Security: Common Vulnerabilities and Fixes”
-            </ListItem>
-            <ListItem>
-              “Data Privacy Compliance Made Simple”
-            </ListItem>
-          </List>
-        </Card>
+            {/* BLOG LIST */}
+            {resource.type === "BLOG" && resource.items && (
+              <List>
+                {resource.items.map((item, index) => (
+                  <ListItem key={index}>{item}</ListItem>
+                ))}
+              </List>
+            )}
+
+            {/* CTA BUTTON (CHECKLIST / WEBINAR) */}
+            {resource.ctaText && resource.ctaLink && (
+              <CTAButton
+                as="a"
+                href={resource.ctaLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ marginTop: "14px", display: "inline-block" }}
+              >
+                {resource.ctaText}
+              </CTAButton>
+            )}
+          </Card>
+        ))}
       </Grid>
 
-      {/* CTA */}
+      {/* ===== GLOBAL CTA ===== */}
       <CTASection>
         <h3>Stay updated with the latest security & AI insights</h3>
         <CTAButton>Subscribe for Updates</CTAButton>

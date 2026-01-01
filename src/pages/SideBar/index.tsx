@@ -1,101 +1,154 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-    SidebarContainer,
-    CloseButton,
-    Backdrop,
-    List,
-    ListItem,
-    ContentWrapper,
-    LogoutButtonWrapper,
-    LogoutButton,
-    LogoWrapper,
-    LogoImage,
-    LogoText,
-    Header
+  Layout,
+  Header,
+  LogoWrapper,
+  LogoImage,
+  LogoutButton,
+  Sidebar,
+  SidebarHeader,
+  CloseButton,
+  NavList,
+  NavItem,
+  Content,
+  Backdrop,
+  SidebarToggle,
 } from "./style";
 
-// Import the components
 import ViewProfile from "../ViewProfile";
 import PostJob from "../PostJob";
 import ViewJobs from "../ViewJobs";
 import Dashboard from "../Dashboard";
+import EngagementModelAdmin from "../EngagementModelAdmin";
+import ResourceAdmin from "../ResourceAdmin";
+import ExpertAdmin from "../ExpertAdmin";
+
+import logo1 from "../../assets/shinelogics-logo.png";
 
 const SideBar: React.FC = () => {
-    const [open, setOpen] = useState<boolean>(false);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-    // Retrieve the stored component from local storage
-    const [selectedComponent, setSelectedComponent] = useState<string>(
-        localStorage.getItem("selectedComponent") || "Dashboard"
-    );
+  const [selectedComponent, setSelectedComponent] = useState<string>(
+    localStorage.getItem("selectedComponent") || "Dashboard"
+  );
 
-    // Toggle Sidebar Drawer
-    const toggleDrawer = () => {
-        setOpen(!open);
-    };
+  const handleNavigation = (component: string) => {
+    setSelectedComponent(component);
+    localStorage.setItem("selectedComponent", component);
+    setSidebarOpen(false);
+  };
 
-    // Handle navigation and store the selected component
-    const handleNavigation = (component: string) => {
-        console.log("Navigating to:", component);
-        setSelectedComponent(component);
-        localStorage.setItem("selectedComponent", component); // Store in local storage
-        setOpen(false); // Close sidebar after navigation
-    };
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
 
-    // Handle logout
-    const handleLogout = () => {
-        localStorage.removeItem("user");
-        localStorage.removeItem("selectedComponent"); // Clear selected component on logout
-        navigate("/login");
-    };
+  const renderComponent = () => {
+    switch (selectedComponent) {
+      case "ViewJobs":
+        return <ViewJobs />;
+      case "PostJob":
+        return <PostJob />;
+      case "ViewResumes":
+        return <ViewProfile />;
+      case "EngagementModels":
+        return <EngagementModelAdmin />;
+      case "ResourceAdmin":
+        return <ResourceAdmin />;
+      case "ExpertsAdmin":
+        return <ExpertAdmin />;
+      default:
+        return <Dashboard />;
+    }
+  };
 
-    // Render the selected component
-    const renderComponent = () => {
-        switch (selectedComponent) {
-            case "ViewJobs":
-                return <ViewJobs />;
-            case "PostJob":
-                return <PostJob />;
-            case "ViewResumes":
-                return <ViewProfile />;
-            default:
-                return <Dashboard />;
-        }
-    };
+  return (
+    <>
+      <Layout>
+        {/* HEADER */}
+        <Header>
+          <LogoWrapper>
+            <LogoImage src={logo1} alt="Logo" />
+          </LogoWrapper>
+          <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+        </Header>
 
-    return (
-        <>
-            {/* Fixed Header */}
-            <Header>
-                <LogoWrapper>
-                    <LogoImage src="/Group 450 (1).png" alt="Logo" />
-                    <LogoText>Company Name</LogoText>
-                </LogoWrapper>
-                <LogoutButtonWrapper>
-                    <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
-                </LogoutButtonWrapper>
-            </Header>
+        {/* SIDEBAR */}
+        <Sidebar open={sidebarOpen}>
+          <SidebarHeader>
+            <span>Menu</span>
+            <CloseButton onClick={() => setSidebarOpen(false)}>✕</CloseButton>
+          </SidebarHeader>
 
-            {/* Sidebar Drawer */}
-            <SidebarContainer open={open}>
-                <CloseButton onClick={toggleDrawer}>✖</CloseButton>
+          <NavList>
+            <NavItem
+              active={selectedComponent === "Dashboard"}
+              onClick={() => handleNavigation("Dashboard")}
+            >
+              Dashboard
+            </NavItem>
 
-                <List>
-                    <ListItem onClick={() => handleNavigation("Dashboard")}>Dashboard</ListItem>
-                    <ListItem onClick={() => handleNavigation("PostJob")}>Post Job</ListItem>
-                    <ListItem onClick={() => handleNavigation("ViewJobs")}>View Jobs</ListItem>
-                    <ListItem onClick={() => handleNavigation("ViewResumes")}>View Resumes</ListItem>
-                </List>
-            </SidebarContainer>
+            <NavItem
+              active={selectedComponent === "PostJob"}
+              onClick={() => handleNavigation("PostJob")}
+            >
+              Post Job
+            </NavItem>
 
-            {/* Backdrop */}
-            {open && <Backdrop onClick={toggleDrawer} />}
+            <NavItem
+              active={selectedComponent === "ViewJobs"}
+              onClick={() => handleNavigation("ViewJobs")}
+            >
+              View Jobs
+            </NavItem>
 
-            {/* Main Content Area */}
-            <ContentWrapper>{renderComponent()}</ContentWrapper>
-        </>
-    );
+            <NavItem
+              active={selectedComponent === "ViewResumes"}
+              onClick={() => handleNavigation("ViewResumes")}
+            >
+              View Resumes
+            </NavItem>
+
+            <NavItem
+              active={selectedComponent === "EngagementModels"}
+              onClick={() => handleNavigation("EngagementModels")}
+            >
+              Engagement Models
+            </NavItem>
+
+            <NavItem
+              active={selectedComponent === "ResourceAdmin"}
+              onClick={() => handleNavigation("ResourceAdmin")}
+            >
+              Blog and Resources
+            </NavItem>
+
+            <NavItem
+              active={selectedComponent === "ExpertsAdmin"}
+              onClick={() => handleNavigation("ExpertsAdmin")}
+            >
+              Experts
+            </NavItem>
+          </NavList>
+        </Sidebar>
+
+        {/* CONTENT */}
+        <Content>{renderComponent()}</Content>
+      </Layout>
+
+      {/* MOBILE TOGGLE */}
+      {!sidebarOpen && (
+        <SidebarToggle onClick={() => setSidebarOpen(true)}>
+          ☰
+        </SidebarToggle>
+      )}
+
+      {/* BACKDROP */}
+      {sidebarOpen && <Backdrop onClick={() => setSidebarOpen(false)} />}
+    </>
+  );
 };
 
 export default SideBar;

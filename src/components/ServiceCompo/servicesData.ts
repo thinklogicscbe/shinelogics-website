@@ -79,7 +79,7 @@ export const serviceData = {
 
   /* ================= SERVICE 2 ================= */
   application_security_testing: {
-    title: "Application Security Testing (AppSec)",
+    title: "Premium QA & Application Security Assurance",
     description:
       "We help businesses identify vulnerabilities before attackers do through comprehensive manual and automated testing.",
     overview: "Capabilities",
@@ -88,58 +88,49 @@ export const serviceData = {
       "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&w=1400&q=80",
 
     expertise: {
-      SAST: {
+      Quality_Engineering: {
         description: [
-          "Static Testing (SAST)",
-          "Early detection of vulnerabilities through source code analysis.",
+          "Quality Engineering",
+          "Flawless functionality and predictable releases through structured manual and automated testing that validates every workflow before production.",
         ],
         image:
           "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&w=900&q=80",
       },
 
-      DAST: {
+      Application_Security_Testing: {
         description: [
-          "Dynamic Testing (DAST)",
-          "Runtime testing to uncover exploitable vulnerabilities.",
+          "Application Security Testing",
+          "Multi-layer security testing across code, runtime, APIs, and mobile to identify vulnerabilities early and reduce the attack surface.",
         ],
         image:
           "https://images.unsplash.com/photo-1614064548237-096f735f344f?auto=format&fit=crop&w=900&q=80",
       },
 
-      API_Security: {
+      API_Integration_Security: {
         description: [
-          "API Security Testing",
-          "Prevent data leakage and unauthorized access in APIs.",
+          "API & Integration Security",
+          "Protect APIs from IDOR, broken authorization, data leakage, and abuse to ensure safe, scalable integrations.",
         ],
         image:
           "https://images.unsplash.com/photo-1600267165477-6d4cc741b379?auto=format&fit=crop&w=900&q=80",
       },
 
-      Mobile_Security: {
+      Compliance_Ready_Assurance: {
         description: [
-          "Mobile App Security",
-          "Security testing for Android and iOS applications.",
+          "Compliance-Ready Assurance",
+          "Testing aligned with OWASP Top 10 and secure coding standards, delivering evidence that simplifies audits and compliance reviews.",
         ],
         image:
           "https://images.unsplash.com/photo-1556155092-8707de31f9c4?auto=format&fit=crop&w=900&q=80",
       },
 
-      Threat_Modeling: {
+      Executive_Risk_Reporting: {
         description: [
-          "Threat Modeling",
-          "Proactive identification of potential attack vectors.",
+          "Executive Risk Reporting",
+          "Risk-prioritized, actionable reports that translate technical findings into clear business impact for leadership.",
         ],
         image:
           "https://images.unsplash.com/photo-1581090700227-1e37b190418e?auto=format&fit=crop&w=900&q=80",
-      },
-
-      Compliance: {
-        description: [
-          "Compliance Mapping (OWASP, NIST, ISO, GDPR, DPDPA)",
-          "Security assessments aligned with regulatory standards.",
-        ],
-        image:
-          "https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=900&q=80",
       },
     },
   },

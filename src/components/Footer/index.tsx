@@ -1,6 +1,4 @@
-// import React from "react";
 import { Link } from "react-router-dom";
-
 import {
   FooterSection,
   FooterContainer,
@@ -9,72 +7,80 @@ import {
   FooterLink,
   FooterText,
   FooterContactInfo,
-  HighlightedText,
   FooterBottom,
   SocialIcons,
+  HighlightedText,
+  NewsletterBox,
+  NewsletterInput,
+  SubscribeButton,
 } from "./styles";
 
 const Footer = () => {
   return (
     <FooterSection>
       <FooterContainer>
+
+        {/* ===== Brand & Social ===== */}
         <FooterColumn>
           <FooterTitle>Shinelogics</FooterTitle>
           <FooterText>
-            Shinelogics is a global leader in{" "}
-            <HighlightedText>AI-powered solutions</HighlightedText>, dedicated
-            to transforming businesses with cutting-edge technology.
+            Secure, <HighlightedText>Intelligent</HighlightedText>, and future-ready
+            technology solutions designed for modern businesses.
           </FooterText>
+
           <SocialIcons>
-            <a href="https://www.facebook.com/share/1YHbrEVKhb/">
-              <img src="/img/socialmediaimg/facebook.png" alt="" />
-            </a>
-            <a href="https://www.instagram.com/shinelogicschennai?igsh=OXkycHRoZWxtbmNs">
-              <img src="/img/socialmediaimg/social.png" alt="" />
-            </a>
-            <a href="https://www.linkedin.com/company/shinelogics-pvt-ltd/">
-              <img src="/img/socialmediaimg/linkedin.png" alt="" />
-            </a>
-            <a href="https://x.com/shinelogic?t=WWH5qEbodqxZwAdmbIWxvA&s=09">
-              <img src="/img/socialmediaimg/twitter.png" alt="" />
-            </a>
-            <a href="https://youtube.com/@shinelogicsinfotech3857?si=hy7SKoSgFf7WpMT_ ">
-              <img src="/img/socialmediaimg/youtube.png" alt="you tube" />
-            </a>
+            <a href="https://www.linkedin.com/company/shinelogics-pvt-ltd/" target="_blank">LinkedIn</a>
+            <a href="https://x.com/shinelogic" target="_blank">Twitter</a>
+            <a href="https://github.com" target="_blank">GitHub</a>
+            <a href="https://www.instagram.com/shinelogicschennai" target="_blank">Instagram</a>
           </SocialIcons>
         </FooterColumn>
+
+        {/* ===== Quick Links ===== */}
         <FooterColumn>
-          <FooterTitle>Explore</FooterTitle>
-          <FooterLink as={Link} to="/home" onClick={() => window.scrollTo(0, 0)}>
-            Home
-          </FooterLink>
-          <FooterLink as={Link} to="/about" onClick={() => window.scrollTo(0, 0)}>
-            About
-          </FooterLink>
-          <FooterLink as={Link} to="/service" onClick={() => window.scrollTo(0, 0)}>
-            Services
-          </FooterLink>
-          <FooterLink as={Link} to="/portfolio" onClick={() => window.scrollTo(0, 0)}>
-            Portfolio
-          </FooterLink>
-          <FooterLink as={Link} to="/team" onClick={() => window.scrollTo(0, 0)}>
-            Team
-          </FooterLink>
+          <FooterTitle>Quick Links</FooterTitle>
+          <FooterLink as={Link} to="/">Home</FooterLink>
+          <FooterLink as={Link} to="/about">About Us</FooterLink>
+          <FooterLink as={Link} to="/service">Services</FooterLink>
+          {/* <FooterLink as={Link} to="/industries">Industries</FooterLink> */}
+          <FooterLink as={Link} to="/Blog-Resource">Resources & Blog</FooterLink>
+          <FooterLink as={Link} to="/career">Careers</FooterLink>
+          <FooterLink as={Link} to="/contact">Contact Us</FooterLink>
+          <FooterLink as={Link} to="/privacyPolicy">Privacy Policy</FooterLink>
+          <FooterLink as={Link} to="/terms">Terms & Conditions</FooterLink>
         </FooterColumn>
+
+        {/* ===== Newsletter ===== */}
         <FooterColumn>
-          <FooterTitle>Privacy Policy</FooterTitle>
-          <FooterLink as={Link} to="/privacyPolicy" onClick={() => window.scrollTo(0, 0)}>Privacy Policy</FooterLink>
+          <FooterTitle>Newsletter</FooterTitle>
+          <FooterText>
+            Stay updated with the latest in secure technology and AI innovation.
+          </FooterText>
+
+          <NewsletterBox>
+            <NewsletterInput type="email" placeholder="Enter your email" />
+            <SubscribeButton>Subscribe</SubscribeButton>
+          </NewsletterBox>
         </FooterColumn>
+
+        {/* ===== Contact ===== */}
         <FooterColumn>
-          <FooterTitle>Get in Touch</FooterTitle>
+          <FooterTitle>Contact Us</FooterTitle>
           <FooterContactInfo>
-            <div>3rd Floor, KJ Aditya Towers, Chennai-600042</div>
+            <div>Chennai, India</div>
             <div>+91-9500037221</div>
-            <div>info@shinelogics.com</div>
+            <div>support@shinelogics.com</div>
           </FooterContactInfo>
         </FooterColumn>
+
       </FooterContainer>
-      <FooterBottom>&copy; 2025 Shinelogics. All Rights Reserved.</FooterBottom>
+
+      {/* ===== Bottom Bar ===== */}
+      <FooterBottom>
+        © 2025 Shinelogics — Secure, Intelligent, Future-Ready Technology Solutions  
+        <br />
+        Designed for Modern Businesses | Security First | Innovation Always
+      </FooterBottom>
     </FooterSection>
   );
 };
