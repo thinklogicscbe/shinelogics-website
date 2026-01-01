@@ -42,6 +42,7 @@ const OurProduct = () => {
                             <Video ref={emsRef} src={EMS} autoPlay loop muted controls={false} />
                         </Link>
                     </ProductCard>
+                        
                 </div>
             </ProductContainer>
 

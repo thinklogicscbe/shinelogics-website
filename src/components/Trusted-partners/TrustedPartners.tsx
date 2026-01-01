@@ -32,7 +32,7 @@ const partners = [
   {
     name: "Otis AI",
     desc: "Cross-channel AI-powered ad optimization",
-    logo: "https://cdn.worldvectorlogo.com/logos/otis-1.svg",
+    logo: "https://meetotis.com/static/media/otis-logo-blue.a85ab8568632b8084e4f.svgz",
   },
   {
     name: "DataPattern US",

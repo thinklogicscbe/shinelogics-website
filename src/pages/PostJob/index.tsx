@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { createJob } from "../API/AdminUser"; // Import API function
+import React, { useState } from "react";
+import { createJob } from "../API/AdminUser";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // Import styles for toast notifications
+import "react-toastify/dist/ReactToastify.css";
+
 import {
   Container,
-  MainContent,
-  Header,
-  HeaderLeft,
-  HeaderRight,
-  ToggleButton,
-  Main,
   Title,
   Subtitle,
   FormContainer,
@@ -22,12 +17,8 @@ import {
 } from "./style";
 
 const PostJob = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-
-  // Job-related state
   const [jobTitle, setJobTitle] = useState("");
-  const [shortDescription, setShortDescription] = useState(""); // New state
+  const [shortDescription, setShortDescription] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [location, setLocation] = useState("");
   const [jobType, setJobType] = useState("");
@@ -38,18 +29,12 @@ const PostJob = () => {
   const [requirements, setRequirements] = useState("");
   const [skills, setSkills] = useState("");
 
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const jobData = {
       jobTitle,
-      shortDescription, // Include short description
+      shortDescription,
       jobDescription,
       summary: {
         location,
@@ -61,17 +46,13 @@ const PostJob = () => {
       },
       requirements,
       qualifications,
-      skills: skills.split(",").map((skill) => skill.trim()), // Convert skills to an array
+      skills: skills.split(",").map(s => s.trim()),
     };
 
     try {
-      const response = await createJob(jobData);
-      console.log("Job Created Successfully:", response);
+      await createJob(jobData);
+      toast.success("Job created successfully!");
 
-      // Show success toast
-      toast.success("Job Created Successfully!", { position: "top-right" });
-
-      // Clear form fields after submission
       setJobTitle("");
       setShortDescription("");
       setJobDescription("");
@@ -83,103 +64,132 @@ const PostJob = () => {
       setDatePosted("");
       setRequirements("");
       setSkills("");
-
-    } catch (error) {
-      console.error("Error creating job:", error);
-
-      // Show error toast
-      toast.error("Failed to create job!", { position: "top-right" });
+    } catch {
+      toast.error("Failed to create job");
     }
   };
 
   return (
     <Container>
-      <MainContent>
-        <Header>
-          <HeaderLeft>Welcome, Senthil</HeaderLeft>
+      <Title>Post Job</Title>
+      <Subtitle>Enter job details</Subtitle>
 
-          <HeaderRight>
-            {isMobile && (
-              <ToggleButton onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                {isMenuOpen ? "Close Menu" : "Open Menu"}
-              </ToggleButton>
-            )}
-          </HeaderRight>
-        </Header>
+      <FormContainer onSubmit={handleSubmit}>
+        {/* LEFT COLUMN */}
+        <FormColumn>
+          <FormGroup>
+            <Label>Job Title</Label>
+            <Input
+              value={jobTitle}
+              onChange={e => setJobTitle(e.target.value)}
+              required
+            />
+          </FormGroup>
 
-        <Main>
-          <Title>Job Management</Title>
-          <Subtitle>Enter Job Details</Subtitle>
+          <FormGroup>
+            <Label>Short Description</Label>
+            <TextArea
+              value={shortDescription}
+              onChange={e => setShortDescription(e.target.value)}
+              maxLength={150}
+            />
+          </FormGroup>
 
-          <FormContainer onSubmit={handleSubmit}>
-            <FormColumn>
-              <FormGroup>
-                <Label>Job Title</Label>
-                <Input type="text" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} required />
-              </FormGroup>
+          <FormGroup>
+            <Label>Job Description</Label>
+            <TextArea
+              value={jobDescription}
+              onChange={e => setJobDescription(e.target.value)}
+              required
+            />
+          </FormGroup>
 
-              <FormGroup>
-                <Label>Short Description</Label> {/* New input */}
-                <TextArea value={shortDescription} onChange={(e) => setShortDescription(e.target.value)} required />
-              </FormGroup>
+          <FormGroup>
+            <Label>Skills (comma separated)</Label>
+            <Input
+              value={skills}
+              onChange={e => setSkills(e.target.value)}
+              placeholder="Python, SQL, AWS"
+            />
+          </FormGroup>
+        </FormColumn>
 
-              <FormGroup>
-                <Label>Job Description</Label>
-                <TextArea value={jobDescription} onChange={(e) => setJobDescription(e.target.value)} required />
-              </FormGroup>
+        {/* RIGHT COLUMN */}
+        <FormColumn>
+          <FormGroup>
+            <Label>Location</Label>
+            <Input
+              value={location}
+              onChange={e => setLocation(e.target.value)}
+              required
+            />
+          </FormGroup>
 
-              <FormGroup>
-                <Label>Location</Label>
-                <Input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
-              </FormGroup>
+          <FormGroup>
+            <Label>Job Type</Label>
+            <Input
+              value={jobType}
+              onChange={e => setJobType(e.target.value)}
+              placeholder="Full-Time / Contract"
+              required
+            />
+          </FormGroup>
 
-              <FormGroup>
-                <Label>Job Type</Label>
-                <Input type="text" value={jobType} onChange={(e) => setJobType(e.target.value)} required />
-              </FormGroup>
-            </FormColumn>
+          <FormGroup>
+            <Label>Number of Positions</Label>
+            <Input
+              type="number"
+              value={numberOfPositions}
+              onChange={e => setNumberOfPositions(e.target.value)}
+              required
+            />
+          </FormGroup>
 
-            <FormColumn>
-              <FormGroup>
-                <Label>Number of Positions</Label>
-                <Input type="number" value={numberOfPositions} onChange={(e) => setNumberOfPositions(e.target.value)} required />
-              </FormGroup>
+          <FormGroup>
+            <Label>Experience</Label>
+            <Input
+              value={experience}
+              onChange={e => setExperience(e.target.value)}
+              placeholder="2–4 years"
+              required
+            />
+          </FormGroup>
 
-              <FormGroup>
-                <Label>Qualifications</Label>
-                <TextArea value={qualifications} onChange={(e) => setQualifications(e.target.value)} required />
-              </FormGroup>
+          <FormGroup>
+            <Label>Qualifications</Label>
+            <TextArea
+              value={qualifications}
+              onChange={e => setQualifications(e.target.value)}
+              placeholder="Bachelor’s degree in Computer Science or related field"
+              required
+            />
+          </FormGroup>
 
-              <FormGroup>
-                <Label>Experience</Label>
-                <Input type="text" value={experience} onChange={(e) => setExperience(e.target.value)} required />
-              </FormGroup>
+          <FormGroup>
+            <Label>Date Posted</Label>
+            <Input
+              type="date"
+              value={datePosted}
+              onChange={e => setDatePosted(e.target.value)}
+              required
+            />
+          </FormGroup>
 
-              <FormGroup>
-                <Label>Date Posted</Label>
-                <Input type="date" value={datePosted} onChange={(e) => setDatePosted(e.target.value)} required />
-              </FormGroup>
+          <FormGroup>
+            <Label>Requirements</Label>
+            <TextArea
+              value={requirements}
+              onChange={e => setRequirements(e.target.value)}
+              required
+            />
+          </FormGroup>
 
-              <FormGroup>
-                <Label>Requirements</Label>
-                <TextArea value={requirements} onChange={(e) => setRequirements(e.target.value)} required />
-              </FormGroup>
+          <SubmitButton type="submit">Create Job</SubmitButton>
+        </FormColumn>
+      </FormContainer>
 
-              <FormGroup>
-                <Label>Skills (comma-separated)</Label>
-                <Input type="text" value={skills} onChange={(e) => setSkills(e.target.value)} required />
-              </FormGroup>
-
-              <SubmitButton type="submit">Submit</SubmitButton>
-            </FormColumn>
-          </FormContainer>
-        </Main>
-      </MainContent>
-      <ToastContainer />
-      {/* Toast container for showing notifications */}
-      
+      <ToastContainer position="top-right" />
     </Container>
-   
   );
 };
 

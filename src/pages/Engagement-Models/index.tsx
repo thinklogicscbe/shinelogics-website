@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Section,
   Header,
@@ -12,7 +13,40 @@ import {
   List,
 } from "./styles";
 
+interface EngagementModel {
+  _id: string;
+  title: string;
+  objective: string;
+  challenge: string;
+  features: string[];
+  cta?: string;
+}
+
 const EngagementModels: React.FC = () => {
+  const [models, setModels] = useState<EngagementModel[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const API_URL = "http://localhost:3006/api/engagement-models";
+
+  useEffect(() => {
+    const fetchModels = async () => {
+      try {
+        const response = await axios.get(API_URL);
+        setModels(response.data.data || response.data);
+      } catch (error) {
+        console.error("Failed to fetch engagement models", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchModels();
+  }, []);
+
+  if (loading) {
+    return <Section>Loading engagement models...</Section>;
+  }
+
   return (
     <Section>
       <Header>
@@ -24,64 +58,23 @@ const EngagementModels: React.FC = () => {
       </Header>
 
       <Grid>
-        {/* 1 */}
-        <Card>
-          <Badge>01</Badge>
-          <CardTitle>Fixed-Price Projects</CardTitle>
-          <CardText>
-            Ideal for well-defined requirements and complete end-to-end delivery
-            with clear scope.
-          </CardText>
-          <List>
-            <li>Clear timelines and predictable budgets</li>
-            <li>Best for startups and MVPs</li>
-            <li>Suitable for specific feature development</li>
-          </List>
-        </Card>
+        {models.map((model, index) => (
+          <Card key={model._id}>
+            <Badge>{String(index + 1).padStart(2, "0")}</Badge>
 
-        {/* 2 */}
-        <Card>
-          <Badge>02</Badge>
-          <CardTitle>Dedicated Teams</CardTitle>
-          <CardText>
-            Your extended engineering team working as an integral part of your
-            organization.
-          </CardText>
-          <List>
-            <li>Developers, QA, AppSec, AI, Data & DevOps</li>
-            <li>Scale team size up or down as needed</li>
-            <li>Best for long-term product development</li>
-          </List>
-        </Card>
+            <CardTitle>{model.title}</CardTitle>
 
-        {/* 3 */}
-        <Card>
-          <Badge>03</Badge>
-          <CardTitle>Retainer Model</CardTitle>
-          <CardText>
-            Long-term collaboration with consistent support and predictable
-            monthly costs.
-          </CardText>
-          <List>
-            <li>Ongoing support and maintenance</li>
-            <li>Continuous improvements & enhancements</li>
-            <li>Ideal for mature and live products</li>
-          </List>
-        </Card>
+            {/* Objective */}
+            <CardText>{model.objective}</CardText>
 
-        {/* 4 */}
-        <Card>
-          <Badge>04</Badge>
-          <CardTitle>Consulting & Advisory</CardTitle>
-          <CardText>
-            Expert guidance for strategic and high-impact technology decisions.
-          </CardText>
-          <List>
-            <li>Architecture & system design</li>
-            <li>Security & compliance consulting</li>
-            <li>Digital transformation strategy</li>
-          </List>
-        </Card>
+            {/* Features */}
+            <List>
+              {model.features.map((feature, i) => (
+                <li key={i}>{feature}</li>
+              ))}
+            </List>
+          </Card>
+        ))}
       </Grid>
     </Section>
   );

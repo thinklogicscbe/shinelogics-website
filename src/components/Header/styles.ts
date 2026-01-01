@@ -103,22 +103,42 @@ export const NavLinks = styled.div`
   }
 `;
 
-export const StyledButton = styled.span`
-  padding: 10px 15px;
+export const StyledButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 15px;
   cursor: pointer;
-  font-weight: bold;
-  font-size: 16px;
-  color: #333;
-  border-bottom: 2px solid transparent;
-  transition: all 0.3s ease;
-
-  .active & {
-    color: #007bff;
-    border-bottom-color: #007bff;
-  }
+  padding: 8px 14px;
+  border-radius: 8px;
+  color: #0f172a;
+  transition: all 0.25s ease;
+  margin-left : 20px;
 
   &:hover {
-    color: #555;
+    color: #2563eb;
+  }
+
+  &.active {
+    color: #2563eb;
+  }
+
+  &.nav-button {
+    background: #e5e7eb;
+    font-weight: 600;
+  }
+
+  &.nav-button:hover {
+    background: #c7d2fe;
+    transform: translateY(-1px);
+  }
+
+  &.primary {
+    background: #2563eb;
+    color: white;
+  }
+
+  &.primary:hover {
+    background: #1d4ed8;
   }
 `;
 
@@ -194,28 +214,28 @@ export const DropdownContent = styled.div`
 /* ================= MOBILE NAV ================= */
 
 export const MobileNavItem = styled.div`
-  padding: 14px 18px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #020617;
+  padding: 14px 16px;
   cursor: pointer;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
   border-radius: 8px;
-  transition: all 0.25s ease;
+  transition: background 0.2s ease;
 
   &:hover {
     background: #f1f5f9;
   }
 
-  &.active {
-    color: #2563eb;
-    background: #eff6ff;
+  &.nav-button {
+    background: #e5e7eb;
+    font-weight: 600;
+    margin: 8px 0;
+    text-align: center;
+  }
+
+  &.primary {
+    background: #2563eb;
+    color: white;
   }
 `;
+
 
 /* ================= MOBILE DROPDOWN ================= */
 

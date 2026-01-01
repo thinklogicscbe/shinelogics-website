@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { uploadPdfToS3 } from "../../components/AWS/aws";
-import { createForm } from "../API/form";
+import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -20,8 +19,17 @@ import {
   FileInputField,
   ErrorMessage,
   Row,
-  SuccessMessage,
 } from "./style";
+
+interface ApplyFormData {
+  firstName: string;
+  lastName: string;
+  dob: string;
+  gender: string;
+  email: string;
+  phone: string;
+  resume: FileList;
+}
 
 const ApplyForm: React.FC = () => {
   const {
@@ -30,140 +38,115 @@ const ApplyForm: React.FC = () => {
     setValue,
     watch,
     formState: { errors, isValid },
-  } = useForm({ mode: "onChange" });
+  } = useForm<ApplyFormData>({ mode: "onChange" });
 
   const [uploading, setUploading] = useState(false);
-  const [resumeUploaded, setResumeUploaded] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const location = useLocation();
   const jobId = location.state?.jobId;
   const navigate = useNavigate();
 
-  const watchFields = watch();
-  const handleFileUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  /* ================= SUBMIT ================= */
 
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("File size should be less than 5MB");
+  const onSubmit = async (data: ApplyFormData) => {
+    if (!data.resume || data.resume.length === 0) {
+      toast.error("Please upload your resume");
       return;
     }
 
-    if (
-      ![
-        "application/pdf",
-        "application/msword",
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        "text/plain",
-      ].includes(file.type)
-    ) {
-      toast.error(
-        "Invalid file type. Only PDF, DOC, DOCX, and TXT are allowed."
-      );
-      return;
-    }
-
-    setUploading(true);
     try {
-      const uploadedUrl = await uploadPdfToS3({
-        name: file.name,
-        type: file.type,
-        content: file,
-      });
-      setValue("resume", uploadedUrl);
-      setResumeUploaded(true);
-    } catch (error) {
-      console.error("File upload failed:", error);
-      setResumeUploaded(false);
+      setUploading(true);
+
+      const formData = new FormData();
+      formData.append("firstName", data.firstName);
+      formData.append("lastName", data.lastName);
+      formData.append("dob", data.dob);
+      formData.append("gender", data.gender);
+      formData.append("email", data.email);
+      formData.append("phone", data.phone);
+      formData.append("jobId", jobId);
+      formData.append("resume", data.resume[0]); // 🔥 FILE
+
+      const response = await axios.post(
+        "http://localhost:3006/api/form/create", // 🔁 change if needed
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.data?.success) {
+        toast.success("Application submitted successfully!");
+        setSubmitted(true);
+        setTimeout(() => navigate("/"), 2000);
+      } else {
+        toast.error(response.data?.message || "Submission failed");
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error(
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again."
+      );
     } finally {
       setUploading(false);
     }
   };
 
-  const onSubmit = async (data: any) => {
-    if (!resumeUploaded) {
-      toast.error("Please upload your resume before submitting.");
-      return;
-    }
-
-    try {
-      const response = await createForm({
-        ...data,
-        jobId,
-        resume: data.resume,
-      });
-      if (response?.success) {
-        toast.success("Application submitted successfully!");
-        setSubmitted(true);
-        setTimeout(() => navigate("/"), 2000);
-      } else {
-        toast.error(
-          response?.message || "Failed to submit application. Please try again."
-        );
-      }
-    } catch (error) {
-      console.error("Error submitting application:", error);
-      toast.error("Something went wrong. Please try again later.");
-    }
-  };
+  /* ================= UI ================= */
 
   return (
     <FormContainer>
       <FormWrapper>
         <FormTitle>Become a Part of the AI Revolution</FormTitle>
+
         <ScrollableForm>
           <form onSubmit={handleSubmit(onSubmit)}>
+            {/* NAME */}
             <Row>
               <div>
-                <Label htmlFor="firstName">First Name *</Label>
+                <Label>First Name *</Label>
                 <InputField
-                  type="text"
-                  placeholder="First Name"
                   {...register("firstName", {
                     required: "First Name is required",
                   })}
                 />
-                {errors.firstName?.message && (
-                  <ErrorMessage>
-                    {String(errors.firstName.message)}
-                  </ErrorMessage>
+                {errors.firstName && (
+                  <ErrorMessage>{errors.firstName.message}</ErrorMessage>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="lastName">Last Name *</Label>
+                <Label>Last Name *</Label>
                 <InputField
-                  type="text"
-                  placeholder="Last Name"
                   {...register("lastName", {
                     required: "Last Name is required",
                   })}
                 />
-                {errors.lastName?.message && (
-                  <ErrorMessage>{String(errors.lastName.message)}</ErrorMessage>
+                {errors.lastName && (
+                  <ErrorMessage>{errors.lastName.message}</ErrorMessage>
                 )}
               </div>
             </Row>
 
+            {/* DOB + GENDER */}
             <Row>
               <div>
-                <Label htmlFor="dob">Date of Birth *</Label>
+                <Label>Date of Birth *</Label>
                 <InputField
                   type="date"
-                  {...register("dob", {
-                    required: "Date of Birth is required",
-                  })}
+                  {...register("dob", { required: "DOB is required" })}
                 />
-                {errors.dob?.message && (
-                  <ErrorMessage>{String(errors.dob.message)}</ErrorMessage>
+                {errors.dob && (
+                  <ErrorMessage>{errors.dob.message}</ErrorMessage>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="gender">Gender *</Label>
+                <Label>Gender *</Label>
                 <SelectField
                   {...register("gender", { required: "Gender is required" })}
                 >
@@ -172,69 +155,70 @@ const ApplyForm: React.FC = () => {
                   <option value="Female">Female</option>
                   <option value="Other">Other</option>
                 </SelectField>
-                {errors.gender?.message && (
-                  <ErrorMessage>{String(errors.gender.message)}</ErrorMessage>
+                {errors.gender && (
+                  <ErrorMessage>{errors.gender.message}</ErrorMessage>
                 )}
               </div>
             </Row>
 
+            {/* EMAIL + PHONE */}
             <Row>
               <div>
-                <Label htmlFor="email">Email Address *</Label>
+                <Label>Email *</Label>
                 <InputField
                   type="email"
-                  placeholder="Email Address"
                   {...register("email", {
-                    required: "Email Address is required",
+                    required: "Email is required",
                     pattern: {
                       value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                       message: "Enter a valid email",
                     },
                   })}
                 />
-                {errors.email?.message && (
-                  <ErrorMessage>{String(errors.email.message)}</ErrorMessage>
+                {errors.email && (
+                  <ErrorMessage>{errors.email.message}</ErrorMessage>
                 )}
               </div>
 
               <div>
-                <Label htmlFor="phone">Phone Number *</Label>
+                <Label>Phone *</Label>
                 <StyledPhoneInput
                   country="in"
-                  inputProps={{ name: "phone", required: true }}
                   value={watch("phone")}
-                  onChange={(value: unknown) =>
-                    setValue("phone", value as string)
+                  onChange={(value) =>
+                    setValue("phone", value as string, {
+                      shouldValidate: true,
+                    })
                   }
-                  enableSearch
                 />
-                {errors.phone?.message && (
-                  <ErrorMessage>{String(errors.phone.message)}</ErrorMessage>
-                )}
               </div>
             </Row>
 
+            {/* RESUME */}
             <FormGroup>
-              <Label htmlFor="resume">Resume *</Label>
+              <Label>Resume *</Label>
               <FileInputField
                 type="file"
-                accept=".pdf,.doc,.docx,.txt"
-                onChange={handleFileUpload}
+                accept=".pdf,.doc,.docx"
+                {...register("resume", {
+                  required: "Resume is required",
+                })}
               />
-              {uploading && <p>Uploading...</p>}
-              {resumeUploaded && (
-                <SuccessMessage>Uploaded Successfully!!!</SuccessMessage>
-              )}
-              {errors.resume?.message && (
-                <ErrorMessage>{String(errors.resume.message)}</ErrorMessage>
+              {errors.resume && (
+                <ErrorMessage>{errors.resume.message}</ErrorMessage>
               )}
             </FormGroup>
 
+            {/* SUBMIT */}
             <SubmitButton
               type="submit"
               disabled={!isValid || uploading || submitted}
             >
-              {submitted ? "Submitted" : "Submit Application"}
+              {submitted
+                ? "Submitted"
+                : uploading
+                ? "Submitting..."
+                : "Submit Application"}
             </SubmitButton>
           </form>
         </ScrollableForm>

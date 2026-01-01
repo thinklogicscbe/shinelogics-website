@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
-import { Drawer } from "antd";
 import { useNavigate } from "react-router-dom";
-
-// import { SvgIcon } from "../../common/SvgIcon";
+import { Drawer } from "antd";
 
 import {
   HeaderSection,
@@ -14,177 +11,194 @@ import {
   DropdownWrapper,
   DropdownContent,
   DropdownArrow,
-  DropdownWrapperMobile,
-  StyledButton1,
   MobileNavItem,
   MobileDropdown,
   MobileDropdownItem,
   DrawerHeader,
-  CloseIcon
+  CloseIcon,
 } from "./styles";
 
-import logo1 from "../../assets/shinelogics-logo.png";
+import logo1 from "../../assets/shinelogics-logo(1).png";
 
+/* ================= TYPES ================= */
 
+type ActiveMenu =
+  | "product"
+  | "insights"
+  | "service"
+  | "about"
+  | "contact"
+  | "quickmvp"
+  | "";
+
+/* ================= ROUTE GROUPS ================= */
+
+const productRoutes = [
+  "/ProductCompo/erp",
+  "/ProductCompo/ems",
+  "/ProductCompo/e-commerce",
+];
+
+const insightsRoutes = ["/career", "/engagementModels", "/Blog-Resource"];
+
+/* ================= DROPDOWN DATA ================= */
+
+const productDropdownLinks = [
+  { path: "/ProductCompo/erp", label: "ERP (Enterprise Resource Planning)" },
+  { path: "/ProductCompo/ems", label: "EMS (Employee Management System)" },
+  { path: "/ProductCompo/e-commerce", label: "E-Commerce" },
+];
+
+const insightDropdownLinks = [
+  { path: "/career", label: "Career" },
+  { path: "/engagementModels", label: "Engagement Models" },
+  { path: "/Blog-Resource", label: "Blog & Resources" },
+];
 
 const Header = () => {
-  const [visible, setVisibility] = useState(false);
-  const [activeLink, setActiveLink] = useState("/");
-  const [productDropdownVisible, setProductDropdownVisible] = useState(false);
-  const [insightDropdownVisible, setInsightDropdownVisible] = useState(false);
-  const [mobileDropdownVisible, setMobileDropdownVisible] = useState(false);
-  const [mobileInsightDropdownVisible, setMobileInsightDropdownVisible] =
-    useState(false);
-  const [, setIsMobile] = useState(window.innerWidth <= 768);
-
   const navigate = useNavigate();
 
+  /* ================= STATE ================= */
+
+  const [visible, setVisibility] = useState(false);
+  const [activeMenu, setActiveMenu] = useState<ActiveMenu>("");
+
+  const [productDropdownVisible, setProductDropdownVisible] = useState(false);
+  const [insightDropdownVisible, setInsightDropdownVisible] = useState(false);
+
+  const [mobileProductDropdownVisible, setMobileProductDropdownVisible] =
+    useState(false);
+  const [mobileInsightDropdownVisible, setMobileInsightDropdownVisible] =
+    useState(false);
+
+  /* ================= EFFECT ================= */
 
   useEffect(() => {
     const handleResize = () => {
       setProductDropdownVisible(false);
       setInsightDropdownVisible(false);
-      setMobileDropdownVisible(false);
+      setMobileProductDropdownVisible(false);
       setMobileInsightDropdownVisible(false);
     };
+
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const toggleDrawer = () => {
-    setVisibility(!visible);
-    setMobileDropdownVisible(false);
-  };
+  /* ================= NAVIGATION HANDLER ================= */
 
-  const handleLinkClick = (path: string) => {
-    setActiveLink(path);
+  const navigateWithMenu = (path: string) => {
+    if (productRoutes.includes(path)) setActiveMenu("product");
+    else if (insightsRoutes.includes(path)) setActiveMenu("insights");
+    else if (path === "/service") setActiveMenu("service");
+    else if (path === "/about") setActiveMenu("about");
+    else if (path === "/contact") setActiveMenu("contact");
+    else if (path === "/quickmvp") setActiveMenu("quickmvp");
+    else setActiveMenu("");
+
+    navigate(path);
+
     setVisibility(false);
-    setMobileDropdownVisible(false);
     setProductDropdownVisible(false);
     setInsightDropdownVisible(false);
+    setMobileProductDropdownVisible(false);
     setMobileInsightDropdownVisible(false);
-    localStorage.setItem("currentPath", path);
-    window.dispatchEvent(new Event("storage"));
   };
 
-  // Product Dropdown Handlers
-  const showProductDropdown = () => {
-    setProductDropdownVisible(true);
-    setInsightDropdownVisible(false);
-  };
-  const hideProductDropdown = () => {
-    setProductDropdownVisible(false);
-  };
-
-  // Insight Dropdown Handlers
-  const showInsightDropdown = () => {
-    setInsightDropdownVisible(true);
-    setProductDropdownVisible(false);
-  };
-  const hideInsightDropdown = () => {
-    setInsightDropdownVisible(false);
-  };
-
-  // Mobile Dropdown Toggle
-  const handleMobileDropdownToggle = () => {
-    setMobileDropdownVisible(!mobileDropdownVisible);
-  };
+  /* ================= NAV DATA ================= */
 
   const navigationLinks = [
+    { key: "product", label: "Products (AS)", hasDropdown: true },
+    { key: "service", path: "/service", label: "Service" },
+    { key: "insights", label: "Insights", hasDropdown: true },
+    { key: "about", path: "/about", label: "About" },
+
+    // BUTTONS WITH NEXT ARROW
     {
-      path: "/product",
-      label: "Product & Solutions",
-      hasDropdown: true,
-      showDropdown: showProductDropdown,
-      hideDropdown: hideProductDropdown,
+      key: "contact",
+      path: "/contact",
+      label: "Contact",
+      isButton: true,
     },
-    { path: "/service", label: "Service" },
     {
-      path: "/career",
-      label: "Insights",
-      hasDropdown: true,
-      showDropdown: showInsightDropdown,
-      hideDropdown: hideInsightDropdown,
+      key: "quickmvp",
+      path: "/quickmvp",
+      label: "Explore Quick MVP",
+      isButton: true,
+      primary: true,
     },
-    { path: "/about", label: "About" },
-    { path: "/contact", label: "Contact" },
-    { path: "/quickmvp", label: "Explore Quick MVP" },
-  ];
-
-  console.log(navigationLinks);
-
-  const productDropdownLinks = [
-    { path: "/productcompo/erp", label: "ERP (Enterprise Resource Planning)" },
-    { path: "/productcompo/ems", label: "EMS (Employee Management System)" },
-    { path: "/productcompo/e-commerce", label: "ECOMMERCE" },
-  ];
-
-  const insightDropdownLinks = [
-    { path: "/career", label: "Career" },
-    { path: "/engagementModels", label: "Engagement Models" },
-    { path: "/Blog-Resource", label: "Blog & Resources" },
-    // { path: "/productEngineering", label: "Product Engineering" },
-    // { path: "/resourseEngineering", label: "Resourse Engineering" },
   ];
 
   return (
     <HeaderSection>
-      <LogoContainer to="/" aria-label="homepage">
-        <img src={logo1} />
+      {/* LOGO */}
+      <LogoContainer to="/" onClick={() => setActiveMenu("")}>
+        <img src={logo1} alt="logo" />
       </LogoContainer>
 
-      <Burger onClick={toggleDrawer}>
+      {/* BURGER */}
+      <Burger onClick={() => setVisibility(true)}>
         <div />
         <div />
         <div />
       </Burger>
 
-      {/* Desktop Navigation */}
+      {/* DESKTOP NAV */}
       <NavLinks>
         {navigationLinks.map((link) => (
           <div
-            key={link.path}
-            onMouseEnter={link.hasDropdown ? link.showDropdown : undefined}
-            onMouseLeave={link.hasDropdown ? link.hideDropdown : undefined}
+            key={link.key}
             style={{ position: "relative" }}
+            onMouseEnter={() => {
+              if (link.key === "product") setProductDropdownVisible(true);
+              if (link.key === "insights") setInsightDropdownVisible(true);
+            }}
+            onMouseLeave={() => {
+              setProductDropdownVisible(false);
+              setInsightDropdownVisible(false);
+            }}
           >
-            <NavLink
-              to={link.path}
-              className={({ isActive }) => (isActive ? "active" : "")}
-              onClick={(e) => link.hasDropdown && e.preventDefault()}
+            <StyledButton
+              className={[
+                activeMenu === link.key ? "active" : "",
+                link.isButton ? "nav-button" : "",
+                link.primary ? "primary" : "",
+              ].join(" ")}
+              onClick={(e) => {
+                if (link.hasDropdown) e.preventDefault();
+                else navigateWithMenu(link.path!);
+              }}
             >
-              <StyledButton>{link.label}</StyledButton>
-            </NavLink>
+              <span>{link.label}</span>
+              {link.isButton && <span className="arrow">→</span>}
+            </StyledButton>
 
-            {/* Product Dropdown */}
-            {link.path === "/product" && productDropdownVisible && (
+            {/* PRODUCT DROPDOWN (DIRECT ITEMS) */}
+            {link.key === "product" && productDropdownVisible && (
               <DropdownWrapper className="visible">
                 <DropdownArrow />
-                {productDropdownLinks.map((sublink) => (
-                  <NavLink
-                    key={sublink.path}
-                    to={sublink.path}
-                    onClick={() => handleLinkClick(sublink.path)}
+                {productDropdownLinks.map((item) => (
+                  <DropdownContent
+                    key={item.path}
+                    onClick={() => navigateWithMenu(item.path)}
                   >
-                    <DropdownContent>{sublink.label}</DropdownContent>
-                  </NavLink>
+                    {item.label}
+                  </DropdownContent>
                 ))}
               </DropdownWrapper>
             )}
 
-            {/* Insights Dropdown */}
-            {link.path === "/career" && insightDropdownVisible && (
+            {/* INSIGHTS DROPDOWN */}
+            {link.key === "insights" && insightDropdownVisible && (
               <DropdownWrapper className="visible">
                 <DropdownArrow />
-                {insightDropdownLinks.map((sublink) => (
-                  <NavLink
-                    key={sublink.path}
-                    to={sublink.path}
-                    className={({ isActive }) => (isActive ? "active" : "")}
-                    onClick={() => handleLinkClick(sublink.path)}
+                {insightDropdownLinks.map((item) => (
+                  <DropdownContent
+                    key={item.path}
+                    onClick={() => navigateWithMenu(item.path)}
                   >
-                    <DropdownContent>{sublink.label}</DropdownContent>
-                  </NavLink>
+                    {item.label}
+                  </DropdownContent>
                 ))}
               </DropdownWrapper>
             )}
@@ -192,97 +206,57 @@ const Header = () => {
         ))}
       </NavLinks>
 
-      {/* Mobile Drawer */}
-      {/* Mobile Drawer */}
- <Drawer
-  closable={false}
-  open={visible}
-  onClose={toggleDrawer}
-  placement="right"
-  width={300}
->
-  {/* Close Icon */}
-  <DrawerHeader>
-    <CloseIcon onClick={toggleDrawer}>✕</CloseIcon>
-  </DrawerHeader>
+      {/* MOBILE DRAWER */}
+      <Drawer open={visible} placement="right" closable={false} width={300}>
+        <DrawerHeader>
+          <CloseIcon onClick={() => setVisibility(false)}>✕</CloseIcon>
+        </DrawerHeader>
 
-  {navigationLinks.map((link) => (
-    <div key={link.path}>
-      <MobileNavItem
-        className={activeLink === link.path ? "active" : ""}
-        onClick={() => {
-          if (link.path === "/product") {
-            setMobileDropdownVisible((prev) => !prev);
-            setMobileInsightDropdownVisible(false);
-          } 
-          else if (link.path === "/career") {
-            setMobileInsightDropdownVisible((prev) => !prev);
-            setMobileDropdownVisible(false);
-          } 
-          else {
-            // ✅ ACTUAL NAVIGATION
-            setActiveLink(link.path);
-            navigate(link.path);
-            toggleDrawer();
-
-            // close dropdowns
-            setMobileDropdownVisible(false);
-            setMobileInsightDropdownVisible(false);
-          }
-        }}
-      >
-        {link.label}
-        {(link.path === "/product" || link.path === "/career") && (
-          <span>
-            {(link.path === "/product" && mobileDropdownVisible) ||
-            (link.path === "/career" && mobileInsightDropdownVisible)
-              ? "▲"
-              : "▼"}
-          </span>
-        )}
-      </MobileNavItem>
-
-      {/* Product Dropdown */}
-      {link.path === "/product" && mobileDropdownVisible && (
-        <MobileDropdown>
-          {productDropdownLinks.map((sublink) => (
-            <MobileDropdownItem
-              key={sublink.path}
+        {navigationLinks.map((link) => (
+          <div key={link.key}>
+            <MobileNavItem
+              className={activeMenu === link.key ? "active" : ""}
               onClick={() => {
-                setActiveLink(sublink.path);
-                navigate(sublink.path);
-                toggleDrawer();
-                setMobileDropdownVisible(false);
+                if (link.key === "product")
+                  setMobileProductDropdownVisible((p) => !p);
+                else if (link.key === "insights")
+                  setMobileInsightDropdownVisible((p) => !p);
+                else navigateWithMenu(link.path!);
               }}
             >
-              {sublink.label}
-            </MobileDropdownItem>
-          ))}
-        </MobileDropdown>
-      )}
+              {link.label}
+            </MobileNavItem>
 
-      {/* Insights Dropdown */}
-      {link.path === "/career" && mobileInsightDropdownVisible && (
-        <MobileDropdown>
-          {insightDropdownLinks.map((sublink) => (
-            <MobileDropdownItem
-              key={sublink.path}
-              onClick={() => {
-                setActiveLink(sublink.path);
-                navigate(sublink.path);
-                toggleDrawer();
-                setMobileInsightDropdownVisible(false);
-              }}
-            >
-              {sublink.label}
-            </MobileDropdownItem>
-          ))}
-        </MobileDropdown>
-      )}
-    </div>
-  ))}
-</Drawer>
+            {/* MOBILE PRODUCTS */}
+            {link.key === "product" && mobileProductDropdownVisible && (
+              <MobileDropdown>
+                {productDropdownLinks.map((item) => (
+                  <MobileDropdownItem
+                    key={item.path}
+                    onClick={() => navigateWithMenu(item.path)}
+                  >
+                    {item.label}
+                  </MobileDropdownItem>
+                ))}
+              </MobileDropdown>
+            )}
 
+            {/* MOBILE INSIGHTS */}
+            {link.key === "insights" && mobileInsightDropdownVisible && (
+              <MobileDropdown>
+                {insightDropdownLinks.map((item) => (
+                  <MobileDropdownItem
+                    key={item.path}
+                    onClick={() => navigateWithMenu(item.path)}
+                  >
+                    {item.label}
+                  </MobileDropdownItem>
+                ))}
+              </MobileDropdown>
+            )}
+          </div>
+        ))}
+      </Drawer>
     </HeaderSection>
   );
 };

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Heading,
   Title,
@@ -16,9 +16,9 @@ import {
   DescriptionContainer,
   ReadMoreButton,
   CenteredMessage,
-  CenteredMessageContainer
+  CenteredMessageContainer,
 } from "./style";
-import { getAllWithCount  } from "../API/AdminUser";
+import { getAllWithCount } from "../API/AdminUser";
 import career from "../../assets/careers.jpg";
 
 // Define the job structure
@@ -53,24 +53,21 @@ const Career = () => {
 
     // Listen for job updates from ViewJobs page
     window.addEventListener("jobStatusUpdated", fetchJobs);
-    
+
     return () => {
-        window.removeEventListener("jobStatusUpdated", fetchJobs);
+      window.removeEventListener("jobStatusUpdated", fetchJobs);
     };
-}, []);
+  }, []);
 
-const fetchJobs = async () => {
+  const fetchJobs = async () => {
     try {
-        const data = await getAllWithCount();
-        const activeJobs = data.result.filter((job: JobType) => job.status === 1);
-        setJobData(activeJobs);
+      const data = await getAllWithCount();
+      const activeJobs = data.result.filter((job: JobType) => job.status === 1);
+      setJobData(activeJobs);
     } catch (error) {
-        console.error("Error fetching jobs:", error);
+      console.error("Error fetching jobs:", error);
     }
-};
-
-
- 
+  };
 
   // State to manage Read More/Read Less for each job
   const [expandedJobs, setExpandedJobs] = useState<{ [key: string]: boolean }>(
@@ -144,16 +141,16 @@ const fetchJobs = async () => {
                   {expandedJobs[job._id] ? (
                     <>
                       <span>{job.shortDescription}</span>
-                      <ReadMoreButton onClick={() => toggleReadMore(job._id)}>
+                      {/* <ReadMoreButton onClick={() => toggleReadMore(job._id)}>
                         Read Less
-                      </ReadMoreButton>
+                      </ReadMoreButton> */}
                     </>
                   ) : (
                     <>
                       <Roll>{job.shortDescription}</Roll>
-                      <ReadMoreButton onClick={() => toggleReadMore(job._id)}>
+                      {/* <ReadMoreButton onClick={() => toggleReadMore(job._id)}>
                         Read More
-                      </ReadMoreButton>
+                      </ReadMoreButton> */}
                     </>
                   )}
                 </DescriptionContainer>
@@ -173,29 +170,21 @@ const fetchJobs = async () => {
                   </div>
                 )}
 
-
                 {/* View Job Button */}
 
-                <ButtonContainers
-                  onClick={() => {
-                    setSelectedJob(job);
-                    navigate("/Jobs", { state: { job } });
-                  }}
-                >
+                <ButtonContainers onClick={() => navigate(`/jobs/${job._id}`)}>
                   View Job
                 </ButtonContainers>
               </TextContainer>
             ))
           ) : (
-
             <CenteredMessageContainer>
-              <CenteredMessage>No job openings available at the moment.</CenteredMessage>
+              <CenteredMessage>
+                No job openings available at the moment.
+              </CenteredMessage>
             </CenteredMessageContainer>
-
-
           )}
         </TextWrapper>
-
       </Heading>
     </>
   );

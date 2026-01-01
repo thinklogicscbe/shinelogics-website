@@ -1,22 +1,21 @@
 import styled from "styled-components";
 
 /* ===== Layout ===== */
-
 export const PageSection = styled.section`
-  padding: 6rem 6%;
-  background: linear-gradient(180deg, #f8fafc, #ffffff);
+  padding: 5rem 6%;
+  background: radial-gradient(circle at top, #eef2ff, #ffffff);
   font-family: "Poppins", sans-serif;
 `;
 
 /* ===== Header ===== */
-
 export const Header = styled.div`
-  max-width: 800px;
+  max-width: 760px;
   margin-bottom: 4rem;
 `;
 
 export const Title = styled.h2`
-  font-size: 2.6rem;
+  font-size: 2.7rem;
+  font-weight: 800;
   color: #020617;
   margin-bottom: 1rem;
 `;
@@ -28,105 +27,107 @@ export const Subtitle = styled.p`
 `;
 
 /* ===== Grid ===== */
-
 export const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2.5rem;
-
-  @media (max-width: 1024px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
-  }
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 2.2rem;
 `;
 
-/* ===== Cards ===== */
-
+/* ===== Card ===== */
 export const Card = styled.div`
-  padding: 2.6rem;
-  border-radius: 24px;
-  background: #ffffff;
-  border: 1px solid rgba(37, 99, 235, 0.12);
-  box-shadow: 0 20px 45px rgba(2, 6, 23, 0.06);
+  position: relative;
+  padding: 2.4rem 2.2rem;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(99, 102, 241, 0.18);
+  box-shadow: 0 18px 45px rgba(2, 6, 23, 0.08);
   transition: all 0.35s ease;
 
+  /* Accent strip */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 6px;
+    border-radius: 22px 0 0 22px;
+    background: linear-gradient(180deg, #6366f1, #22d3ee);
+  }
+
   &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 35px 75px rgba(2, 6, 23, 0.12);
+    box-shadow: 0 35px 90px rgba(79, 70, 229, 0.25);
   }
 `;
 
+/* ===== Card Content ===== */
 export const CardTitle = styled.h4`
-  font-size: 1.25rem;
-  margin-bottom: 0.8rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
   color: #020617;
 `;
 
 export const CardText = styled.p`
   font-size: 0.95rem;
   line-height: 1.7;
-  color: #64748b;
+  color: #475569;
+  margin-bottom: 1.2rem;
 `;
 
 /* ===== List ===== */
-
 export const List = styled.ul`
-  list-style: none;
-  padding: 0;
+  padding-left: 0;
   margin: 0;
 `;
 
 export const ListItem = styled.li`
-  position: relative;
-  padding-left: 26px;
-  margin-bottom: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
   font-size: 0.95rem;
-  color: #475569;
+  color: #334155;
 
   &::before {
-    content: "•";
-    position: absolute;
-    left: 0;
-    top: 0;
-    font-size: 1.4rem;
-    color: #2563eb;
+    content: "✔";
+    color: #6366f1;
+    font-weight: 700;
+    margin-top: 2px;
   }
 `;
 
-/* ===== CTA ===== */
-
+/* ===== CTA Section ===== */
 export const CTASection = styled.div`
   margin-top: 6rem;
-  padding: 4.5rem 2rem;
-  border-radius: 32px;
-  background: linear-gradient(135deg, #020617, #1e40af);
-  color: #ffffff;
+  padding: 4rem 2rem;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #020617, #1e3a8a);
+  color: white;
   text-align: center;
-  box-shadow: 0 40px 90px rgba(2, 6, 23, 0.35);
+  box-shadow: 0 45px 95px rgba(2, 6, 23, 0.45);
 
   h3 {
     font-size: 2rem;
+    font-weight: 700;
     margin-bottom: 2rem;
-    color : white;
+    color: #ffffff;
   }
 `;
 
+/* ===== CTA Button ===== */
 export const CTAButton = styled.button`
-  padding: 1rem 3.5rem;
-  border-radius: 60px;
+  padding: 1rem 3.2rem;
+  border-radius: 999px;
   border: none;
   font-size: 1rem;
   font-weight: 700;
   color: #020617;
-  background: linear-gradient(135deg, #ffffff, #e0f2fe);
+  background: linear-gradient(135deg, #ffffff, #e0e7ff);
   cursor: pointer;
   transition: all 0.35s ease;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 45px rgba(255, 255, 255, 0.35);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 45px rgba(255, 255, 255, 0.4);
   }
 `;
