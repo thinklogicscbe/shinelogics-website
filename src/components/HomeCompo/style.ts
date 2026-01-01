@@ -3,43 +3,69 @@ import background from "../../assets/AI-image.jpg";
 
 //BELOW GIVEN CSS CODE WAS [ HOME ] PAGE STYLE CSS
 
-export const SectionContainer = styled("div")`
+
+export const SectionContainer = styled.div`
+  position: relative; /* important */
+  z-index: 0; /* stays behind chatbot */
+
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
-  height: 90vh;
-  // background-color: rgb(31, 101, 206); /* Fallback background color */
+  min-height: 80vh;
   padding: 0 5%;
-  background-image: url(${background}); /* Use the imported image */
+  background-image: url(${background});
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center; /* Ensure the background image is centered */
-`;
+  background-position: center;
 
-export const TextContainer = styled("div")`
-  max-width: 50%;
-  color: white;
-  text-align: left;
-  display: flex;
-  flex-direction: column; /* Ensure the text content stacks vertically */
-  justify-content: center; /* Center text vertically within the container */
-
-  h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    line-height: 1.2;
-    color: white;
+  @media (max-width: 1024px) {
+    padding: 0 4%;
   }
 
-  p {
+  @media (max-width: 768px) {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem 1.5rem;
+    min-height: auto;
+  }
+`;
+
+
+export const TextContainer = styled.div`
+  flex: 1;
+  color: #ffffff;
+  margin-top: 4%;
+  z-index: 2;
+
+  h1 {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+      color: #ffffff;
+  }
+
+  .main-description {
     font-size: 1.2rem;
-    margin-bottom: 2rem;
+    line-height: 1.6;
+    margin-top: 1rem;
+    opacity: 0.95;
+      color: #ffffff;
+  }
+
+  .sub-hero {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-top: 0.75rem;
+    color: #ffffff;
+    max-width: 620px;
   }
 
   .button-group {
     display: flex;
     gap: 1rem;
+    margin-top: 2rem;
 
     button {
       font-size: 1rem;
@@ -47,61 +73,136 @@ export const TextContainer = styled("div")`
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      transition: all 0.3s ease;
 
       &:first-child {
         background-color: white;
         color: #0066ff;
+
+        &:hover {
+          background-color: #0066ff;
+          color: white;
+          box-shadow: 0 8px 20px rgba(0, 102, 255, 0.3);
+        }
       }
 
       &:last-child {
         background-color: transparent;
         color: white;
         border: 2px solid white;
+
+        &:hover {
+          background-color: white;
+          color: #0066ff;
+          box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+        }
       }
+    }
+  }
+
+  /* Tablet */
+  @media (max-width: 1024px) {
+    margin-top: 5%;
+
+    h1 {
+      font-size: 2.2rem;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    margin-top: 0;
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    .main-description {
+      font-size: 1.05rem;
+    }
+
+    .sub-hero {
+      font-size: 0.9rem;
+      max-width: 100%;
+    }
+
+    .button-group {
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  }
+
+  /* Small phones */
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 1.7rem;
+    }
+
+    .main-description {
+      font-size: 1rem;
     }
   }
 `;
 
-export const ImageContainer = styled("div")`
+export const ImageContainer = styled.div`
   flex: 1;
   display: flex;
   justify-content: flex-end;
-  align-items: flex-end; /* Align the image to the baseline */
+  align-items: flex-end;
+  z-index: 1;
 
-  /* Define the dancing animation */
   @keyframes danceUpDown {
     0% {
       transform: translateY(0);
     }
     25% {
-      transform: translateY(-5px);
+      transform: translateY(-6px);
     }
     50% {
       transform: translateY(0);
     }
     75% {
-      transform: translateY(-5px);
+      transform: translateY(-6px);
     }
     100% {
       transform: translateY(0);
     }
   }
 
-  /* Apply animation to the image */
   img {
-    width: 100%; /* Adjust size as needed */
+    width: 100%;
     max-width: 600px;
     height: auto;
-    animation: danceUpDown 2s ease-in-out infinite; /* Apply the animation */
+    animation: danceUpDown 2s ease-in-out infinite;
   }
 
-  span {
-    margin-right: 10px;
-    font-size: 1.2rem;
-    align-self: baseline; /* Align text baseline with the image */
+  /* Tablet */
+  @media (max-width: 1024px) {
+    justify-content: center;
+
+    img {
+      max-width: 500px;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    margin-top: 2.5rem;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      max-width: 380px;
+    }
+  }
+
+  /* Small phones */
+  @media (max-width: 480px) {
+    img {
+      max-width: 300px;
+    }
   }
 `;
-
 //BELOW GIVEN CSS CODE WAS [ PDAAS ] PAGE STYLE CSS
 
 // const slideIn = keyframes`
@@ -211,7 +312,34 @@ export const ServiceContainer = styled.div`
       grid-template-columns: 1fr;
     }
   }
+
+
+  /* ✅ CTA BUTTON STYLES */
+  .services-cta {
+    margin-top: 2rem;
+    text-align: center;
+
+    button {
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: none;
+      background-color: #0B1D45;
+      color: #ffffff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: #004fcc;
+        box-shadow: 0 10px 25px rgba(0, 102, 255, 0.3);
+      }
+    }
+  }
+
 `;
+
+
+
 
 export const Title = styled.h1`
   font-size: 28px;
@@ -251,6 +379,8 @@ export const ServiceCard = styled.div`
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   }
 `;
+
+
 
 //BELOW GIVEN CSS CODE FOR [ OUR PRODUCT ] PAGE STYLE
 

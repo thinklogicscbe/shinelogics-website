@@ -1,3 +1,5 @@
+/* servicesData.ts */
+
 export interface ExpertiseDetail {
   description: string[];
   image: string;
@@ -13,290 +15,263 @@ export interface Service {
   overview: string;
   expertise: Expertise;
   image: string;
+  cta: string;
 }
 
-export interface ServicesData {
-  [key: string]: Service;
-}
-
-export const serviceData: ServicesData = {
-  web_development_services: {
-    title: "Web Development",
+export const serviceData = {
+  /* ================= SERVICE 1 ================= */
+  secure_custom_software_development: {
+    title: "Secure Custom Software Development",
     description:
-      "We craft highly responsive and scalable web applications using modern frameworks like Angular, Python, and React Native to deliver seamless user experiences.",
-    overview: "Build Fast, Scalable & Engaging Web Applications. Our Web Development Expertise:",
+      "We build secure, scalable, and high-performance digital applications tailored to your business needs. Every solution follows a Secure SDLC, ensuring quality and protection from day one.",
+    overview: "What We Deliver",
+    cta: "Schedule a Free Consultation",
+    image:
+      "https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&w=1400&q=80",
+
     expertise: {
-      Angular_Development: {
+      Web_Applications: {
         description: [
-          "Optimized Rendering: SPAs use Virtual DOM for efficient rendering, updating only the necessary parts of the page, enhancing performance and reducing reloads.",
-          "Efficient Routing: Client-side routing enables seamless navigation between views without full-page reloads, while asynchronous data fetching improves load times.",
-          "State Management: Centralized state management with tools like Redux ensures consistent app behavior, boosting performance across components.",
-          "Progressive Web Apps (PWAs): SPAs can be turned into PWAs, offering offline support, push notifications, and faster loading, delivering a native app experience in the browser.",
+          "Web applications (React, Node.js, Python, Go)",
+          "Secure and scalable web platforms designed for long-term performance.",
         ],
-        image: require("../../assets/service/web4.jpg"),
+        image:
+          "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=900&q=80",
       },
-      Python_Web_Development: {
+
+      Mobile_Apps: {
         description: [
-          "Rapid Development with Django: Django offers a high-level framework that allows for quick development of secure and scalable web applications with minimal setup.",
-          "Customizable Flask Applications: Flask's lightweight structure enables the creation of highly customizable backend systems for microservices and RESTful APIs.",
-          "Comprehensive ORM Support: Django’s powerful ORM simplifies database handling and reduces the complexity of data models, enabling quick integration with various databases.",
-          "Flexible Routing in Flask: Flask provides flexible routing mechanisms, allowing for easy management of different HTTP methods and URL endpoints for diverse application needs.",
-          
+          "Mobile apps (Flutter, iOS, Android)",
+          "High-quality mobile apps with seamless UX and strong security.",
         ],
-        image: require("../../assets/service/web2.jpg"),
+        image:
+          "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=900&q=80",
       },
-      React_Web_Development: {
+
+      Enterprise_SaaS: {
         description: [
-          "Our skilled developers leverage the latest React frameworks, libraries, and tools to create fast, interactive, and dynamic web applications.",
-          "We provide tailored solutions that align with your unique business requirements, ensuring a seamless user experience.",
-          "Our front-end experts craft intuitive and visually appealing interfaces that engage users and enhance brand presence.",
-          "Creating highly responsive SPAs for an engaging user experience.",
-          "We follow agile methodologies to ensure flexibility, transparency, and on-time delivery of your projects.",
+          "Enterprise SaaS platforms",
+          "Multi-tenant SaaS systems with role-based access and scalability.",
         ],
-        image: require("../../assets/service/web5.jpg"),
+        image:
+          "https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=900&q=80",
+      },
+
+      API_Microservices: {
+        description: [
+          "API & Microservices development",
+          "Secure REST & GraphQL APIs with modular microservice architecture.",
+        ],
+        image:
+          "https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg?auto=compress&cs=tinysrgb&w=1200",
+      },
+
+      Cloud_Native: {
+        description: [
+          "Cloud-native architecture & deployment",
+          "Highly resilient, scalable cloud-native systems.",
+        ],
+        image:
+          "https://images.pexels.com/photos/1181675/pexels-photo-1181675.jpeg?auto=compress&cs=tinysrgb&w=1200",
       },
     },
-    image: require("../../assets/service/Webdev.jpg"),
-  },
-
-  mobile_app_development_services: {
-    title: "Mobile App Development",
-    description:
-      "At Shinelogics, we develop high-performing mobile applications tailored to your business needs.",
-    overview: "Innovative & Custom Mobile Apps for iOS & Android.",
-    expertise: {
-      Flutter_App_Development: {
-        description: [
-          "Efficient Cross-Platform Development: Flutter enables the creation of native apps for both iOS and Android using a single codebase, reducing the need for separate codebases for each platform.",
-          "Rapid Prototyping and Iteration: Flutter's hot reload feature allows developers to quickly visualize changes in real time, speeding up the development and testing process.",
-          "Consistent UI Across Platforms: Flutter's built-in Material Design and Cupertino widgets offer platform-specific designs, ensuring that your app has a native look and feel on both iOS and Android.",
-        ],
-        image: require("../../assets/service/flutter.jpg"),
-      },
-      ios_and_android_Customization: {
-        description: [
-          "Develop high-performance apps using native languages like Swift for iOS and Kotlin for Android, ensuring smooth operation on each platform.",
-          "Ensure your app meets the strict guidelines of both the Apple App Store and Google Play Store for seamless publishing.",
-          "Enhance user engagement with immersive AR/VR experiences, leveraging native SDKs and frameworks for both platforms.",
-          "Integrate AI-driven features such as chatbots, recommendation engines, and smart notifications for enhanced functionality."
-        ],
-        image: require("../../assets/service/mobile.jpg"),
-      },
-      React_Native_Mobile_App_Development: {
-        description: [
-          "React Native allows you to write a single codebase for both iOS and Android, streamlining development and reducing maintenance time.",
-          "The lightweight nature of React Native ensures that applications run smoothly even on devices with limited resources, enhancing performance.",
-          "By utilizing server-side rendering (SSR) and optimizing metadata, React Native apps can be made SEO-friendly, increasing visibility on search engines.",
-          "React Native allows the creation of visually rich interfaces with native-like performance, providing users with an engaging experience.",
-        ],
-        image: require("../../assets/service/web5.jpg"),
-      },
-    },
-    image: require("../../assets/service/mobileApp.jpg"),
   },
 
-  cybersecurity_services: {
-    title: "Cybersecurity",
+  /* ================= SERVICE 2 ================= */
+  application_security_testing: {
+    title: "Application Security Testing (AppSec)",
     description:
-      "Cyber threats are increasing rapidly, and businesses need robust security to protect their digital assets.",
-    overview: "Protect Your Business from Cyber Threats.",
+      "We help businesses identify vulnerabilities before attackers do through comprehensive manual and automated testing.",
+    overview: "Capabilities",
+    cta: "Request a Security Assessment",
+    image:
+      "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&w=1400&q=80",
+
     expertise: {
-      Network_Security: {
+      SAST: {
         description: [
-          "Implement advanced firewall solutions to safeguard network perimeters and block unauthorized access.",
-          "Use intrusion detection systems (IDS) to continuously monitor traffic and identify potential threats in real time.",
-          "Establish secure Virtual Private Networks (VPNs) to encrypt data and protect user connections.",
-          "Deploy DDoS mitigation strategies to defend against Distributed Denial of Service attacks that overwhelm network resources.",
-          "Utilize machine learning and AI-driven tools for early detection and rapid response to sophisticated cyber threats."
+          "Static Testing (SAST)",
+          "Early detection of vulnerabilities through source code analysis.",
         ],
-        image: require("../../assets/service/network.jpg"),
+        image:
+          "https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&w=900&q=80",
       },
-      Application_Security: {
+
+      DAST: {
         description: [
-          "Comprehensive vulnerability scanning for both web and mobile applications to identify potential attack vectors.",
-          "Testing of API endpoints to ensure they are protected against common vulnerabilities like SQL injection and cross-site scripting (XSS).",
-          "Evaluation of API authentication methods, ensuring proper use of OAuth, JWT, and other modern security protocols.",
-          "Implementation of rate-limiting and IP filtering to prevent abuse of APIs.",
-          "In-depth analysis of your application’s logic to identify potential flaws that could be exploited by attackers.",
+          "Dynamic Testing (DAST)",
+          "Runtime testing to uncover exploitable vulnerabilities.",
         ],
-        image: require("../../assets/service/application.jpg"),
+        image:
+          "https://images.unsplash.com/photo-1614064548237-096f735f344f?auto=format&fit=crop&w=900&q=80",
       },
-      Cloud_Security: {
+
+      API_Security: {
         description: [
-          "Implement best practices for cloud security across AWS, Azure, and Google Cloud platforms.",
-          "Encrypt sensitive data both in transit and at rest to prevent unauthorized access.",
-          "Set strict access control policies to ensure only authorized users and applications can access critical resources.",
-          "Deploy multi-layered security strategies, including firewalls, intrusion detection systems, and endpoint security.",
-          "Use automated tools to monitor cloud activity and generate alerts for suspicious behavior or non-compliance.",
+          "API Security Testing",
+          "Prevent data leakage and unauthorized access in APIs.",
         ],
-        image: require("../../assets/service/cloud.jpg"),
+        image:
+          "https://images.unsplash.com/photo-1600267165477-6d4cc741b379?auto=format&fit=crop&w=900&q=80",
       },
-      Cyber_Threat_Intelligence_and_Monitoring: {
+
+      Mobile_Security: {
         description: [
-          "Our expert team offers round-the-clock surveillance to detect emerging threats instantly. Proactive monitoring ensures that potential risks are mitigated before they can escalate.",
-          "Leverage cutting-edge AI technology to continuously analyze your network for abnormal activity. Real-time threat detection and risk analysis empower your business to stay ahead of cybercriminals.",
-          "We provide rapid response and recovery strategies to minimize the impact of cyber incidents. Our solutions help you restore operations quickly and securely, ensuring business continuity.",
-          "We aggregate global intelligence feeds to identify emerging threats and vulnerabilities. This comprehensive data empowers businesses with actionable insights to strengthen their security posture.",
+          "Mobile App Security",
+          "Security testing for Android and iOS applications.",
         ],
-        image: require("../../assets/service/cybermonitoring.jpg"),
+        image:
+          "https://images.unsplash.com/photo-1556155092-8707de31f9c4?auto=format&fit=crop&w=900&q=80",
+      },
+
+      Threat_Modeling: {
+        description: [
+          "Threat Modeling",
+          "Proactive identification of potential attack vectors.",
+        ],
+        image:
+          "https://images.unsplash.com/photo-1581090700227-1e37b190418e?auto=format&fit=crop&w=900&q=80",
+      },
+
+      Compliance: {
+        description: [
+          "Compliance Mapping (OWASP, NIST, ISO, GDPR, DPDPA)",
+          "Security assessments aligned with regulatory standards.",
+        ],
+        image:
+          "https://images.unsplash.com/photo-1601597111158-2fceff292cdc?auto=format&fit=crop&w=900&q=80",
       },
     },
-    image: require("../../assets/service/cyberSecurity.jpg"),
   },
-  data_analytics: {
-    title: "Data Analytics",
+
+  /* ================= SERVICE 3 ================= */
+  ai_ml_integration: {
+    title: "AI/ML Integration & Intelligent Automation",
     description:
-      "Transforming Data into Actionable Insights for Smarter Decision-Making In today’s data-driven world, businesses generate massive amounts of data daily. But raw data is not enough—you need insights that drive strategic decisions. At Shinelogics, we specialize in Data Analytics solutions that help organizations extract valuable insights, identify trends, and optimize operations for better business outcomes.",
-    overview: "Protect Your Business from Cyber Threats.",
+      "Enhance decision-making, reduce operational costs, and build intelligent systems using AI-driven solutions.",
+    overview: "Offerings",
+    cta: "Explore AI Solutions",
+    image:
+      "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1400&q=80",
+
     expertise: {
-      Business_Intelligence_and_Data_Visualization: {
+      Chatbots: {
         description: [
-          "We help businesses visualize their data with intuitive dashboards and reports, enabling stakeholders to make informed decisions at a glance.",
-          "Custom Dashboards & Reports – Power BI, Tableau, Google Data Studio KPI & Performance Monitoring – Track sales, customer engagement, and operational efficiency.",
-          "Data-Driven Decision Making – Interactive reports with real-time updates Executive Insights – High-level business overviews for leadership teams.",
+          "AI Chatbots & Virtual Assistants",
+          "Conversational AI for customer engagement and automation.",
         ],
-        image: require("../../assets/service/data1.jpg"),
+        image:
+          "https://images.unsplash.com/photo-1674027444485-cec3da58eef4?auto=format&fit=crop&w=900&q=80",
       },
-      Big_Data_Analytics: {
+
+      Predictive_Analytics: {
         description: [
-          "Leverage cutting-edge big data analytics tools to process large volumes of data, uncovering patterns and trends. This helps drive informed decision-making and predictive insights.",
-          "Build efficient data warehousing solutions to store vast amounts of data. Implement ETL pipelines to streamline data extraction, transformation, and loading for analysis.",
-          "Use distributed computing frameworks like Apache Spark and Hadoop to process large-scale datasets. This ensures high-speed data processing and real-time analysis across multiple nodes.",
-          "Create data lakes to store all types of raw, unstructured, and structured data in a central repository. This approach enables flexible and scalable data access for analysis and future use.",
+          "Predictive Analytics",
+          "Forecasting models for data-driven decision making.",
         ],
-        image: require("../../assets/service/data2.jpg"),
+        image:
+          "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80",
       },
-      Predictive_Analytics_and_Machine_Learning: {
+
+      LLM_Agents: {
         description: [
-          "Leverage AI to analyze past interactions, helping businesses predict future purchasing behaviors and preferences. This enables tailored marketing strategies and personalized product recommendations.",
-          "AI can identify anomalies in transaction data, flagging potential fraudulent activities in real-time. By learning from historical data, it helps minimize financial losses and improve security.",
-          "AI models can identify patterns leading to customer churn, allowing businesses to proactively address issues. Retention strategies are optimized by targeting at-risk customers with personalized offers and engagement.",
-          "AI uses historical sales data to predict future trends and demand. This helps businesses plan inventory levels, optimize resource allocation, and set more accurate sales targets.",
+          "LLM-based automation & enterprise AI agents",
+          "Advanced AI agents built on large language models.",
         ],
-        image: require("../../assets/service/data3.jpg"),
-      },
-      Data_Engineering_and_Cloud_Data_Solutions: {
-        description: [
-          "Cloud Data Warehousing (AWS Redshift, Google BigQuery, Azure Synapse)We implement scalable cloud data warehouses for efficient data storage and retrieval. Our solutions integrate seamlessly with platforms like AWS Redshift, Google BigQuery, and Azure Synapse.",
-          "ETL Development & Data Pipelines We design ETL processes to enable smooth data extraction, transformation, and loading. Our automated pipelines ensure reliable and efficient data flow across various sources.",
-          "Database Optimization & Performance Tuning We optimize database performance by refining queries and structures for faster response times. Our tuning techniques enhance efficiency and scalability to meet business demands.",
-        ],
-        image: require("../../assets/service/data4.jpg"),
-      },
-      AI_Powered_Analytics_and_NLP: {
-        description: [
-          "Chatbots & Automated Reporting: Utilize AI-powered chatbots to provide instant customer support and generate automated reports, improving efficiency and reducing manual effort.",
-          "Text & Speech Analytics: Leverage NLP to process and analyze text and voice data, extracting valuable insights that drive business growth and enhance customer experiences.",
-          "Real-time Decision Making: AI-driven insights enable businesses to make informed decisions quickly by analyzing large volumes of data and identifying trends in real time.",
-        ],
-        image: require("../../assets/service/data5.jpg"),
+        image:
+          "https://images.pexels.com/photos/8438923/pexels-photo-8438923.jpeg?auto=compress&cs=tinysrgb&w=1200",
       },
     },
-    image: require("../../assets/service/data.jpg"),
   },
-  seo_optimization: {
-    title: "SEO Optimization",
+
+  /* ================= SERVICE 4 ================= */
+  iot_embedded_systems: {
+    title: "IoT & Embedded Systems",
     description:
-      "Our SEO Optimization Services enhance your website’s rankings, boost organic traffic, and strengthen your online presence. We use advanced techniques, data-driven insights, and best practices to optimize for both search engines and users. From keyword research to technical SEO and link building, our holistic approach ensures high-quality traffic and conversions. Stay ahead with our tailored solutions designed for long-term growth and success.",
-    overview: "Protect Your Business from Cyber Threats.",
+      "We develop smart IoT solutions connecting hardware, software, and cloud systems for real-time intelligence.",
+    overview: "Solutions",
+    cta: "Build Your IoT Product",
+    image:
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1400&q=80",
+
     expertise: {
-      On_Page_SEO_Optimization: {
+      Firmware: {
         description: [
-          "Keyword Research & Strategy – Target relevant, high-traffic keywords for your business.",
-          "Title Tags, Meta Descriptions & Header Tags – Optimize key on-page elements for better rankings.",
-          "URL Structuring & Internal Linking – Improve site navigation and user flow.",
-          "Content Optimization – Ensure your content is high-quality, engaging, and keyword-rich.",
-          " Mobile Optimization & Page Speed – Enhance site speed and responsiveness for mobile users."
+          "Firmware development",
+          "Reliable embedded firmware optimized for performance.",
         ],
-        image: require("../../assets/service/seo1.jpg"),
+        image:
+          "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=1200",
       },
-      Off_Page_SEO_Optimization: {
+
+      Device_Integration: {
         description: [
-          "Link Building & Guest Posting – Secure high-authority backlinks from industry-relevant websites.",
-          "Social Media Optimization – Leverage social platforms to drive traffic and enhance brand visibility.",
-          "Influencer Outreach & PR – Partner with influencers and brands for greater exposure.",
-          "Local Listings & Directories – Ensure your business is listed in local directories and review sites.",
-          "We optimize your Google My Business (GMB) profile and ensure consistency across local listings."
+          "IoT device integration",
+          "Seamless integration between devices and cloud systems.",
         ],
-        image: require("../../assets/service/seo2.jpg"),
+        image:
+          "https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg?auto=compress&cs=tinysrgb&w=1200",
       },
-      Local_SEO_Optimization: {
+
+      Monitoring: {
         description: [
-          "Google My Business (GMB) Optimization – Claim and optimize your GMB listing.",
-          "Local Keyword Targeting – Optimize your website for location-based search terms.",
-          "NAP Consistency (Name, Address, Phone) – Ensure consistency across local directories.",
-          "Customer Reviews & Reputation Management – Build a strong online reputation through positive reviews.",
-          "Use automated tools to monitor cloud activity and generate alerts for suspicious behavior or non-compliance.",
+          "Real-time monitoring systems",
+          "Live dashboards and alerting systems.",
         ],
-        image: require("../../assets/service/seo3.jpg"),
-      },
-      Technical_SEO_Services: {
-        description: [
-          "Website Audit & SEO Health Check – Comprehensive audit to identify technical issues.",
-          "Fix Crawl Errors & Broken Links – Resolve issues that impact your website’s performance.",
-          "Improve Site Speed & Core Web Vitals – Optimize page load times for a better user experience.",
-          "Mobile-Friendly Optimization – Ensure your website is fully responsive and mobile-ready.",
-          "Structured Data (Schema Markup) – Implement schema to enhance search visibility and rich snippets.",
-        ],
-        image: require("../../assets/service/seo4.jpg"),
-      },
-      Content_Creation_and_Optimization: {
-        description: [
-          "Website Audit & SEO Health Check – Comprehensive audit to identify technical issues.",
-          "Fix Crawl Errors & Broken Links – Resolve issues that impact your website’s performance.",
-          "Improve Site Speed & Core Web Vitals – Optimize page load times for a better user experience.",
-          "Mobile-Friendly Optimization – Ensure your website is fully responsive and mobile-ready.",
-          "Structured Data (Schema Markup) – Implement schema to enhance search visibility and rich snippets.",
-        ],
-        image: require("../../assets/service/seo5.jpg"),
-      },
-      SEO_Analytics_and_Reporting: {
-        description: [
-          "Keyword Ranking Reports – Track progress and ranking for your target keywords.",
-          "Traffic & Conversion Analysis – Measure organic traffic, user behavior, and conversion rates.",
-          "Competitor Analysis – Monitor competitors’ SEO strategies and identify opportunities.",
-          "SEO Health Reports – Regular reports on technical issues, backlinks, and content performance.",
-          "We provide detailed analytics and performance tracking to ensure your SEO efforts are delivering measurable results. Through regular reporting and analysis, we continuously adjust strategies to improve rankings and traffic.",
-        ],
-        image: require("../../assets/service/seo6.jpg"),
+        image:
+          "https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?auto=format&fit=crop&w=900&q=80",
       },
     },
-    image: require("../../assets/service/seo.jpg"),
   },
-  graphic_design_services: {
-    title: "Graphic Design Services",
+
+  /* ================= SERVICE 5 ================= */
+  data_engineering_visualization: {
+    title: "Data Engineering & Visualization",
     description:
-      "In today’s fast-paced digital world, visual appeal plays a crucial role in attracting and retaining audiences. Our Graphic Design Services provide stunning, user-centric designs that enhance your brand’s identity and create seamless user experiences. Whether you need website designs, UI/UX prototypes, marketing creatives, or custom branding solutions, we leverage industry-leading tools like Figma, Adobe Suite (Photoshop, Illustrator, XD), HTML, CSS, and Bootstrap to bring your vision to life.",
-    overview: "Protect Your Business from Cyber Threats.",
+      "Turn raw data into meaningful insights with scalable data pipelines and dashboards.",
+    overview: "Capabilities",
+    cta: "Transform Your Data",
+    image:
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1400&q=80",
+
     expertise: {
-      "UI/UX Design & Prototyping (Figma, Adobe XD)": {
-        description: [
-          "Wireframing & Prototyping – Interactive prototypes for better visualization, allowing stakeholders to test functionality, refine user flows, and ensure an intuitive user experience before development begins.",
-          "High-Fidelity Prototypes – Interactive mockups that mimic real-world user interactions, incorporating detailed UI elements, animations, and transitions to provide a realistic preview of the final product.",
-          "User Flow Mapping – Designing intuitive navigation paths for better usability, ensuring seamless transitions between screens and minimizing friction in the user journey for an optimal experience.",
-          "Usability Testing – Refining designs based on feedback to ensure a flawless experience, identifying pain points early and iterating on design elements to enhance user satisfaction and engagement.",
-        ],
-        image: require("../../assets/service/ui.jpg"),
+      ETL_ELT: {
+        description: ["ETL / ELT pipelines"],
+        image:
+          "https://images.pexels.com/photos/669615/pexels-photo-669615.jpeg?auto=compress&cs=tinysrgb&w=1200",
       },
-      "Website & Landing Page Design (HTML, CSS, Bootstrap)": {
+
+      Dashboards: {
         description: [
-          "Custom Web Design – We create unique, brand-aligned web designs that reflect your business identity, ensuring a visually appealing and engaging user experience that enhances customer trust and retention.",
-          "Responsive & Mobile-First Development – Our designs are optimized to provide seamless experiences across all devices, adapting fluidly to different screen sizes for enhanced usability and accessibility.",
-          "HTML & CSS Styling – We craft pixel-perfect layouts with smooth animations and transitions, ensuring visually stunning and high-performance websites that captivate and retain user attention.",
-          " Bootstrap Framework – Leveraging the power of Bootstrap, we build fast, scalable, and fully responsive front-end designs, ensuring consistency, efficiency, and ease of maintenance across all digital platforms.",
+          "Power BI, Tableau, Looker dashboards",
+          "Interactive visual dashboards for business insights.",
         ],
-        image: require("../../assets/service/webDesign.jpg"),
-      },
-      "Branding & Marketing Collateral (Adobe Photoshop, Illustrator)": {
-        description: [
-          "Wireframing & Prototyping – Interactive prototypes for better visualization, allowing stakeholders to test functionality, refine user flows, and ensure an intuitive user experience before development begins.",
-          "High-Fidelity Prototypes – Interactive mockups that mimic real-world user interactions, incorporating detailed UI elements, animations, and transitions to provide a realistic preview of the final product.",
-          "User Flow Mapping – Designing intuitive navigation paths for better usability, ensuring seamless transitions between screens and minimizing friction in the user journey for an optimal experience.",
-          "Usability Testing – Refining designs based on feedback to ensure a flawless experience, identifying pain points early and iterating on design elements to enhance user satisfaction and engagement.",
-        ],
-        image: require("../../assets/service/brand.jpg"),
+        image:
+          "https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=1200",
       },
     },
-    image: require("../../assets/service/graphic.jpg"),
   },
-};
+
+  /* ================= SERVICE 6 ================= */
+  staff_augmentation: {
+    title: "Staff Augmentation (Dedicated Teams)",
+    description:
+      "Scale your engineering capacity with skilled professionals who integrate seamlessly into your team.",
+    overview: "Talent We Provide",
+    cta: "Hire Skilled Talent",
+    image:
+      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1400&q=80",
+
+    expertise: {
+      Talent: {
+        description: [
+          "Software Developers, Security Engineers, Data Engineers, AI/ML & DevOps experts.",
+        ],
+        image:
+          "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=900&q=80",
+      },
+    },
+  },
+} as const;
+
+export type ServiceKey = keyof typeof serviceData;

@@ -4,61 +4,59 @@ import {
   SliderContainer,
   ServiceBox,
   DetailsContainer,
-  DescriptionRow,
+  ServiceTitle,
+  ServiceItem,
   Title,
   DescriptionTitle,
   DescriptionText,
   DescriptionText1,
-  DescriptionBox,
+  CardsGrid,
+  ServiceCard,
+  CardImage,
+  CardContent,
+  CTAWrapper,
+  CTAButton,
 } from "./style";
-import { serviceData } from "./servicesData"; // Importing the service data
 
-const keys = [
-  "web_development_services",
-  "mobile_app_development_services",
-  "cybersecurity_services",
-  "data_analytics",
-  "seo_optimization",
-  "graphic_design_services",
-];
+import { serviceData, ServiceKey } from "./servicesData";
 
-const Service = () => {
-  const [selectedServiceKey, setSelectedServiceKey] = useState<string>(keys[0]);
-  const [selectedService, setSelectedService] = useState(serviceData[keys[0]]);
+/* ✅ derive keys safely */
+const keys = Object.keys(serviceData) as ServiceKey[];
+
+const Service: React.FC = () => {
+  const [selectedServiceKey, setSelectedServiceKey] = useState<ServiceKey>(
+    keys[0]
+  );
+
+  const [selectedService, setSelectedService] = useState<
+    (typeof serviceData)[ServiceKey]
+  >(serviceData[keys[0]]);
+
   const sliderContainerRef = useRef<HTMLDivElement>(null);
 
-  const handleServiceClick = (key: string) => {
+  const handleServiceClick = (key: ServiceKey) => {
     setSelectedServiceKey(key);
     setSelectedService(serviceData[key]);
   };
-  const handleWheel = (event: WheelEvent) => {
-    if (sliderContainerRef.current) {
-      // If the scroll is vertical (deltaY), scroll horizontally
-      if (event.deltaY !== 0) {
-        sliderContainerRef.current.scrollLeft += event.deltaY;
-        event.preventDefault(); // Prevent the page from scrolling
-      }
 
-      // If the scroll is horizontal (deltaX), allow the default behavior
-      if (event.deltaX !== 0) {
-        sliderContainerRef.current.scrollLeft += event.deltaX;
-      }
+  const handleWheel = (event: WheelEvent) => {
+    if (!sliderContainerRef.current) return;
+
+    if (event.deltaY !== 0) {
+      sliderContainerRef.current.scrollLeft += event.deltaY;
+      event.preventDefault();
     }
   };
 
   useEffect(() => {
-    const sliderContainer = sliderContainerRef.current;
-    if (sliderContainer) {
-      // Add event listener for mouse wheel
-      sliderContainer.addEventListener("wheel", handleWheel, {
-        passive: false,
-      });
+    const slider = sliderContainerRef.current;
+    if (!slider) return;
 
-      return () => {
-        // Cleanup event listener when the component unmounts
-        sliderContainer.removeEventListener("wheel", handleWheel);
-      };
-    }
+    slider.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      slider.removeEventListener("wheel", handleWheel);
+    };
   }, []);
 
   return (
@@ -74,103 +72,76 @@ const Service = () => {
       >
         OUR SERVICES
       </h1>
+
+      {/* ================= SLIDER ================= */}
       <SliderContainer ref={sliderContainerRef}>
         {keys.map((key, index) => (
-          <div key={key} style={{ textAlign: "center", margin: "10px" }}>
+          <ServiceItem key={key}>
             <ServiceBox
+              active={selectedServiceKey === key}
               onClick={() => handleServiceClick(key)}
-              style={{
-                position: "relative",
-                overflow: "hidden",
-                border:
-                  selectedServiceKey === key
-                    ? "2px solid #007bff"
-                    : "1px solid #ddd",
-                boxShadow:
-                  selectedServiceKey === key
-                    ? "0 2px 10px rgba(0, 123, 255, 0.2)"
-                    : "none",
-                transform:
-                  selectedServiceKey === key ? "scale(1.05)" : "scale(1)",
-                transition:
-                  "transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease",
-                animationDelay: `${index * 0.1}s`, // Staggered delay based on index
-              }}
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
               <img
                 src={serviceData[key].image}
                 alt={serviceData[key].title}
-                style={{
-                  position: "absolute",
-                  top: "0",
-                  left: "0",
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                }}
+                loading="lazy"
               />
             </ServiceBox>
 
-            <div
-              style={{
-                marginTop: "10px",
-                fontWeight: "bold",
-                fontSize: "16px",
-                color: selectedServiceKey === key ? "#007bff" : "#000",
-                textAlign: "center",
-              }}
-            >
+            <ServiceTitle active={selectedServiceKey === key}>
               {serviceData[key].title}
-            </div>
-          </div>
+            </ServiceTitle>
+          </ServiceItem>
         ))}
       </SliderContainer>
 
+      {/* ================= DETAILS ================= */}
       <Title>{selectedService.title}</Title>
+
       <DescriptionText
         style={{
           textAlign: "center",
           margin: "20px 0",
           fontSize: "18px",
-          color: "#555",
         }}
       >
         {selectedService.description}
       </DescriptionText>
-      <DetailsContainer>
-        {Object.keys(selectedService.expertise).map((expertiseKey, idx) => {
-          const expertise = selectedService.expertise[expertiseKey];
-          const isEven = idx % 2 === 0; // Check if the index is even or odd
-          const delay = `${idx * 0.1}s`; // Set delay based on index (e.g., 0s, 0.5s, 1s, 1.5s...)
 
-          return (
-            <DescriptionRow key={expertiseKey} delay={delay}>
-              <DescriptionBox isEven={isEven}>
-                <div style={{ flex: "1", paddingRight: "10px" }}>
+      <DetailsContainer>
+        <CardsGrid>
+          {Object.entries(selectedService.expertise).map(
+            ([expertiseKey, expertise]) => (
+              <ServiceCard key={expertiseKey}>
+                <CardImage>
                   <img
                     src={expertise.image}
                     alt={expertiseKey}
-                    style={{
-                      width: "100%",
-                      height: "90%",
-                      borderRadius: "8px",
-                    }}
+                    loading="lazy"
                   />
-                </div>
-                <div style={{ flex: "1", paddingLeft: "10px" }}>
+                </CardImage>
+
+                <CardContent>
                   <DescriptionTitle>
                     {expertiseKey.replace(/_/g, " ")}
                   </DescriptionTitle>
+
                   <DescriptionText1>
-                    {expertise.description.map((item, index) => (
-                      <div key={index}>➤ {item}</div>
-                    ))}
+                    {expertise.description.map(
+                      (item: string, index: number) => (
+                        <li key={index}>{item}</li>
+                      )
+                    )}
                   </DescriptionText1>
-                </div>
-              </DescriptionBox>
-            </DescriptionRow>
-          );
-        })}
+                </CardContent>
+              </ServiceCard>
+            )
+          )}
+        </CardsGrid>
+        <CTAWrapper>
+          <CTAButton>{selectedService.cta}</CTAButton>
+        </CTAWrapper>
       </DetailsContainer>
     </SectionContainer>
   );

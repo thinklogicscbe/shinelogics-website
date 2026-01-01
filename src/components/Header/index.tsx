@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { Drawer } from "antd";
+import { useNavigate } from "react-router-dom";
+
 // import { SvgIcon } from "../../common/SvgIcon";
 
 import {
@@ -14,8 +16,16 @@ import {
   DropdownArrow,
   DropdownWrapperMobile,
   StyledButton1,
-  ActiveLink
+  MobileNavItem,
+  MobileDropdown,
+  MobileDropdownItem,
+  DrawerHeader,
+  CloseIcon
 } from "./styles";
+
+import logo1 from "../../assets/shinelogics-logo.png";
+
+
 
 const Header = () => {
   const [visible, setVisibility] = useState(false);
@@ -23,8 +33,12 @@ const Header = () => {
   const [productDropdownVisible, setProductDropdownVisible] = useState(false);
   const [insightDropdownVisible, setInsightDropdownVisible] = useState(false);
   const [mobileDropdownVisible, setMobileDropdownVisible] = useState(false);
-  const [mobileInsightDropdownVisible, setMobileInsightDropdownVisible] = useState(false);
+  const [mobileInsightDropdownVisible, setMobileInsightDropdownVisible] =
+    useState(false);
   const [, setIsMobile] = useState(window.innerWidth <= 768);
+
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -76,15 +90,26 @@ const Header = () => {
     setMobileDropdownVisible(!mobileDropdownVisible);
   };
 
-
-
   const navigationLinks = [
-    { path: "/product", label: "Product", hasDropdown: true, showDropdown: showProductDropdown, hideDropdown: hideProductDropdown },
+    {
+      path: "/product",
+      label: "Product & Solutions",
+      hasDropdown: true,
+      showDropdown: showProductDropdown,
+      hideDropdown: hideProductDropdown,
+    },
     { path: "/service", label: "Service" },
-    { path: "/career", label: "Insights", hasDropdown: true, showDropdown: showInsightDropdown, hideDropdown: hideInsightDropdown },
+    {
+      path: "/career",
+      label: "Insights",
+      hasDropdown: true,
+      showDropdown: showInsightDropdown,
+      hideDropdown: hideInsightDropdown,
+    },
     { path: "/about", label: "About" },
+    { path: "/contact", label: "Contact" },
+    { path: "/quickmvp", label: "Explore Quick MVP" },
   ];
-
 
   console.log(navigationLinks);
 
@@ -96,14 +121,16 @@ const Header = () => {
 
   const insightDropdownLinks = [
     { path: "/career", label: "Career" },
-    { path: "/productEngineering", label: "Product Engineering" },
-    { path: "/resourseEngineering", label: "Resourse Engineering" },
+    { path: "/engagementModels", label: "Engagement Models" },
+    { path: "/Blog-Resource", label: "Blog & Resources" },
+    // { path: "/productEngineering", label: "Product Engineering" },
+    // { path: "/resourseEngineering", label: "Resourse Engineering" },
   ];
 
   return (
     <HeaderSection>
       <LogoContainer to="/" aria-label="homepage">
-        <img src="Group 450 (1).png" width="500px" height="60px" />
+        <img src={logo1} />
       </LogoContainer>
 
       <Burger onClick={toggleDrawer}>
@@ -121,13 +148,12 @@ const Header = () => {
             onMouseLeave={link.hasDropdown ? link.hideDropdown : undefined}
             style={{ position: "relative" }}
           >
-            <NavLink to={link.path} onClick={(e) => link.hasDropdown && e.preventDefault()}>
-              <StyledButton
-                className={activeLink === link.path ? "active" : ""}
-                onClick={() => handleLinkClick(link.path)}
-              >
-                {link.label}
-              </StyledButton>
+            <NavLink
+              to={link.path}
+              className={({ isActive }) => (isActive ? "active" : "")}
+              onClick={(e) => link.hasDropdown && e.preventDefault()}
+            >
+              <StyledButton>{link.label}</StyledButton>
             </NavLink>
 
             {/* Product Dropdown */}
@@ -136,11 +162,10 @@ const Header = () => {
               <DropdownWrapper className="visible">
                 <DropdownArrow />
                 {productDropdownLinks.map((sublink) => (
-                  <ActiveLink
+                  <NavLink
                     key={sublink.path}
                     to={sublink.path}
-                    onClick={() => handleLinkClick("/product")} // Ensure that Product remains active when a dropdown item is clicked
-                    className={({ isActive }) => (isActive ? "active" : "")}
+                    onClick={() => handleLinkClick(sublink.path)}
                   >
                     <DropdownContent>{sublink.label}</DropdownContent>
                   </ActiveLink>
@@ -153,11 +178,11 @@ const Header = () => {
               <DropdownWrapper className="visible">
                 <DropdownArrow />
                 {insightDropdownLinks.map((sublink) => (
-                  <ActiveLink
+                  <NavLink
                     key={sublink.path}
                     to={sublink.path}
-                    onClick={() => handleLinkClick("/career")}
                     className={({ isActive }) => (isActive ? "active" : "")}
+                    onClick={() => handleLinkClick(sublink.path)}
                   >
                     <DropdownContent>{sublink.label}</DropdownContent>
                   </ActiveLink>
@@ -171,55 +196,96 @@ const Header = () => {
       </NavLinks>
 
       {/* Mobile Drawer */}
-      <Drawer closable={false} open={visible} onClose={toggleDrawer} placement="right" style={{ width: "300px" }}>
-        {navigationLinks.map((link) => (
-          <div key={link.path} style={{ position: "relative" }}>
-            <NavLink to={link.path}>
-              <StyledButton1
-                className={activeLink === link.path ? "active" : ""}
-                onClick={(e) => {
-                  if (link.path === "/product") {
-                    e.preventDefault();
-                    setMobileDropdownVisible(!mobileDropdownVisible);
-                  } else if (link.path === "/career") {
-                    e.preventDefault();
-                    setMobileInsightDropdownVisible(!mobileInsightDropdownVisible);
-                  } else {
-                    handleLinkClick(link.path);
-                    toggleDrawer();
-                  }
-                }}
-              >
-                {link.label}
-              </StyledButton1>
-            </NavLink>
+      {/* Mobile Drawer */}
+ <Drawer
+  closable={false}
+  open={visible}
+  onClose={toggleDrawer}
+  placement="right"
+  width={300}
+>
+  {/* Close Icon */}
+  <DrawerHeader>
+    <CloseIcon onClick={toggleDrawer}>✕</CloseIcon>
+  </DrawerHeader>
 
-            {/* Mobile Product Dropdown */}
-            {link.path === "/product" && mobileDropdownVisible && (
-              <DropdownWrapperMobile className="visible">
-                <DropdownArrow />
-                {productDropdownLinks.map((sublink) => (
-                  <NavLink key={sublink.path} to={sublink.path} onClick={() => handleLinkClick(sublink.path)}>
-                    <DropdownContent>{sublink.label}</DropdownContent>
-                  </NavLink>
-                ))}
-              </DropdownWrapperMobile>
-            )}
+  {navigationLinks.map((link) => (
+    <div key={link.path}>
+      <MobileNavItem
+        className={activeLink === link.path ? "active" : ""}
+        onClick={() => {
+          if (link.path === "/product") {
+            setMobileDropdownVisible((prev) => !prev);
+            setMobileInsightDropdownVisible(false);
+          } 
+          else if (link.path === "/career") {
+            setMobileInsightDropdownVisible((prev) => !prev);
+            setMobileDropdownVisible(false);
+          } 
+          else {
+            // ✅ ACTUAL NAVIGATION
+            setActiveLink(link.path);
+            navigate(link.path);
+            toggleDrawer();
 
-            {/* Mobile Insights Dropdown */}
-            {link.path === "/career" && mobileInsightDropdownVisible && (
-              <DropdownWrapperMobile className="visible">
-                <DropdownArrow />
-                {insightDropdownLinks.map((sublink) => (
-                  <NavLink key={sublink.path} to={sublink.path} onClick={() => handleLinkClick(sublink.path)}>
-                    <DropdownContent>{sublink.label}</DropdownContent>
-                  </NavLink>
-                ))}
-              </DropdownWrapperMobile>
-            )}
-          </div>
-        ))}
-      </Drawer>
+            // close dropdowns
+            setMobileDropdownVisible(false);
+            setMobileInsightDropdownVisible(false);
+          }
+        }}
+      >
+        {link.label}
+        {(link.path === "/product" || link.path === "/career") && (
+          <span>
+            {(link.path === "/product" && mobileDropdownVisible) ||
+            (link.path === "/career" && mobileInsightDropdownVisible)
+              ? "▲"
+              : "▼"}
+          </span>
+        )}
+      </MobileNavItem>
+
+      {/* Product Dropdown */}
+      {link.path === "/product" && mobileDropdownVisible && (
+        <MobileDropdown>
+          {productDropdownLinks.map((sublink) => (
+            <MobileDropdownItem
+              key={sublink.path}
+              onClick={() => {
+                setActiveLink(sublink.path);
+                navigate(sublink.path);
+                toggleDrawer();
+                setMobileDropdownVisible(false);
+              }}
+            >
+              {sublink.label}
+            </MobileDropdownItem>
+          ))}
+        </MobileDropdown>
+      )}
+
+      {/* Insights Dropdown */}
+      {link.path === "/career" && mobileInsightDropdownVisible && (
+        <MobileDropdown>
+          {insightDropdownLinks.map((sublink) => (
+            <MobileDropdownItem
+              key={sublink.path}
+              onClick={() => {
+                setActiveLink(sublink.path);
+                navigate(sublink.path);
+                toggleDrawer();
+                setMobileInsightDropdownVisible(false);
+              }}
+            >
+              {sublink.label}
+            </MobileDropdownItem>
+          ))}
+        </MobileDropdown>
+      )}
+    </div>
+  ))}
+</Drawer>
+
     </HeaderSection>
   );
 };
