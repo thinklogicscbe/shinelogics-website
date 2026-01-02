@@ -69,7 +69,7 @@ const ApplyForm: React.FC = () => {
       formData.append("resume", data.resume[0]); // 🔥 FILE
 
       const response = await axios.post(
-        "http://localhost:3006/api/form/create", // 🔁 change if needed
+        "https://www.shinelogics.com/api/form/create", // 🔁 change if needed
         formData,
         {
           headers: {

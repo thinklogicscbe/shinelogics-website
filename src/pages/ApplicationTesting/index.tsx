@@ -4,7 +4,6 @@ import {
   HeroOverlay,
   HeroContent,
   HeroTitle,
-  HeroSubtitle,
   Section,
   Container,
   ContentWrapper,

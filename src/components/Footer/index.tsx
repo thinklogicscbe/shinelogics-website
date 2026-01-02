@@ -29,10 +29,10 @@ const Footer = () => {
           </FooterText>
 
           <SocialIcons>
-            <a href="https://www.linkedin.com/company/shinelogics-pvt-ltd/" target="_blank">LinkedIn</a>
-            <a href="https://x.com/shinelogic" target="_blank">Twitter</a>
-            <a href="https://github.com" target="_blank">GitHub</a>
-            <a href="https://www.instagram.com/shinelogicschennai" target="_blank">Instagram</a>
+            <a href="https://www.linkedin.com/company/shinelogics-pvt-ltd/" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href="https://x.com/shinelogic" target="_blank" rel="noreferrer">Twitter</a>
+            <a href="https://github.com" target="_blank" rel="noreferrer">GitHub</a>
+            <a href="https://www.instagram.com/shinelogicschennai" target="_blank" rel="noreferrer">Instagram</a>
           </SocialIcons>
         </FooterColumn>
 

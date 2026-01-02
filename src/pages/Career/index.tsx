@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Heading,
   Title,
@@ -14,7 +14,6 @@ import {
   MiddleContent,
   ButtonContainers,
   DescriptionContainer,
-  ReadMoreButton,
   CenteredMessage,
   CenteredMessageContainer,
 } from "./style";
@@ -44,8 +43,6 @@ const Career = () => {
   // State to hold job data
   const [jobData, setJobData] = useState<JobType[]>([]);
 
-  // State to track selected job
-  const [selectedJob, setSelectedJob] = useState<JobType | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,16 +67,9 @@ const Career = () => {
   };
 
   // State to manage Read More/Read Less for each job
-  const [expandedJobs, setExpandedJobs] = useState<{ [key: string]: boolean }>(
+  const [expandedJobs] = useState<{ [key: string]: boolean }>(
     {}
   );
-
-  const toggleReadMore = (jobId: string) => {
-    setExpandedJobs((prev) => ({
-      ...prev,
-      [jobId]: !prev[jobId],
-    }));
-  };
 
   return (
     <>
