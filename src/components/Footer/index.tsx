@@ -19,35 +19,77 @@ const Footer = () => {
   return (
     <FooterSection>
       <FooterContainer>
-
         {/* ===== Brand & Social ===== */}
         <FooterColumn>
           <FooterTitle>Shinelogics</FooterTitle>
           <FooterText>
-            Secure, <HighlightedText>Intelligent</HighlightedText>, and future-ready
-            technology solutions designed for modern businesses.
+            Secure, <HighlightedText>Intelligent</HighlightedText>, and
+            future-ready technology solutions designed for modern businesses.
           </FooterText>
 
           <SocialIcons>
-            <a href="https://www.linkedin.com/company/shinelogics-pvt-ltd/" target="_blank">LinkedIn</a>
-            <a href="https://x.com/shinelogic" target="_blank">Twitter</a>
-            <a href="https://github.com" target="_blank">GitHub</a>
-            <a href="https://www.instagram.com/shinelogicschennai" target="_blank">Instagram</a>
+            <a
+              href="https://www.linkedin.com/company/shinelogics-pvt-ltd/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              LinkedIn
+            </a>
+
+            <a
+              href="https://x.com/shinelogic"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Twitter
+            </a>
+
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub
+            </a>
+
+            <a
+              href="https://www.instagram.com/shinelogicschennai"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Instagram
+            </a>
           </SocialIcons>
         </FooterColumn>
 
         {/* ===== Quick Links ===== */}
         <FooterColumn>
           <FooterTitle>Quick Links</FooterTitle>
-          <FooterLink as={Link} to="/">Home</FooterLink>
-          <FooterLink as={Link} to="/about">About Us</FooterLink>
-          <FooterLink as={Link} to="/service">Services</FooterLink>
+          <FooterLink as={Link} to="/">
+            Home
+          </FooterLink>
+          <FooterLink as={Link} to="/about">
+            About Us
+          </FooterLink>
+          <FooterLink as={Link} to="/service">
+            Services
+          </FooterLink>
           {/* <FooterLink as={Link} to="/industries">Industries</FooterLink> */}
-          <FooterLink as={Link} to="/Blog-Resource">Resources & Blog</FooterLink>
-          <FooterLink as={Link} to="/career">Careers</FooterLink>
-          <FooterLink as={Link} to="/contact">Contact Us</FooterLink>
-          <FooterLink as={Link} to="/privacyPolicy">Privacy Policy</FooterLink>
-          <FooterLink as={Link} to="/terms">Terms & Conditions</FooterLink>
+          <FooterLink as={Link} to="/Blog-Resource">
+            Resources & Blog
+          </FooterLink>
+          <FooterLink as={Link} to="/career">
+            Careers
+          </FooterLink>
+          <FooterLink as={Link} to="/contact">
+            Contact Us
+          </FooterLink>
+          <FooterLink as={Link} to="/privacyPolicy">
+            Privacy Policy
+          </FooterLink>
+          <FooterLink as={Link} to="/terms">
+            Terms & Conditions
+          </FooterLink>
         </FooterColumn>
 
         {/* ===== Newsletter ===== */}
@@ -72,12 +114,12 @@ const Footer = () => {
             <div>support@shinelogics.com</div>
           </FooterContactInfo>
         </FooterColumn>
-
       </FooterContainer>
 
       {/* ===== Bottom Bar ===== */}
       <FooterBottom>
-        © 2025 Shinelogics — Secure, Intelligent, Future-Ready Technology Solutions  
+        © 2025 Shinelogics — Secure, Intelligent, Future-Ready Technology
+        Solutions
         <br />
         Designed for Modern Businesses | Security First | Innovation Always
       </FooterBottom>
