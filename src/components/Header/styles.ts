@@ -25,6 +25,32 @@ export const HeaderSection = styled.header`
 `;
 
 
+
+export const ActiveLink = styled(NavLink)`
+  color: green;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 25px;
+
+  &.active {
+    text-decoration: underline;
+    text-decoration-thickness: 2px; /* Adjust thickness */
+    text-underline-offset: 4px; /* Add space between text and underline */
+    color: green;
+  }
+
+  &:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px; /* Adjust thickness */
+    text-underline-offset: 4px; /* Add space between text and underline */
+    color: green;
+  }
+`;
+
+
+
+
+
 export const LogoContainer = styled(NavLink)`
   display: flex;
   align-items: center;
@@ -114,6 +140,7 @@ export const StyledButton = styled.button`
   transition: all 0.25s ease;
   margin-left : 20px;
 
+  /* Add hover effect */
   &:hover {
     color: #2563eb;
   }
