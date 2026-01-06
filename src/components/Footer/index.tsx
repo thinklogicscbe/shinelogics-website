@@ -110,7 +110,7 @@ const Footer = () => {
           <FooterTitle>Contact Us</FooterTitle>
           <FooterContactInfo>
             <div>Chennai, India</div>
-            <div>+91-9500037221</div>
+            {/* <div>+91-9500037221</div> */}
             <div>support@shinelogics.com</div>
           </FooterContactInfo>
         </FooterColumn>
