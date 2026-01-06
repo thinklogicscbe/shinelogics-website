@@ -38,10 +38,10 @@ const Contact: React.FC = () => {
           <InfoValue>support@shinelogics.com</InfoValue>
         </InfoCard>
 
-        <InfoCard>
+        {/* <InfoCard>
           <InfoLabel>Phone</InfoLabel>
           <InfoValue>+91-9500037221</InfoValue>
-        </InfoCard>
+        </InfoCard> */}
 
         <InfoCard>
           <InfoLabel>Address</InfoLabel>

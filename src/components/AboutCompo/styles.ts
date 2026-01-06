@@ -78,7 +78,6 @@ export const CardText = styled.p`
 
 /* ===== Services / What We Do ===== */
 export const ServicesSection = styled.section`
-  margin: 6rem 0;
   padding: 4.5rem 4rem;
   border-radius: 28px;
   background: linear-gradient(135deg, #ffffff, #f1f5ff);
@@ -259,7 +258,6 @@ export const CTA = styled.div`
 /* ===== Industries ===== */
 
 export const IndustriesSection = styled.section`
-  margin: 6rem 0;
   padding: 4.5rem 4rem;
   border-radius: 28px;
   background: linear-gradient(135deg, #ffffff, #f8fafc);
@@ -345,7 +343,6 @@ export const IndustriesCTA = styled.div`
 /* ===== Experts Section ===== */
 
 export const ExpertsSection = styled.section`
-  margin-top: 7rem;
   padding: 4.5rem 4rem;
   border-radius: 28px;
   background: linear-gradient(135deg, #ffffff, #f1f5ff);
