@@ -1,78 +1,79 @@
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 
+/* ================= HEADER ================= */
+
 export const HeaderSection = styled.header`
   position: sticky;
   top: 0;
   z-index: 1000;
+
   display: flex;
   justify-content: space-between;
-  align-items: center; /* Ensures vertical alignment */
-  background-color: #fff;
+  align-items: center;
+
+  background-color: #ffffff;
   padding: 20px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.08);
 
   @media (max-width: 768px) {
-    flex-direction: column; 
+    flex-direction: column;
     padding: 15px;
-    text-align: left;
-    align-items: flex-start; /* Align left for mobile */
+    align-items: flex-start;
   }
-  
+
   @media (max-width: 480px) {
-    padding: 10px;
+    padding: 12px;
   }
 `;
 
-
+/* ================= NAV LINKS ================= */
 
 export const ActiveLink = styled(NavLink)`
-  color: green;
+  font-size: 16px;
+  font-weight: 700;
+  color: #020617;
   text-decoration: none;
-  font-weight: bold;
   margin-top: 25px;
+  margin-left: 20px;
 
   &.active {
+    color: #166534;
     text-decoration: underline;
-    text-decoration-thickness: 2px; /* Adjust thickness */
-    text-underline-offset: 4px; /* Add space between text and underline */
-    color: green;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 5px;
   }
 
   &:hover {
+    color: #166534;
     text-decoration: underline;
-    text-decoration-thickness: 2px; /* Adjust thickness */
-    text-underline-offset: 4px; /* Add space between text and underline */
-    color: green;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 5px;
   }
 `;
 
-
-
-
+/* ================= LOGO ================= */
 
 export const LogoContainer = styled(NavLink)`
   display: flex;
   align-items: center;
   text-decoration: none;
+  font-weight: 700;
+  color: #020617;
 
-  margin-bottom: 10px;
+  height: 30px;
+  max-width: 240px;
   padding: 0.25rem 0.75rem;
 
-  /* Increase navbar logo area */
-  height: 40px;
-  max-width: 240px;
-
   img {
-    margin-top: 10px;
-    max-height: 220px;   /* 🔥 bigger logo */
+  
+    max-height: 200px;
     width: auto;
     max-width: 100%;
     object-fit: contain;
     display: block;
   }
 
-  /* Tablet */
   @media (max-width: 1024px) {
     height: 64px;
 
@@ -81,7 +82,6 @@ export const LogoContainer = styled(NavLink)`
     }
   }
 
-  /* Mobile */
   @media (max-width: 768px) {
     height: 56px;
     max-width: 200px;
@@ -92,33 +92,32 @@ export const LogoContainer = styled(NavLink)`
   }
 `;
 
-
-
-
-
+/* ================= BURGER ================= */
 
 export const Burger = styled.div`
   cursor: pointer;
   display: none;
   flex-direction: column;
   justify-content: space-between;
-  width: 25px;
+  width: 26px;
   height: 18px;
 
   div {
-    background-color: #333;
+    background-color: #020617;
     width: 100%;
     height: 3px;
     border-radius: 2px;
   }
 
   @media (max-width: 932px) {
-    display: flex; 
+    display: flex;
     position: absolute;
-    right: 25px; 
-    top: 30px; 
+    right: 25px;
+    top: 30px;
   }
 `;
+
+/* ================= DESKTOP NAV ================= */
 
 export const NavLinks = styled.div`
   display: flex;
@@ -129,39 +128,57 @@ export const NavLinks = styled.div`
   }
 `;
 
+/* ================= BUTTONS ================= */
+
 export const StyledButton = styled.button`
   background: none;
   border: none;
-  font-size: 15px;
-  cursor: pointer;
-  padding: 8px 14px;
-  border-radius: 8px;
-  color: #0f172a;
-  transition: all 0.25s ease;
-  margin-left : 20px;
 
-  /* Add hover effect */
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+
+  padding: 10px 16px;
+  border-radius: 10px;
+  margin-left: 20px;
+
+  color: #020617;
+  transition: all 0.25s ease;
+
+  .main-label {
+    pointer-events: auto; /* dropdown works here */
+  }
+
+  .suffix {
+    margin-left: 5px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #64748b;
+    pointer-events: none; /* 🔥 NOT clickable */
+  }
+
   &:hover {
-    color: #2563eb;
+    color: #1d4ed8;
   }
 
   &.active {
-    color: #2563eb;
+    color: #1d4ed8;
+    font-weight: 700;
   }
 
   &.nav-button {
     background: #e5e7eb;
-    font-weight: 600;
+    font-weight: 700;
   }
 
   &.nav-button:hover {
     background: #c7d2fe;
-    transform: translateY(-1px);
   }
 
   &.primary {
     background: #2563eb;
     color: white;
+    font-weight: 700;
   }
 
   &.primary:hover {
@@ -169,30 +186,23 @@ export const StyledButton = styled.button`
   }
 `;
 
-export const StyledButton1 = styled.span`
-  padding: 10px 15px;
-  font-size: 16px;
-  color: #333;
-
-  .active & {
-    font-weight: bold;
-    color: #007bff;
-  }
-`;
+/* ================= DROPDOWN (DESKTOP) ================= */
 
 export const DropdownWrapper = styled.div`
   display: none;
   position: absolute;
   top: 100%;
   left: 0;
-  background-color: #fff;
-  width: 200px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 6px;
+
+  background-color: #ffffff;
+  width: 220px;
+  border-radius: 10px;
+  box-shadow: 0px 6px 14px rgba(0, 0, 0, 0.12);
+
   z-index: 10;
   opacity: 0;
   transform: translateY(-10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.25s ease, transform 0.25s ease;
 
   &.visible {
     display: block;
@@ -200,19 +210,16 @@ export const DropdownWrapper = styled.div`
     transform: translateY(0);
   }
 `;
-export const DropdownWrapperMobile = styled.div`
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background-color: #fff;
-  width: 100%;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-  z-index: 1;
 
-  &.visible {
-    display: block;
+export const DropdownContent = styled.div`
+  padding: 14px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #020617;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f1f5f9;
   }
 `;
 
@@ -220,68 +227,84 @@ export const DropdownArrow = styled.div`
   position: absolute;
   top: -6px;
   left: 20px;
+
   width: 0;
   height: 0;
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
-  border-bottom: 6px solid #fff;
-`;
-
-export const DropdownContent = styled.div`
-  padding: 12px 20px;
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #f1f1f1;
-  }
+  border-bottom: 6px solid #ffffff;
 `;
 
 /* ================= MOBILE NAV ================= */
 
 export const MobileNavItem = styled.div`
-  padding: 14px 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+
+  font-size: 16px;
+  font-weight: 600;
+  color: #020617;
+
   cursor: pointer;
-  border-radius: 8px;
-  transition: background 0.2s ease;
+  border-radius: 14px;
+  transition: all 0.25s ease;
+
+    .main-label {
+    pointer-events: auto; /* dropdown trigger */
+  }
+
+  .suffix {
+    margin-left: 6px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #64748b;
+    pointer-events: none; /* 🔥 NOT clickable */
+  }
 
   &:hover {
     background: #f1f5f9;
   }
 
+  &.active {
+    font-weight: 700;
+    color: #1d4ed8;
+  }
+
   &.nav-button {
-    background: #e5e7eb;
-    font-weight: 600;
-    margin: 8px 0;
-    text-align: center;
+    background: #f1f5f9;
+    font-weight: 700;
   }
 
   &.primary {
     background: #2563eb;
     color: white;
+    font-weight: 700;
+  }
+
+  &.primary:hover {
+    background: #1d4ed8;
   }
 `;
-
 
 /* ================= MOBILE DROPDOWN ================= */
 
 export const MobileDropdown = styled.div`
-  margin-left: 12px;
+  margin-left: 14px;
   margin-top: 6px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 
   border-left: 3px solid #e5e7eb;
-  padding-left: 12px;
+  padding-left: 14px;
 `;
 
 export const MobileDropdownItem = styled.div`
-  padding: 10px 12px;
-  font-size: 14px;
-  color: #475569;
-  cursor: pointer;
-  border-radius: 6px;
+  padding: 12px 14px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #334155;
 
+  cursor: pointer;
+  border-radius: 8px;
   transition: all 0.25s ease;
 
   &:hover {
@@ -304,8 +327,8 @@ export const CloseIcon = styled.span`
   font-size: 22px;
   font-weight: 700;
   cursor: pointer;
-  color: #020617;
 
+  color: #020617;
   padding: 6px 10px;
   border-radius: 50%;
 
@@ -316,9 +339,3 @@ export const CloseIcon = styled.span`
     color: #2563eb;
   }
 `;
-
-
-
-
-
-

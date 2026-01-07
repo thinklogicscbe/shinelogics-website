@@ -4,20 +4,11 @@ import background from "../../assets/AI-image.jpg";
 //BELOW GIVEN CSS CODE WAS [ HOME ] PAGE STYLE CSS
 
 
-export const SectionContainer = styled.div`
-  position: relative; /* important */
-  z-index: 0; /* stays behind chatbot */
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  min-height: 80vh;
-  padding: 0 5%;
-  background-image: url(${background});
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
+export const SectionContainer = styled.section`
+  padding: 20px 6%;
+  background: #ffffff;
+
 
   @media (max-width: 1024px) {
     padding: 0 4%;
@@ -540,5 +531,147 @@ export const TechnologiesParagraph = styled.p`
   @media (max-width: 480px) {
     font-size: 1rem; /* Further reduce font size on very small screens */
     max-width: 95%; /* Adjust width on very small screens */
+  }
+`;
+
+
+
+
+/* SECTION */
+
+
+/* MAIN GRID */
+export const GridWrapper = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 32px;
+  align-items: stretch; /* 🔥 LEFT HEIGHT MATCHES RIGHT */
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+/* LEFT GRID */
+export const LeftGrid = styled.div`
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: clamp(24px, 4vw, 48px); /* responsive padding */
+  background: #ffffff;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  h1 {
+    font-size: clamp(1.7rem, 2.6vw, 2.4rem);
+    color: #0f172a;
+    margin-bottom: 1rem;
+    line-height: 1.25;
+  }
+
+  .main-description {
+    font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+    color: #334155;
+    line-height: 1.7;
+    margin-bottom: 0.75rem;
+  }
+
+  .sub-hero {
+    font-size: clamp(0.9rem, 1.1vw, 1rem);
+    color: #475569;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 768px) {
+    text-align: center;
+  }
+`;
+
+
+/* BUTTONS */
+export const ButtonGroup = styled.div`
+  display: flex;
+  gap: clamp(12px, 2vw, 18px);
+  margin-top: clamp(20px, 4vw, 36px);
+  flex-wrap: wrap;
+
+  button {
+    padding: clamp(10px, 1.8vw, 14px)
+      clamp(18px, 2.5vw, 28px);
+    font-size: clamp(14px, 1.1vw, 15px);
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+  }
+
+  .primary {
+    background: #2563eb;
+    color: #ffffff;
+
+    &:hover {
+      background: #1d4ed8;
+      transform: translateY(-2px);
+    }
+  }
+
+  .secondary {
+    background: transparent;
+    border: 2px solid #2563eb;
+    color: #2563eb;
+
+    &:hover {
+      background: #2563eb;
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+  }
+
+  /* Tablet */
+  @media (max-width: 768px) {
+    justify-content: center;
+  }
+
+  /* Small mobile */
+  @media (max-width: 480px) {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+      text-align: center;
+    }
+  }
+`;
+
+
+/* RIGHT GRID */
+export const RightGrid = styled.div`
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 24px;
+`;
+
+/* VIDEO BOX */
+export const VideoBox = styled.div`
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 12px;
+  background: #f8fafc;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  shadow-box: 0 4px 12px rgba(211, 45, 45, 0.1);
+
+  video {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    object-fit: cover;
   }
 `;

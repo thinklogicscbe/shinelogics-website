@@ -43,6 +43,8 @@ const Career = () => {
   // State to hold job data
   const [jobData, setJobData] = useState<JobType[]>([]);
 
+  // State to track selected job
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -70,6 +72,13 @@ const Career = () => {
   const [expandedJobs] = useState<{ [key: string]: boolean }>(
     {}
   );
+
+  // const toggleReadMore = (jobId: string) => {
+  //   setExpandedJobs((prev) => ({
+  //     ...prev,
+  //     [jobId]: !prev[jobId],
+  //   }));
+  // };
 
   return (
     <>

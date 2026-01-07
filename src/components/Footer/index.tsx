@@ -19,13 +19,12 @@ const Footer = () => {
   return (
     <FooterSection>
       <FooterContainer>
-
         {/* ===== Brand & Social ===== */}
         <FooterColumn>
           <FooterTitle>Shinelogics</FooterTitle>
           <FooterText>
-            Secure, <HighlightedText>Intelligent</HighlightedText>, and future-ready
-            technology solutions designed for modern businesses.
+            Secure, <HighlightedText>Intelligent</HighlightedText>, and
+            future-ready technology solutions designed for modern businesses.
           </FooterText>
 
           <SocialIcons>
@@ -39,15 +38,31 @@ const Footer = () => {
         {/* ===== Quick Links ===== */}
         <FooterColumn>
           <FooterTitle>Quick Links</FooterTitle>
-          <FooterLink as={Link} to="/">Home</FooterLink>
-          <FooterLink as={Link} to="/about">About Us</FooterLink>
-          <FooterLink as={Link} to="/service">Services</FooterLink>
+          <FooterLink as={Link} to="/">
+            Home
+          </FooterLink>
+          <FooterLink as={Link} to="/about">
+            About Us
+          </FooterLink>
+          <FooterLink as={Link} to="/service">
+            Services
+          </FooterLink>
           {/* <FooterLink as={Link} to="/industries">Industries</FooterLink> */}
-          <FooterLink as={Link} to="/Blog-Resource">Resources & Blog</FooterLink>
-          <FooterLink as={Link} to="/career">Careers</FooterLink>
-          <FooterLink as={Link} to="/contact">Contact Us</FooterLink>
-          <FooterLink as={Link} to="/privacyPolicy">Privacy Policy</FooterLink>
-          <FooterLink as={Link} to="/terms">Terms & Conditions</FooterLink>
+          <FooterLink as={Link} to="/Blog-Resource">
+            Resources & Blog
+          </FooterLink>
+          <FooterLink as={Link} to="/career">
+            Careers
+          </FooterLink>
+          <FooterLink as={Link} to="/contact">
+            Contact Us
+          </FooterLink>
+          <FooterLink as={Link} to="/privacyPolicy">
+            Privacy Policy
+          </FooterLink>
+          <FooterLink as={Link} to="/terms">
+            Terms & Conditions
+          </FooterLink>
         </FooterColumn>
 
         {/* ===== Newsletter ===== */}
@@ -68,16 +83,16 @@ const Footer = () => {
           <FooterTitle>Contact Us</FooterTitle>
           <FooterContactInfo>
             <div>Chennai, India</div>
-            <div>+91-9500037221</div>
+            {/* <div>+91-9500037221</div> */}
             <div>support@shinelogics.com</div>
           </FooterContactInfo>
         </FooterColumn>
-
       </FooterContainer>
 
       {/* ===== Bottom Bar ===== */}
       <FooterBottom>
-        © 2025 Shinelogics — Secure, Intelligent, Future-Ready Technology Solutions  
+        © 2025 Shinelogics — Secure, Intelligent, Future-Ready Technology
+        Solutions
         <br />
         Designed for Modern Businesses | Security First | Innovation Always
       </FooterBottom>

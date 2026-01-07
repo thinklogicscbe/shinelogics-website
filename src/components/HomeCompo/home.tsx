@@ -1,48 +1,68 @@
-import { Link } from "react-router-dom";
-import Ai from "../../assets/hero-img.png";
+import { useNavigate } from "react-router-dom";
 import {
   SectionContainer,
-  TextContainer,
-  ImageContainer
+  GridWrapper,
+  LeftGrid,
+  RightGrid,
+  VideoBox,
+  ButtonGroup,
 } from "./style";
 
 const Home = () => {
+  const navigate = useNavigate();
+
   return (
     <SectionContainer>
-      <TextContainer>
-        <div>
-          {/* Main Headline */}
+      <GridWrapper>
+        {/* LEFT GRID — CONTENT */}
+        <LeftGrid>
           <h1>Secure, Scalable & AI-Driven Technology Solutions</h1>
 
-          {/* Main Description */}
           <p className="main-description">
             We build secure-by-design software, intelligent automation systems,
             and future-ready digital products for modern businesses.
           </p>
 
-          {/* Sub-Hero Pitch */}
           <p className="sub-hero">
-            Transform your business with enterprise-grade software development,
-            advanced application security, AI/ML integration, IoT engineering,
-            and data solutions—all delivered under one roof with a
-            security-first mindset.
+            Our expertise spans enterprise software development, application
+            security, AI/ML integration, IoT engineering, and data platforms —
+            all delivered with a security-first mindset.
           </p>
 
-          {/* CTA Buttons */}
-          <div className="button-group">
-            <Link to="/contact">
-              <button>Get a Free Consultation</button>
-            </Link>
-            <Link to="/services">
-              <button>View Our Services</button>
-            </Link>
-          </div>
-        </div>
-      </TextContainer>
+          <ButtonGroup>
+            <button
+              className="primary"
+              onClick={() => navigate("/free-consultation")}
+            >
+              Get a Free Consultation
+            </button>
 
-      <ImageContainer>
-        <img src={Ai} alt="AI-Driven Technology Solutions" />
-      </ImageContainer>
+            <button
+              className="secondary"
+              onClick={() => navigate("/service")}
+            >
+              View Our Services
+            </button>
+          </ButtonGroup>
+        </LeftGrid>
+
+        {/* RIGHT GRID — VIDEOS */}
+        <RightGrid>
+          <VideoBox>
+            <video controls>
+              <source src="/videos/video1.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </VideoBox>
+
+          <VideoBox>
+            <video controls>
+              <source src="/videos/video2.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </VideoBox>
+        </RightGrid>
+      </GridWrapper>
     </SectionContainer>
   );
 };
