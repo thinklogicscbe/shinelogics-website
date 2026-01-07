@@ -30,7 +30,7 @@ export const HeaderSection = styled.header`
 /* ================= NAV LINKS ================= */
 
 export const ActiveLink = styled(NavLink)`
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: #020617;
   text-decoration: none;
