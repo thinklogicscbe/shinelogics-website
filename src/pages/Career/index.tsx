@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Heading,
   Title,
@@ -14,7 +14,6 @@ import {
   MiddleContent,
   ButtonContainers,
   DescriptionContainer,
-
   CenteredMessage,
   CenteredMessageContainer,
 } from "./style";
@@ -70,7 +69,7 @@ const Career = () => {
   };
 
   // State to manage Read More/Read Less for each job
-  const [expandedJobs, setExpandedJobs] = useState<{ [key: string]: boolean }>(
+  const [expandedJobs] = useState<{ [key: string]: boolean }>(
     {}
   );
 

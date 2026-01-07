@@ -26,7 +26,7 @@ const EngagementModels: React.FC = () => {
   const [models, setModels] = useState<EngagementModel[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const API_URL = "http://localhost:3006/api/engagement-models";
+  const API_URL = "https://www.shinelogics.com/api/engagement-models";
 
   useEffect(() => {
     const fetchModels = async () => {
