@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import background from "../../assets/AI-image.jpg";
+
 
 //BELOW GIVEN CSS CODE WAS [ HOME ] PAGE STYLE CSS
 
