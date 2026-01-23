@@ -11,7 +11,7 @@ import {
   Description,
 } from "./styles";
 
-const API_URL = "http://localhost:3006/api/experts";
+const API_URL = "https://www.shinelogics.com/api/experts";
 
 const Experts = () => {
   const [experts, setExperts] = useState([]);

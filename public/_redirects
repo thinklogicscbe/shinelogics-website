@@ -1,0 +1,5 @@
+# Netlify redirects file
+# Important: Static files must be served first before the catch-all
+# Serve all other routes to index.html for client-side routing
+/*    /index.html   200
+

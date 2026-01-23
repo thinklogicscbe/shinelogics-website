@@ -33,7 +33,7 @@ interface Resource {
   ctaLink?: string;
 }
 
-const API_URL = "http://localhost:3006/api/resources";
+const API_URL = "https://www.shinelogics.com/api/resources";
 
 const ResourcesAdmin = () => {
   const [resources, setResources] = useState<Resource[]>([]);

@@ -27,7 +27,7 @@ interface Expert {
   image: string;
 }
 
-const API_URL = "http://localhost:3006/api/experts";
+const API_URL = "https://www.shinelogics.com/api/experts";
 
 const ExpertAdmin: React.FC = () => {
   const [experts, setExperts] = useState<Expert[]>([]);
