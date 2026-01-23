@@ -10,7 +10,7 @@ export const BannerContainer = styled.div`
   .heading-banner {
     position: relative;
     width: 100%;
-    height: 400px; /* Adjust height as needed */
+    height: 430px; /* Adjust height as needed */
     background-size: cover;
     background-position: center;
     display: flex;
@@ -94,38 +94,37 @@ export const BannerContainer = styled.div`
 //   }
 
 
-/* ================= FEATURES CONTAINER (CLEAN LAYOUT) ================= */
-
 .features-container {
   width: 95%;
   max-width: 1200px;
   margin: 40px auto;
   padding: 40px 20px;
 
-  display: block; /* ❌ no grid cards */
+  display: block;            /* ❌ no grid cards */
   text-align: left;
 
   animation: fadeIn 1.2s ease-in-out;
 }
 
-/* ================= EMS / ERP HEADER ================= */
-
-.ems-header,
-.erp-header {
-  max-width: 900px;
-  margin: 0 auto 40px;
-  text-align: center;
+/* ERP Layout Wrapper */
+.erp-layout {
+  display: block;
 }
 
-.ems-header h2,
+/* ERP Header */
+.erp-header {
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto 40px;
+}
+
 .erp-header h2 {
-  font-size: 2.3rem;
+  font-size: 2.4rem;
   font-weight: 700;
   color: #18216D;
   margin-bottom: 12px;
 }
 
-.ems-header p,
 .erp-header p {
   font-size: 1.1rem;
   font-weight: 600;
@@ -133,28 +132,20 @@ export const BannerContainer = styled.div`
   line-height: 1.7;
 }
 
-/* ================= SECTIONS GRID ================= */
-
-.ems-sections,
+/* ERP Sections */
 .erp-sections {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 40px;
-  max-width: 1100px;
-  margin: 0 auto;
 }
 
-/* ================= INDIVIDUAL SECTION ================= */
-
-.ems-section,
+/* Individual Section */
 .erp-section {
   padding: 0;
   background: none;
   box-shadow: none;
 }
 
-/* Section title */
-.ems-section h3,
 .erp-section h3 {
   font-size: 1.4rem;
   font-weight: 700;
@@ -164,16 +155,13 @@ export const BannerContainer = styled.div`
   border-bottom: 2px solid #e5e7eb;
 }
 
-/* ================= LISTS ================= */
-
-.ems-section ul,
+/* Lists */
 .erp-section ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.ems-section li,
 .erp-section li {
   font-size: 1rem;
   font-weight: 600;
@@ -184,7 +172,6 @@ export const BannerContainer = styled.div`
 }
 
 /* Bullet */
-.ems-section li::before,
 .erp-section li::before {
   content: "•";
   position: absolute;
@@ -193,17 +180,15 @@ export const BannerContainer = styled.div`
   font-size: 1.4rem;
 }
 
-/* Checkmark list (Business Value) */
+/* Checkmarks */
 .check-list li::before {
   content: "✔";
   color: #16a34a;
   font-weight: 700;
 }
 
-/* ================= RESPONSIVE ================= */
-
+/* Responsive */
 @media (max-width: 1024px) {
-  .ems-sections,
   .erp-sections {
     grid-template-columns: 1fr 1fr;
   }
@@ -214,12 +199,10 @@ export const BannerContainer = styled.div`
     padding: 30px 15px;
   }
 
-  .ems-sections,
   .erp-sections {
     grid-template-columns: 1fr;
   }
 
-  .ems-header h2,
   .erp-header h2 {
     font-size: 1.9rem;
   }
@@ -323,109 +306,33 @@ export const BannerContainer = styled.div`
     }
   }
 
-  /* Responsive Media Queries */
-
-
-  @media (min-width: 1920px) {
-  .heading-banner {
-    height: 500px; /* Set banner height for large screens */
-  }
-
-  .heading-content {
-    width: 60%; /* Set content width to 60% for better balance */
-    height: auto; /* Allow content height to adjust dynamically */
-    padding: 20px; /* Add some padding for spacing */
-    margin: 0 auto; /* Center the content horizontally */
-  }
-
-  .heading-content h1 {
-    font-size: 4rem; /* Larger font size for headers on large screens */
-    line-height: 1.2; /* Ensure proper line height for large text */
-  }
-
-  .heading-content p {
-    font-size: 1.5rem; /* Larger font size for paragraphs */
-    line-height: 1.8; /* Adjust line height for readability */
-  }
-}
-
-/* Media query for 1600px width */
-@media (min-width: 1600px) {
-  .heading-banner {
-    height: 450px; /* Set banner height for 1600px width */
-  }
-
-  .heading-content {
-    width: 65%; /* Set content width to 65% for a balanced layout */
-    height: auto; /* Allow content height to adjust dynamically */
-    padding: 20px; /* Moderate padding for spacing */
-    margin: 0 auto; /* Center the content horizontally */
-  }
-
-  .heading-content h1 {
-    font-size: 3.5rem; /* Slightly smaller font size than on 1920px screens */
-    line-height: 1.3; /* Maintain proper line height for readability */
-  }
-
-  .heading-content p {
-    font-size: 1.4rem; /* Slightly smaller font size for paragraphs */
-    line-height: 1.7; /* Adjust line height for readability */
-  }
-}
-
-/* Media query for 1245px width */
-@media (min-width: 1245px) {
-  .heading-banner {
-    height: 400px; /* Adjust banner height for 1245px screens */
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Reduced shadow size */
-  }
-
-  .heading-content {
-    width: 60%; /* Reduce content width to 60% for a more compact layout */
-    height: auto; /* Allow content height to adjust dynamically */
-    padding: 10px; /* Reduced padding for a more compact design */
-    margin: 0 auto; /* Center the content horizontally */
-  }
-
-  .heading-content h1 {
-    font-size: 2.5rem; /* Reduce font size for headers */
-    line-height: 1.3; /* Ensure proper line height */
-  }
-
-  .heading-content p {
-    font-size: 1.1rem; /* Reduce font size for paragraphs */
-    line-height: 1.5; /* Adjust line height for readability */
-  }
-}
-}
-
-
 
   /* Responsive Media Queries for 1024px */
 @media (max-width: 1024px) {
   .heading-banner {
-    height: 400px; /* Adjust the height for medium screens */
+    height: 400px; /* Adjust the banner height for medium-sized screens */
   }
-  
+
   .heading-content {
-    width: 80%; /* Slightly reduce the width for better alignment */
-    height: auto; /* Allow content to adjust naturally */
-    padding: 15px; /* Moderate padding for readability */
+    width: 85%; /* Slightly increase width for better layout on larger screens */
+    height: auto; /* Allow content height to adjust dynamically */
+    padding: 20px; /* Moderate padding for spacing */
   }
-  
+
   .heading-content h1 {
-    font-size: 2.5rem; /* Reduce font size to fit the layout */
+    font-size: 2.5rem; /* Adjust font size for headers */
   }
-  
+
   .heading-content p {
-    font-size: 1.2rem; /* Adjust font size for better readability */
-    line-height: 1.8; /* Slightly reduce line height */
+    font-size: 1.2rem; /* Slightly larger font size for readability */
   }
 }
 
+
+  /* Responsive Media Queries */
   @media (max-width: 768px) {
     .heading-banner {
-      height: 400px; /* Reduce banner height for tablets and smaller devices */
+      height: 300px; /* Reduce banner height for tablets and smaller devices */
     }
     .heading-content {
       width: 80%; /* Increase width for better readability */
@@ -439,8 +346,6 @@ export const BannerContainer = styled.div`
       font-size: 1rem; /* Adjust font size for paragraph */
     }
   }
-
-
 
   
 @media (max-width: 468px) {
@@ -463,29 +368,5 @@ export const BannerContainer = styled.div`
     line-height: 1.9; /* Adjust line height for better readability */
   }
 }
-
-  /* Responsive Media Queries for 320px */
-@media (max-width: 320px) {
-  .heading-banner {
-    height: 350px; /* Reduce banner height further for ultra-small screens */
-  }
-
-  .heading-content {
-    width: 85%; /* Use the full width of the screen */
-    height: auto; /* Allow content height to adjust dynamically */
-    padding: 8px; /* Reduce padding for a tighter layout */
-  }
-
-  .heading-content h1 {
-    font-size: 0.9rem; /* Smaller font size for headers */
-    line-height: 1.3; /* Adjust line height for compact display */
-  }
-
-  .heading-content p {
-    font-size: 0.6rem; /* Smaller font size for paragraphs */
-    line-height: 1.5; /* Adjust line height for readability */
-  }
-}
-
 `;
 

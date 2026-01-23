@@ -11,9 +11,9 @@ export const WhyChooseContainer = styled.section`
 `;
 
 export const Title = styled.h2`
-  font-size: 2.2rem;
-  font-weight: 700;
-  color: #0b1d45;
+  font-size: 28px;
+  font-weight: bold;
+  color: #003366;
   margin-bottom: 0.75rem;
 
   @media (max-width: 768px) {
@@ -26,7 +26,9 @@ export const Subtitle = styled.p`
   margin: 0 auto 3rem auto;
   font-size: 1rem;
   line-height: 1.6;
-  color: #4a5568;
+  color: #3a4048ff;
+  font-weight: 700;
+  font-size: 16px;
 `;
 
 export const CardsGrid = styled.div`
@@ -54,14 +56,16 @@ export const FeatureCard = styled.div`
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   h3 {
-    font-size: 1.1rem;
-    color: #0b1d45;
+    color: #003366;
+    font-weight: 700;
+    font-size: 16px;
     margin-bottom: 0.5rem;
   }
 
   p {
-    font-size: 0.95rem;
-    color: #4a5568;
+      color: #3a4048ff;
+    font-weight: 600;
+    font-size: 14px;
     line-height: 1.6;
   }
 

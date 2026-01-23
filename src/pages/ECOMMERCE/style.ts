@@ -159,80 +159,129 @@ export const BannerContainer = styled.div`
 `;
 
 
+export const FeaturesContainer = styled.div`
+  /* ================= MAIN CONTAINER ================= */
 
-export const CoreFeaturesContainer = styled.div`
-  .core-features-container {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 20px auto;
-    max-width: 1200px; /* Limit width for better readability */
-  }
+  width: 95%;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 40px 20px;
+  text-align: left;
+  animation: fadeIn 1.2s ease-in-out;
 
-  .core-features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px; /* Space between grid items */
-  }
+  /* ================= HEADER ================= */
 
-  .core-feature-item {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  .commerce-header {
+    max-width: 900px;
+    margin: 0 auto 40px;
     text-align: center;
-    transition: transform 0.3s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   }
 
-  .core-feature-item:hover {
-    transform: translateY(-10px); /* Hover effect to raise item */
+  .commerce-title {
+    font-size: 2.3rem;
+    font-weight: 700;
+    color: #18216D;
+    margin-bottom: 12px;
   }
 
-  .core-feature-icon {
-    font-size: 3rem; /* Size of the icon */
-    margin-bottom: 15px;
+  .commerce-intro {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #444;
+    line-height: 1.7;
   }
 
-  .core-feature-item strong {
-    display: block;
-    font-size: 1.2rem; /* Reduced heading size */
-    color: #007bff;
-    margin-bottom: 15px; /* Increased gap between heading and content */
+  /* ================= SECTIONS GRID ================= */
+
+  .commerce-sections {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    max-width: 1100px;
+    margin: 0 auto;
   }
 
-  .core-feature-item ul {
-    padding-left: 20px; /* Indentation for the list */
-    list-style-type: disc; /* Show bullet points */
-    text-align: left; /* Left-align the text inside the list */
+  /* ================= INDIVIDUAL SECTION ================= */
+
+  .commerce-section {
+    padding: 0;
+    background: none;
+    box-shadow: none;
   }
 
-  .core-feature-item li {
+  .commerce-section-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #003366;
+    margin-bottom: 14px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #e5e7eb;
+  }
+
+  /* ================= LIST STYLES ================= */
+
+  .commerce-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .commerce-list li {
     font-size: 1rem;
-    line-height: 1.6;
+    font-weight: 600;
+    color: #333;
     margin-bottom: 10px;
+    padding-left: 22px;
+    position: relative;
+    line-height: 1.6;
   }
 
-  /* Adjust image size for all grid items */
-  .core-feature-item img {
-    width: 100%; /* Full width to cover container */
-    height: auto; /* Maintain aspect ratio */
-    max-height: 250px; /* Set a max height for uniform image size */
-    object-fit: cover; /* Ensure the image covers the container */
-    border-radius: 8px; /* Rounded corners for the image */
-    margin-bottom: 15px; /* Gap between image and content */
+  .commerce-list li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #2563eb;
+    font-size: 1.4rem;
+  }
+
+  /* ================= CHECK LIST ================= */
+
+  .commerce-checklist li::before {
+    content: "✔";
+    color: #16a34a;
+    font-weight: 700;
+  }
+
+  /* ================= RESPONSIVE ================= */
+
+  @media (max-width: 1024px) {
+    .commerce-sections {
+      grid-template-columns: 1fr 1fr;
+    }
   }
 
   @media (max-width: 768px) {
-    .core-features-grid {
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    padding: 30px 15px;
+
+    .commerce-sections {
+      grid-template-columns: 1fr;
     }
 
-    .core-feature-item strong {
-      font-size: 1rem; /* Further reduce heading size on smaller screens */
+    .commerce-title {
+      font-size: 1.9rem;
+    }
+  }
+
+  /* ================= ANIMATION ================= */
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 `;

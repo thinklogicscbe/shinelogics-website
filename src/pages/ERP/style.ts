@@ -95,125 +95,119 @@ export const BannerContainer = styled.div`
 
 
 .features-container {
-  padding: 30px;
-  margin-top: 40px;
-  animation: fadeIn 1.5s ease-in-out;
-  text-align: center;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Increased min-width for grid items */
-  gap: 20px;
-  width: 95%; /* Increased width */
-  ; /* Reduced height, adjust as needed */
-  overflow-y: auto; /* Adds scroll if content overflows */
-  margin: 0 auto;
-}
+  width: 95%;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 40px 20px;
 
-.feature-item {
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: #333;
+  display: block;            /* ❌ no grid cards */
   text-align: left;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  box-sizing: border-box;
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Center-aligns content */
-  justify-content: flex-start; /* Aligns items to the top */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  height: 100%;
-  gap: 10px; /* Adds consistent spacing between elements */
+
+  animation: fadeIn 1.2s ease-in-out;
 }
 
-.feature-item:hover {
-  background-color: #e9e9e9;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+/* ERP Layout Wrapper */
+.erp-layout {
+  display: block;
 }
 
-.feature-image {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 15px;
-  width: 100%;
-  height: 150px; /* Fixed height for images */
-  overflow: hidden; /* Ensures the image fits within the container */
+/* ERP Header */
+.erp-header {
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto 40px;
 }
 
-.feature-img {
-  width: auto;
-  max-height: 100%; /* Ensures the image fits within the fixed height */
-  object-fit: cover; /* Prevents distortion and maintains aspect ratio */
+.erp-header h2 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #18216D;
+  margin-bottom: 12px;
 }
 
-.feature-item h3 {
-  font-size: 1.2rem;
+.erp-header p {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #444;
+  line-height: 1.7;
+}
+
+/* ERP Sections */
+.erp-sections {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+/* Individual Section */
+.erp-section {
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.erp-section h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #003366;
+  margin-bottom: 14px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+/* Lists */
+.erp-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.erp-section li {
+  font-size: 1rem;
   font-weight: 600;
   color: #333;
-  margin: 15px 0; /* Adds consistent spacing above and below the heading */
-  text-align: center;
+  margin-bottom: 10px;
+  padding-left: 22px;
+  position: relative;
 }
 
-.feature-details {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  font-weight: 400;
-  color: #555;
- 
+/* Bullet */
+.erp-section li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #2563eb;
+  font-size: 1.4rem;
 }
 
-/* Media Query for Smaller Screens */
+/* Checkmarks */
+.check-list li::before {
+  content: "✔";
+  color: #16a34a;
+  font-weight: 700;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .erp-sections {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .features-container {
-    padding: 20px;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px;
+    padding: 30px 15px;
   }
 
-  .feature-item {
-    padding: 15px;
+  .erp-sections {
+    grid-template-columns: 1fr;
   }
 
-  .feature-img {
-    max-height: 120px;
-  }
-
-  .feature-details {
-    font-size: 1rem;
+  .erp-header h2 {
+    font-size: 1.9rem;
   }
 }
 
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .features-container {
-    grid-template-columns: 1fr 1fr; /* Two columns on medium screens */
-  }
-}
-
-@media (max-width: 480px) {
-  .features-container {
-    grid-template-columns: 1fr; /* Single column on small screens */
-  }
-
-  .feature-item {
-    padding: 15px; /* Adjust padding for smaller screens */
-  }
-
-  .feature-icon {
-    font-size: 2rem; /* Reduce icon size */
-  }
-
-  .feature-item h3 {
-    font-size: 1.2rem;
-  }
-
-  .feature-details {
-    font-size: 1rem;
-  }
-}
 
 
   /* Why Choose Our EMS Styles */

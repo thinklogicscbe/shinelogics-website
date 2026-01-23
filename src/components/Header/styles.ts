@@ -3,29 +3,55 @@ import { NavLink } from "react-router-dom";
 
 /* ================= HEADER ================= */
 
+
+export const AsAText = styled.span`
+  font-size: 16px;
+  font-weight: 600;
+  color: #020617;
+
+  margin: 0 2px;
+
+  cursor: default;
+  user-select: none;
+  white-space: nowrap;
+
+  display: flex;           /* 🔥 IMPORTANT */
+  align-items: center;     /* 🔥 IMPORTANT */
+  height: 40px;            /* 🔥 MATCH button height */
+  line-height: 1;
+
+  &.pas-as-a {
+    margin: 0 2px;
+  }
+
+    /* 🔥 HIDE "as a" ON MOBILE */
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;
+
+
 export const HeaderSection = styled.header`
   position: sticky;
   top: 0;
   z-index: 1000;
 
   display: flex;
+  align-items: center; /* 🔥 key */
   justify-content: space-between;
-  align-items: center;
+
+  min-height: 80px; /* ✅ consistent height */
 
   background-color: #ffffff;
-  padding: 20px;
+  padding: 0 20px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.08);
 
   @media (max-width: 768px) {
-    flex-direction: column;
-    padding: 15px;
-    align-items: flex-start;
-  }
-
-  @media (max-width: 480px) {
-    padding: 12px;
+    min-height: 64px;
+    padding: 0 15px;
   }
 `;
+
 
 /* ================= NAV LINKS ================= */
 
@@ -34,8 +60,11 @@ export const ActiveLink = styled(NavLink)`
   font-weight: 700;
   color: #020617;
   text-decoration: none;
-  margin-top: 25px;
-  margin-left: 20px;
+
+  margin-left: 20px; /* keep horizontal spacing only */
+
+  display: flex;
+  align-items: center; /* 🔥 vertically centered */
 
   &.active {
     color: #166534;
@@ -52,45 +81,31 @@ export const ActiveLink = styled(NavLink)`
   }
 `;
 
+
 /* ================= LOGO ================= */
 
 export const LogoContainer = styled(NavLink)`
   display: flex;
   align-items: center;
-  text-decoration: none;
-  font-weight: 700;
-  color: #020617;
-
-  height: 30px;
+  height: 100%; /* 🔥 match header */
   max-width: 240px;
-  padding: 0.25rem 0.75rem;
+  padding: 0;
 
   img {
-  
-    max-height: 200px;
+    max-height: 56px; /* 🔥 control image, not container */
     width: auto;
-    max-width: 100%;
     object-fit: contain;
     display: block;
-  }
-
-  @media (max-width: 1024px) {
-    height: 64px;
-
-    img {
-      max-height: 52px;
-    }
+    margin-bottom: 10px
   }
 
   @media (max-width: 768px) {
-    height: 56px;
-    max-width: 200px;
-
     img {
-      max-height: 160px;
+      max-height: 40px;
     }
   }
 `;
+
 
 /* ================= BURGER ================= */
 
@@ -144,6 +159,14 @@ export const StyledButton = styled.button`
 
   color: #020617;
   transition: all 0.25s ease;
+
+
+    &.pas-button {
+    margin-left: 4px;     /* 🔥 tight ONLY for Products & Service */
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
 
   .main-label {
     pointer-events: auto; /* dropdown works here */

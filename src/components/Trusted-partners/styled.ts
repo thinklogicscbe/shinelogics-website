@@ -29,16 +29,19 @@ export const Header = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-size: 3rem;
-  font-weight: 800;
-  color: #020617;
+  font-size: 29px;
+  font-weight: bold;
+  color: #003366;
 `;
 
 export const Subtitle = styled.p`
-  font-size: 1.1rem;
-  line-height: 1.8;
-  color: #475569;
-  margin-top: 1rem;
+  max-width: 720px;
+  margin: 0 auto 3rem auto;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #3a4048ff;
+  font-weight: 700;
+  font-size: 16px;
 `;
 
 /* ================= SLIDER ================= */

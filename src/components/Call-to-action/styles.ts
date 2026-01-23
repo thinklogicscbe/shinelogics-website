@@ -47,9 +47,13 @@ export const Title = styled.h2`
 `;
 
 export const Description = styled.p`
+
+  max-width: 720px;
   font-size: 1rem;
   line-height: 1.6;
-  color: #4a5568;
+  color: #3a4048ff;
+  font-weight: 700;
+  font-size: 16px;
 `;
 
 export const ButtonBlock = styled.div`

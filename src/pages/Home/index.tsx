@@ -1,30 +1,36 @@
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
+
 import SuccessMetrics from "../../components/Success-metrics/SuccessMetrics";
 import CallToAction from "../../components/Call-to-action/CallToAction";
 import TrustedPartners from "../../components/Trusted-partners/TrustedPartners";
+import Shineplatforms from "../../components/HomeCompo/Shineplatforms";
 
-
+/* LAZY LOADED SECTIONS */
 const Homes = lazy(() => import("../../components/HomeCompo/home"));
 const Pdaas = lazy(() => import("../../components/HomeCompo/pdaas"));
 const OurService = lazy(() => import("../../components/HomeCompo/ourService"));
 const OurProduct = lazy(() => import("../../components/HomeCompo/ourProduct"));
-const WhyChooseUs = lazy(() => import("../../components/Choose-Us/WhyChooseUs"));
-
+const WhyChooseUs = lazy(
+  () => import("../../components/Choose-Us/WhyChooseUs")
+);
+const ShinePlatforms = lazy(() => import("../../components/HomeCompo/Shineplatforms"));
 
 const Home = () => {
   return (
-   <div>
-     <Homes />
-     <Pdaas/>
-     <OurService/>
-     <WhyChooseUs/>
-     <TrustedPartners />
-     <SuccessMetrics />
-     <CallToAction />
-     <WhyChooseUs />
+    <Suspense fallback={<div style={{ padding: "40px", textAlign: "center" }}>Loading...</div>}>
+      <div>
+        <Homes />
+        <Pdaas />
+        <Shineplatforms />
 
-     <OurProduct/>
-   </div>
+        <OurService />
+        <WhyChooseUs />
+        <TrustedPartners />
+        <SuccessMetrics />
+        <CallToAction />
+        <OurProduct />
+      </div>
+    </Suspense>
   );
 };
 
