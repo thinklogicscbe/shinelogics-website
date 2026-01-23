@@ -10,9 +10,8 @@ const routes = [
   { path: "/about/experts", exact: true, component: "AboutExperts" },
 
   { path: "/service", exact: true, component: "Service" },
-  { path: "/ProductCompo/erp", exact: true, component: "ERP" },
-  { path: "/ProductCompo/ems", exact: true, component: "EMS" },
-  { path: "/ProductCompo/e-commerce", exact: true, component: "ECOMMERCE" },
+{ path: "/ProductCompo/:slug", exact: true, component: "Products" },
+
   { path: "/contact", exact: true, component: "Contact" },
   { path: "/career", exact: true, component: "Career" },
   { path: "/privacyPolicy", exact: true, component: "PrivacyPolicy" },

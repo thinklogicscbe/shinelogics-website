@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import background from "../../assets/AI-image.jpg";
+
 
 //BELOW GIVEN CSS CODE WAS [ HOME ] PAGE STYLE CSS
 
@@ -256,7 +256,6 @@ export const AnimatedImage = styled.img`
     max-width: 100%; /* Full width for phones */
   }
 `;
-
 export const PdaasContent = styled.div`
   display: flex;
   flex-direction: column;
@@ -266,19 +265,34 @@ export const PdaasContent = styled.div`
   color: #333;
 
   h1 {
-    color: blue; /* Set h1 tag color to blue */
+    color: #003366;
+    font-size: 40px;
+    margin: 0 0 8px 0; /* ✅ control space after heading */
   }
 
-  /* Responsive font sizes */
+  p {
+    color: #3a4048ff;
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 1.6;
+    margin: 0; /* ✅ REMOVE bottom gap completely */
+  }
+
+  /* If you want a LITTLE space before the next heading */
+  p + h1 {
+    margin-top: 8px; /* optional, controlled spacing */
+  }
+
   @media (max-width: 1024px) {
-    font-size: 18px; /* Slightly smaller text on tablets */
+    font-size: 18px;
   }
 
   @media (max-width: 768px) {
-    font-size: 16px; /* Smaller text for phones */
-    text-align: center; /* Center-align text on smaller screens */
+    font-size: 16px;
+    text-align: center;
   }
 `;
+
 
 //BELOW GIVEN CSS CODE FOR [ OURSERVICE ] PAGE STYLE
 
@@ -360,8 +374,10 @@ export const ServiceCard = styled.div`
   }
 
   p {
+    color: #3a4048ff;
+    font-weight: 700;
     font-size: 14px;
-    color: #666;
+    line-height: 1.6;
   }
 
   &:hover {
@@ -379,6 +395,18 @@ export const ProductContainer = styled.div`
   text-align: center;
   padding: 60px;
   background-color: white;
+
+
+  p{
+  
+  max-width: 720px;
+  margin: 0 auto 3rem auto;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #3a4048ff;
+  font-weight: 700;
+  font-size: 16px;
+  }
 
   .services-grid {
     display: grid;
@@ -513,14 +541,13 @@ export const TechnologiesHeading = styled.h2`
 
 
 export const TechnologiesParagraph = styled.p`
-  font-size: 1.2rem; /* Slightly larger font for readability */
-  line-height: 1.8; /* Increase line height for better readability */
-  font-weight: bold; /* Make the text bold */
-  text-align: center; /* Center align the text */
-  max-width: 80%; /* Reduce the width */
-  margin: 0 auto 20px auto; /* Center the paragraph and add space at the bottom */
-  color: #555; /* Set a dark grey color for the text */
-  padding: 0 20px; /* Add horizontal padding for mobile responsiveness */
+  max-width: 900px;
+  margin: 0 auto 3rem auto;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #3a4048ff;
+  font-weight: 700;
+  font-size: 16px;
 
   /* Optional: Add responsiveness for smaller screens */
   @media (max-width: 768px) {
@@ -542,48 +569,64 @@ export const TechnologiesParagraph = styled.p`
 
 /* MAIN GRID */
 export const GridWrapper = styled.div`
-  max-width: 1200px;
+  max-width: 1320px; /* 🔥 wider */
   margin: 0 auto;
 
   display: grid;
-  grid-template-columns: 1fr 1.3fr;
-  gap: 32px;
-  align-items: stretch; /* 🔥 LEFT HEIGHT MATCHES RIGHT */
+  grid-template-columns: 1.1fr 1fr; /* 🔥 balanced width */
+  gap: 36px;
+  align-items: stretch; /* 🔥 equal height */
+
+  min-height: 420px; /* 🔥 controls hero height */
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
+    min-height: auto;
   }
 `;
 
+
 /* LEFT GRID */
 export const LeftGrid = styled.div`
-  border: 1px solid #e5e7eb;
+  border: 2px solid #eef2f7; /* 🔥 lighter border */
   border-radius: 18px;
-  padding: clamp(24px, 4vw, 48px); /* responsive padding */
+  padding: clamp(22px, 3vw, 40px);
   background: #ffffff;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
 
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+
+  &:hover {
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
+    transform: translateY(-2px);
+  }
+
   h1 {
-    font-size: clamp(1.7rem, 2.6vw, 2.4rem);
+    font-size: clamp(1.8rem, 2.5vw, 2.3rem);
     color: #0f172a;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
     line-height: 1.25;
   }
 
-  .main-description {
-    font-size: clamp(0.95rem, 1.3vw, 1.1rem);
-    color: #334155;
-    line-height: 1.7;
-    margin-bottom: 0.75rem;
-  }
+.main-description {
+  font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+  color: #3a4048ff;
+  line-height: 1.65;
+  margin-bottom: 0.6rem;
+  font-weight: 700; /* ✅ Bold */
+}
+
 
   .sub-hero {
-    font-size: clamp(0.9rem, 1.1vw, 1rem);
-    color: #475569;
-    line-height: 1.7;
+    font-size: clamp(0.9rem, 1.05vw, 0.98rem);
+    color: #3a4048ff;
+    line-height: 1.6;
+    font-weight: 700; /* ✅ Bold */
   }
 
   @media (max-width: 768px) {
@@ -592,17 +635,19 @@ export const LeftGrid = styled.div`
 `;
 
 
+
+
+
 /* BUTTONS */
 export const ButtonGroup = styled.div`
   display: flex;
-  gap: clamp(12px, 2vw, 18px);
-  margin-top: clamp(20px, 4vw, 36px);
+  gap: 16px;
+  margin-top: 28px;
   flex-wrap: wrap;
 
   button {
-    padding: clamp(10px, 1.8vw, 14px)
-      clamp(18px, 2.5vw, 28px);
-    font-size: clamp(14px, 1.1vw, 15px);
+    padding: 12px 26px;
+    font-size: 14.5px;
     border-radius: 10px;
     cursor: pointer;
     border: none;
@@ -632,46 +677,72 @@ export const ButtonGroup = styled.div`
     }
   }
 
-  /* Tablet */
   @media (max-width: 768px) {
     justify-content: center;
   }
 
-  /* Small mobile */
   @media (max-width: 480px) {
     flex-direction: column;
 
     button {
       width: 100%;
-      text-align: center;
     }
   }
 `;
 
 
+
 /* RIGHT GRID */
 export const RightGrid = styled.div`
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  gap: 24px;
+  display: flex;
+  height: 100%;
+
+  /* Desktop / default */
+  justify-content: flex-end;
+  align-items: center;
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    justify-content: center;
+    align-items: center;
+  }
 `;
+
+
+
+
 
 /* VIDEO BOX */
 export const VideoBox = styled.div`
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 12px;
+  border: 2px solid #eef2f7; /* 🔥 lighter border */
+  border-radius: 18px;
+  
   background: #f8fafc;
+
+  width: 100%;
+  height: 100%;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  shadow-box: 0 4px 12px rgba(211, 45, 45, 0.1);
+
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+
+  &:hover {
+    box-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
+    transform: translateY(-2px);
+  }
 
   video {
     width: 100%;
     height: 100%;
-    border-radius: 12px;
+    border-radius: 14px;
     object-fit: cover;
+    aspect-ratio: 16 / 9;
   }
 `;
+
+
+

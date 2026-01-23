@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Layout,
@@ -16,6 +16,7 @@ import {
   SidebarToggle,
 } from "./style";
 
+// 🔹 Pages / Components
 import ViewProfile from "../ViewProfile";
 import PostJob from "../PostJob";
 import ViewJobs from "../ViewJobs";
@@ -23,34 +24,53 @@ import Dashboard from "../Dashboard";
 import EngagementModelAdmin from "../EngagementModelAdmin";
 import ResourceAdmin from "../ResourceAdmin";
 import ExpertAdmin from "../ExpertAdmin";
+import AdminBanner from "../AdminBanner";
+import AdminProducts from "../AdminProducts";
 
+// 🔹 Assets
 import logo1 from "../../assets/shinelogics-logo.png";
+
+// 🔹 Allowed component keys (STRICT typing)
+type AdminComponent =
+  | "Dashboard"
+  | "AdminBanner"
+  | "PostJob"
+  | "ViewJobs"
+  | "ViewResumes"
+  | "EngagementModels"
+  | "ResourceAdmin"
+  | "ExpertsAdmin"
+  | "AdminProducts";
 
 const SideBar: React.FC = () => {
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const [selectedComponent, setSelectedComponent] = useState<string>(
-    localStorage.getItem("selectedComponent") || "Dashboard"
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+
+  const [selectedComponent, setSelectedComponent] = useState<AdminComponent>(
+    (localStorage.getItem("selectedComponent") as AdminComponent) || "Dashboard"
   );
 
-  const handleNavigation = (component: string) => {
+  // 🔹 Navigation handler
+  const handleNavigation = (component: AdminComponent): void => {
     setSelectedComponent(component);
     localStorage.setItem("selectedComponent", component);
     setSidebarOpen(false);
   };
 
-  const handleLogout = () => {
+  // 🔹 Logout
+  const handleLogout = (): void => {
     localStorage.clear();
     navigate("/login");
   };
 
+  // 🔹 Render Selected Component
   const renderComponent = () => {
     switch (selectedComponent) {
-      case "ViewJobs":
-        return <ViewJobs />;
       case "PostJob":
         return <PostJob />;
+      case "ViewJobs":
+        return <ViewJobs />;
       case "ViewResumes":
         return <ViewProfile />;
       case "EngagementModels":
@@ -59,6 +79,11 @@ const SideBar: React.FC = () => {
         return <ResourceAdmin />;
       case "ExpertsAdmin":
         return <ExpertAdmin />;
+      case "AdminBanner":
+        return <AdminBanner />;
+      case "AdminProducts": // 👈 ADD
+        return <AdminProducts />; // 👈 ADD
+      case "Dashboard":
       default:
         return <Dashboard />;
     }
@@ -70,7 +95,7 @@ const SideBar: React.FC = () => {
         {/* HEADER */}
         <Header>
           <LogoWrapper>
-            <LogoImage src={logo1} alt="Logo" />
+            <LogoImage src={logo1} alt="Shinelogics Logo" />
           </LogoWrapper>
           <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
         </Header>
@@ -88,6 +113,20 @@ const SideBar: React.FC = () => {
               onClick={() => handleNavigation("Dashboard")}
             >
               Dashboard
+            </NavItem>
+
+            <NavItem
+              active={selectedComponent === "AdminBanner"}
+              onClick={() => handleNavigation("AdminBanner")}
+            >
+              Home Page Banner
+            </NavItem>
+
+            <NavItem
+              active={selectedComponent === "AdminProducts"}
+              onClick={() => handleNavigation("AdminProducts")}
+            >
+              Products
             </NavItem>
 
             <NavItem
@@ -122,7 +161,7 @@ const SideBar: React.FC = () => {
               active={selectedComponent === "ResourceAdmin"}
               onClick={() => handleNavigation("ResourceAdmin")}
             >
-              Blog and Resources
+              Blog & Resources
             </NavItem>
 
             <NavItem
@@ -140,9 +179,7 @@ const SideBar: React.FC = () => {
 
       {/* MOBILE TOGGLE */}
       {!sidebarOpen && (
-        <SidebarToggle onClick={() => setSidebarOpen(true)}>
-          ☰
-        </SidebarToggle>
+        <SidebarToggle onClick={() => setSidebarOpen(true)}>☰</SidebarToggle>
       )}
 
       {/* BACKDROP */}

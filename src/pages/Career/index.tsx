@@ -20,12 +20,12 @@ import {
 import { getAllWithCount } from "../API/AdminUser";
 import career from "../../assets/careers.jpg";
 
-// Define the job structure
+// Job interface
 interface JobType {
   _id: string;
   jobTitle: string;
   shortDescription: string;
-  jobDescription: string; // Use shortDescription instead of jobDescription
+  jobDescription: string;
   skills: string[];
   requirements: string;
   qualifications: string;
@@ -39,20 +39,15 @@ interface JobType {
   };
   status: number;
 }
+
 const Career = () => {
-  // State to hold job data
   const [jobData, setJobData] = useState<JobType[]>([]);
-
-  // State to track selected job
-
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchJobs();
 
-    // Listen for job updates from ViewJobs page
     window.addEventListener("jobStatusUpdated", fetchJobs);
-
     return () => {
       window.removeEventListener("jobStatusUpdated", fetchJobs);
     };
@@ -61,24 +56,14 @@ const Career = () => {
   const fetchJobs = async () => {
     try {
       const data = await getAllWithCount();
-      const activeJobs = data.result.filter((job: JobType) => job.status === 1);
+      const activeJobs = data.result.filter(
+        (job: JobType) => job.status === 1
+      );
       setJobData(activeJobs);
     } catch (error) {
       console.error("Error fetching jobs:", error);
     }
   };
-
-  // State to manage Read More/Read Less for each job
-  const [expandedJobs] = useState<{ [key: string]: boolean }>(
-    {}
-  );
-
-  // const toggleReadMore = (jobId: string) => {
-  //   setExpandedJobs((prev) => ({
-  //     ...prev,
-  //     [jobId]: !prev[jobId],
-  //   }));
-  // };
 
   return (
     <>
@@ -118,7 +103,7 @@ const Career = () => {
         </p>
       </MiddleContent>
 
-      {/* Job Listings Section */}
+      {/* Job Listings */}
       <Heading>
         <Title>Job Aspirants</Title>
         <Subtitle>Our Current Openings</Subtitle>
@@ -127,34 +112,16 @@ const Career = () => {
           {jobData.length > 0 ? (
             jobData.map((job) => (
               <TextContainer key={job._id}>
-                {/* Job Title */}
                 <Technologi>{job.jobTitle}</Technologi>
 
-                {/* Job Type */}
                 <p style={{ color: "blue", fontWeight: "bolder" }}>
                   {job.summary?.jobType || "Not specified"}
                 </p>
 
-                {/* Job Short Description */}
                 <DescriptionContainer>
-                  {expandedJobs[job._id] ? (
-                    <>
-                      <span>{job.shortDescription}</span>
-                      {/* <ReadMoreButton onClick={() => toggleReadMore(job._id)}>
-                        Read Less
-                      </ReadMoreButton> */}
-                    </>
-                  ) : (
-                    <>
-                      <Roll>{job.shortDescription}</Roll>
-                      {/* <ReadMoreButton onClick={() => toggleReadMore(job._id)}>
-                        Read More
-                      </ReadMoreButton> */}
-                    </>
-                  )}
+                  <Roll>{job.shortDescription}</Roll>
                 </DescriptionContainer>
 
-                {/* Skills */}
                 {job.skills && job.skills.length > 0 && (
                   <div className="skills">
                     {job.skills.slice(0, 4).map((skill, idx) => (
@@ -169,9 +136,9 @@ const Career = () => {
                   </div>
                 )}
 
-                {/* View Job Button */}
-
-                <ButtonContainers onClick={() => navigate(`/jobs/${job._id}`)}>
+                <ButtonContainers
+                  onClick={() => navigate(`/jobs/${job._id}`)}
+                >
                   View Job
                 </ButtonContainers>
               </TextContainer>

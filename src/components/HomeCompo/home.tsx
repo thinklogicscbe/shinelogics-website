@@ -1,4 +1,6 @@
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
   SectionContainer,
   GridWrapper,
@@ -8,59 +10,149 @@ import {
   ButtonGroup,
 } from "./style";
 
+const API_URL = "http://localhost:3006/api/home-content";
+
+interface HomeContent {
+  _id: string;
+  heroTitle: string;
+  mainDescription: string;
+  subDescription: string;
+  primaryCtaText?: string;
+  primaryCtaRoute?: string;
+  secondaryCtaText?: string;
+  secondaryCtaRoute?: string;
+  videos: string[];
+}
+
 const Home = () => {
   const navigate = useNavigate();
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  const [banner, setBanner] = useState<HomeContent | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [muted, setMuted] = useState(true); // 🔊 sound state
+
+  const loadBanner = async () => {
+    try {
+      const res = await axios.get(API_URL, {
+        headers: { "Cache-Control": "no-cache" },
+      });
+
+      const list = Array.isArray(res.data?.result)
+        ? res.data.result
+        : [];
+
+      if (list.length > 0) {
+        setBanner({
+          ...list[0],
+          videos: list[0].videos ?? [],
+        });
+      } else {
+        setBanner(null);
+      }
+    } catch (error) {
+      console.error("Failed to load home banner", error);
+      setBanner(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadBanner();
+  }, []);
+
+  // ▶️ Ensure autoplay works after refresh
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(() => {});
+    }
+  }, [banner]);
+
+  const toggleMute = () => {
+    if (!videoRef.current) return;
+
+    const next = !muted;
+    videoRef.current.muted = next;
+    videoRef.current.volume = 1;
+    setMuted(next);
+  };
+
+  if (loading) {
+    return (
+      <SectionContainer>
+        <p>Loading...</p>
+      </SectionContainer>
+    );
+  }
+
+  if (!banner) return null;
 
   return (
     <SectionContainer>
       <GridWrapper>
-        {/* LEFT GRID — CONTENT */}
+        {/* LEFT GRID */}
         <LeftGrid>
-          <h1>Secure, Scalable & AI-Driven Technology Solutions</h1>
-
-          <p className="main-description">
-            We build secure-by-design software, intelligent automation systems,
-            and future-ready digital products for modern businesses.
-          </p>
-
-          <p className="sub-hero">
-            Our expertise spans enterprise software development, application
-            security, AI/ML integration, IoT engineering, and data platforms —
-            all delivered with a security-first mindset.
-          </p>
+          <h1>{banner.heroTitle}</h1>
+          <p className="main-description">{banner.mainDescription}</p>
+          <p className="sub-hero">{banner.subDescription}</p>
 
           <ButtonGroup>
-            <button
-              className="primary"
-              onClick={() => navigate("/free-consultation")}
-            >
-              Get a Free Consultation
-            </button>
+            {banner.primaryCtaText && (
+              <button
+                className="primary"
+                onClick={() =>
+                  banner.primaryCtaRoute &&
+                  navigate(banner.primaryCtaRoute)
+                }
+              >
+                {banner.primaryCtaText}
+              </button>
+            )}
 
-            <button
-              className="secondary"
-              onClick={() => navigate("/service")}
-            >
-              View Our Services
-            </button>
+            {banner.secondaryCtaText && (
+              <button
+                className="secondary"
+                onClick={() =>
+                  banner.secondaryCtaRoute &&
+                  navigate(banner.secondaryCtaRoute)
+                }
+              >
+                {banner.secondaryCtaText}
+              </button>
+            )}
           </ButtonGroup>
         </LeftGrid>
 
-        {/* RIGHT GRID — VIDEOS */}
+        {/* RIGHT GRID — HERO VIDEO */}
         <RightGrid>
-          <VideoBox>
-            <video controls>
-              <source src="/videos/video1.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </VideoBox>
+          {banner.videos.length > 0 && (
+            <VideoBox>
+              <video
+                key={banner.videos[0]} // forces remount if video changes
+                ref={videoRef}
+                autoPlay
+                loop
+                muted={muted}
+                playsInline
+                preload="auto"
+                onClick={toggleMute} // click video to unmute
+              >
+                <source src={banner.videos[0]} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
 
-          <VideoBox>
-            <video controls>
-              <source src="/videos/video2.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          </VideoBox>
+              {/* 🔊 Sound Toggle */}
+              <button
+                className="sound-toggle"
+                onClick={toggleMute}
+                aria-label="Toggle sound"
+              >
+                {muted ? "🔇" : "🔊"}
+              </button>
+            </VideoBox>
+          )}
         </RightGrid>
       </GridWrapper>
     </SectionContainer>

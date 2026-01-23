@@ -13,11 +13,15 @@ import {
   LogoWrapper,
 } from "./styled";
 
+
+import datapatternlogo from "../../assets/data-pattern(1).png"
+import aws from "../../assets/aws-logo(1).png"
+
 const partners = [
   {
     name: "AWS",
     desc: "Scalable cloud infrastructure and AI tools",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg",
+    logo: aws,
   },
   {
     name: "Google Cloud",
@@ -37,7 +41,7 @@ const partners = [
   {
     name: "DataPattern US",
     desc: "Precision engineering and defense solutions",
-    logo: "https://datapattern.ai/wp-content/uploads/2022/01/Data-Pattern-Logo-1.png",
+    logo: datapatternlogo,
   },
   {
     name: "The Hindu",

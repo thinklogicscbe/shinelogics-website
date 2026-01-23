@@ -16,9 +16,10 @@ import {
   MobileDropdownItem,
   DrawerHeader,
   CloseIcon,
+  AsAText,
 } from "./styles";
 
-import logo1 from "../../assets/shinelogics-logo(1).png";
+import logo1 from "../../assets/logo_3.png";
 
 /* ================= TYPES ================= */
 
@@ -30,6 +31,13 @@ type ActiveMenu =
   | "contact"
   | "quickmvp"
   | "";
+
+/* 🔥 NEW: Product Type for Header */
+type HeaderProduct = {
+  _id: string;
+  title: string;
+  slug: string;
+};
 
 /* ================= ROUTE GROUPS ================= */
 
@@ -43,20 +51,13 @@ const insightsRoutes = ["/career", "/engagementModels", "/Blog-Resource"];
 
 /* ================= DROPDOWN DATA ================= */
 
-/* PRODUCT (UNCHANGED) */
-const productDropdownLinks = [
-  { path: "/ProductCompo/erp", label: "ERP (Enterprise Resource Planning)" },
-  { path: "/ProductCompo/ems", label: "EMS (Employee Management System)" },
-  { path: "/ProductCompo/e-commerce", label: "E-Commerce" },
-];
-
 /* INSIGHTS (UNCHANGED) */
 const insightsDropdownLinks = [
   { path: "/engagementModels", label: "Engagement Models" },
   { path: "/Blog-Resource", label: "Blog & Resources" },
 ];
 
-/* ABOUT (NEW – SEPARATE, SAFE) */
+/* ABOUT (UNCHANGED) */
 const aboutDropdownLinks = [
   { path: "/career", label: "Career" },
   { path: "/about/mission", label: "Mission & Vision" },
@@ -84,8 +85,12 @@ const Header = () => {
   const [mobileAboutDropdownVisible, setMobileAboutDropdownVisible] =
     useState(false);
 
-  /* ================= EFFECT ================= */
+  /* 🔥 NEW: Dynamic Products from Admin */
+  const [productLinks, setProductLinks] = useState<HeaderProduct[]>([]);
 
+  /* ================= EFFECTS ================= */
+
+  // Existing resize effect (UNCHANGED)
   useEffect(() => {
     const handleResize = () => {
       setProductDropdownVisible(false);
@@ -99,6 +104,21 @@ const Header = () => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // 🔥 NEW: Fetch products for header dropdown
+  useEffect(() => {
+    fetchHeaderProducts();
+  }, []);
+
+  const fetchHeaderProducts = async () => {
+    try {
+      const res = await fetch("http://localhost:3006/api/products");
+      const data = await res.json();
+      setProductLinks(data.result || []);
+    } catch (err) {
+      console.error("Failed to load products for header", err);
+    }
+  };
 
   /* ================= NAVIGATION HANDLER ================= */
 
@@ -125,12 +145,13 @@ const Header = () => {
   /* ================= NAV DATA ================= */
 
   const navigationLinks = [
-    { key: "product", label: "Products", suffix: "(AS)", hasDropdown: true },
+    { key: "product", label: "Products", hasDropdown: true },
+
+    { key: "as-a", label: "as a", isStatic: true },
 
     { key: "service", path: "/service", label: "Service" },
     { key: "insights", label: "Insights", hasDropdown: true },
     { key: "about", label: "About", hasDropdown: true },
-
     {
       key: "contact",
       path: "/contact",
@@ -177,38 +198,46 @@ const Header = () => {
               setAboutDropdownVisible(false);
             }}
           >
-            <StyledButton
-              className={[
-                activeMenu === link.key ? "active" : "",
-                link.isButton ? "nav-button" : "",
-                link.primary ? "primary" : "",
-              ].join(" ")}
-              onClick={(e) => {
-                if (link.hasDropdown) e.preventDefault();
-                else navigateWithMenu(link.path!);
-              }}
-            >
-              <span className="main-label">{link.label}</span>
-              {link.suffix && <span className="suffix">{link.suffix}</span>}
-              {link.isButton && <span className="arrow">→</span>}
-            </StyledButton>
+            {link.isStatic ? (
+              <AsAText className="pas-as-a">{link.label}</AsAText>
+            ) : (
+              <StyledButton
+                className={[
+                  link.key === "product" || link.key === "service"
+                    ? "pas-button"
+                    : "",
+                  activeMenu === link.key ? "active" : "",
+                  link.isButton ? "nav-button" : "",
+                  link.primary ? "primary" : "",
+                ].join(" ")}
+                onClick={(e) => {
+                  if (link.hasDropdown) e.preventDefault();
+                  else navigateWithMenu(link.path!);
+                }}
+              >
+                <span className="main-label">{link.label}</span>
+                {link.isButton && <span className="arrow">→</span>}
+              </StyledButton>
+            )}
 
-            {/* PRODUCT DROPDOWN */}
+            {/* ================= PRODUCT DROPDOWN (DYNAMIC) ================= */}
             {link.key === "product" && productDropdownVisible && (
               <DropdownWrapper className="visible">
                 <DropdownArrow />
-                {productDropdownLinks.map((item) => (
+                {productLinks.map((item) => (
                   <DropdownContent
-                    key={item.path}
-                    onClick={() => navigateWithMenu(item.path)}
+                    key={item._id}
+                    onClick={() =>
+                      navigateWithMenu(`/ProductCompo/${item.slug}`)
+                    }
                   >
-                    {item.label}
+                    {item.title}
                   </DropdownContent>
                 ))}
               </DropdownWrapper>
             )}
 
-            {/* INSIGHTS DROPDOWN */}
+            {/* ================= INSIGHTS DROPDOWN ================= */}
             {link.key === "insights" && insightDropdownVisible && (
               <DropdownWrapper className="visible">
                 <DropdownArrow />
@@ -223,7 +252,7 @@ const Header = () => {
               </DropdownWrapper>
             )}
 
-            {/* ABOUT DROPDOWN */}
+            {/* ================= ABOUT DROPDOWN ================= */}
             {link.key === "about" && aboutDropdownVisible && (
               <DropdownWrapper className="visible">
                 <DropdownArrow />
@@ -247,74 +276,75 @@ const Header = () => {
           <CloseIcon onClick={() => setVisibility(false)}>✕</CloseIcon>
         </DrawerHeader>
 
-        {navigationLinks.map((link) => (
-          <div key={link.key}>
-            <MobileNavItem
-              className={[
-                activeMenu === link.key ? "active" : "",
-                link.isButton ? "nav-button" : "",
-                link.primary ? "primary" : "",
-              ].join(" ")}
-              onClick={() => {
-                if (link.key === "product")
-                  setMobileProductDropdownVisible((p) => !p);
-                else if (link.key === "insights")
-                  setMobileInsightDropdownVisible((p) => !p);
-                else if (link.key === "about")
-                  setMobileAboutDropdownVisible((p) => !p);
-                else navigateWithMenu(link.path!);
-              }}
-            >
-              <span className="main-label">{link.label}</span>
+        {navigationLinks
+          .filter((link) => link.key !== "as-a") // 🔥 remove "as a" from mobile
+          .map((link) => (
+            <div key={link.key}>
+              <MobileNavItem
+                className={[
+                  activeMenu === link.key ? "active" : "",
+                  link.isButton ? "nav-button" : "",
+                  link.primary ? "primary" : "",
+                ].join(" ")}
+                onClick={() => {
+                  if (link.key === "product")
+                    setMobileProductDropdownVisible((p) => !p);
+                  else if (link.key === "insights")
+                    setMobileInsightDropdownVisible((p) => !p);
+                  else if (link.key === "about")
+                    setMobileAboutDropdownVisible((p) => !p);
+                  else navigateWithMenu(link.path!);
+                }}
+              >
+                <span className="main-label">{link.label}</span>
+                {link.isButton && <span className="arrow">→</span>}
+              </MobileNavItem>
 
-              {link.suffix && <span className="suffix">{link.suffix}</span>}
+              {/* MOBILE PRODUCT (DYNAMIC) */}
+              {link.key === "product" && mobileProductDropdownVisible && (
+                <MobileDropdown>
+                  {productLinks.map((item) => (
+                    <MobileDropdownItem
+                      key={item._id}
+                      onClick={() =>
+                        navigateWithMenu(`/ProductCompo/${item.slug}`)
+                      }
+                    >
+                      {item.title}
+                    </MobileDropdownItem>
+                  ))}
+                </MobileDropdown>
+              )}
 
-              {link.isButton && <span className="arrow">→</span>}
-            </MobileNavItem>
+              {/* MOBILE INSIGHTS */}
+              {link.key === "insights" && mobileInsightDropdownVisible && (
+                <MobileDropdown>
+                  {insightsDropdownLinks.map((item) => (
+                    <MobileDropdownItem
+                      key={item.path}
+                      onClick={() => navigateWithMenu(item.path)}
+                    >
+                      {item.label}
+                    </MobileDropdownItem>
+                  ))}
+                </MobileDropdown>
+              )}
 
-            {/* MOBILE PRODUCT */}
-            {link.key === "product" && mobileProductDropdownVisible && (
-              <MobileDropdown>
-                {productDropdownLinks.map((item) => (
-                  <MobileDropdownItem
-                    key={item.path}
-                    onClick={() => navigateWithMenu(item.path)}
-                  >
-                    {item.label}
-                  </MobileDropdownItem>
-                ))}
-              </MobileDropdown>
-            )}
-
-            {/* MOBILE INSIGHTS */}
-            {link.key === "insights" && mobileInsightDropdownVisible && (
-              <MobileDropdown>
-                {insightsDropdownLinks.map((item) => (
-                  <MobileDropdownItem
-                    key={item.path}
-                    onClick={() => navigateWithMenu(item.path)}
-                  >
-                    {item.label}
-                  </MobileDropdownItem>
-                ))}
-              </MobileDropdown>
-            )}
-
-            {/* MOBILE ABOUT */}
-            {link.key === "about" && mobileAboutDropdownVisible && (
-              <MobileDropdown>
-                {aboutDropdownLinks.map((item) => (
-                  <MobileDropdownItem
-                    key={item.path}
-                    onClick={() => navigateWithMenu(item.path)}
-                  >
-                    {item.label}
-                  </MobileDropdownItem>
-                ))}
-              </MobileDropdown>
-            )}
-          </div>
-        ))}
+              {/* MOBILE ABOUT */}
+              {link.key === "about" && mobileAboutDropdownVisible && (
+                <MobileDropdown>
+                  {aboutDropdownLinks.map((item) => (
+                    <MobileDropdownItem
+                      key={item.path}
+                      onClick={() => navigateWithMenu(item.path)}
+                    >
+                      {item.label}
+                    </MobileDropdownItem>
+                  ))}
+                </MobileDropdown>
+              )}
+            </div>
+          ))}
       </Drawer>
     </HeaderSection>
   );
