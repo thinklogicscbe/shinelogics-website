@@ -112,7 +112,7 @@ const Header = () => {
 
   const fetchHeaderProducts = async () => {
     try {
-      const res = await fetch("http://localhost:3006/api/products");
+      const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/products`);
       const data = await res.json();
       setProductLinks(data.result || []);
     } catch (err) {
@@ -228,7 +228,9 @@ const Header = () => {
                   <DropdownContent
                     key={item._id}
                     onClick={() =>
-                      navigateWithMenu(`/ProductCompo/${item.slug}`)
+                      navigateWithMenu(
+                        `/ProductCompo/${encodeURIComponent(item.slug)}`
+                      )
                     }
                   >
                     {item.title}

@@ -42,7 +42,7 @@ const EngagementModelAdmin = () => {
   const [challenge, setChallenge] = useState("");
   const [features, setFeatures] = useState<string[]>([""]);
 
-  const API_URL = "http://localhost:3006/api/engagement-models";
+  const API_URL = `${process.env.REACT_APP_BACKEND_URL}/engagement-models`;
 
   const fetchModels = async () => {
     const res = await axios.get(API_URL);

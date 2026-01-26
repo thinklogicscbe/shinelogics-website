@@ -44,7 +44,7 @@ type Product = {
   isActive: boolean;
 };
 
-const API_BASE = "http://localhost:3006/api/products";
+const API_BASE = `${process.env.REACT_APP_BACKEND_URL}/products`;
 
 const AdminProducts = () => {
   const [products, setProducts] = useState<Product[]>([]);

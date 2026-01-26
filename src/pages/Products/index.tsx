@@ -14,7 +14,7 @@ type Product = {
   businessValue: string[];
 };
 
-const API_BASE = "http://localhost:3006/api/products";
+const API_BASE = `${process.env.REACT_APP_BACKEND_URL}/products`;
 
 const ProductDynamic: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();

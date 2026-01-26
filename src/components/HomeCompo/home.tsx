@@ -10,7 +10,7 @@ import {
   ButtonGroup,
 } from "./style";
 
-const API_URL = "http://localhost:3006/api/home-content";
+const API_URL = `${process.env.REACT_APP_BACKEND_URL}/home-content`;
 
 interface HomeContent {
   _id: string;

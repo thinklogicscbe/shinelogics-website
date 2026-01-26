@@ -11,7 +11,7 @@ import {
   Description,
 } from "./styles";
 
-const API_URL = "http://localhost:3006/api/experts";
+const API_URL = `${process.env.REACT_APP_BACKEND_URL}/experts`;
 
 const Experts = () => {
   const [experts, setExperts] = useState([]);

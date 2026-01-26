@@ -118,7 +118,7 @@ const Footer = () => {
 
       {/* ===== Bottom Bar ===== */}
       <FooterBottom>
-        © 2025 Shinelogics — Secure, Intelligent, Future-Ready Technology
+        © {new Date().getFullYear()} Shinelogics — Secure, Intelligent, Future-Ready Technology
         Solutions
         <br />
         Designed for Modern Businesses | Security First | Innovation Always

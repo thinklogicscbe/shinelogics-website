@@ -33,7 +33,7 @@ interface Resource {
   ctaLink?: string;
 }
 
-const API_URL = "http://localhost:3006/api/resources";
+const API_URL = `${process.env.REACT_APP_BACKEND_URL}/resources`;
 
 const ResourcesAdmin = () => {
   const [resources, setResources] = useState<Resource[]>([]);
