@@ -32,11 +32,17 @@ type ActiveMenu =
   | "quickmvp"
   | "";
 
-/* 🔥 NEW: Product Type for Header */
+/* 🔥 Product Type */
 type HeaderProduct = {
   _id: string;
   title: string;
   slug: string;
+};
+
+/* 🔥 Service Type */
+type HeaderService = {
+  _id: string;
+  title: string;
 };
 
 /* ================= ROUTE GROUPS ================= */
@@ -51,13 +57,11 @@ const insightsRoutes = ["/career", "/engagementModels", "/Blog-Resource"];
 
 /* ================= DROPDOWN DATA ================= */
 
-/* INSIGHTS (UNCHANGED) */
 const insightsDropdownLinks = [
   { path: "/engagementModels", label: "Engagement Models" },
   { path: "/Blog-Resource", label: "Blog & Resources" },
 ];
 
-/* ABOUT (UNCHANGED) */
 const aboutDropdownLinks = [
   { path: "/career", label: "Career" },
   { path: "/about/mission", label: "Mission & Vision" },
@@ -75,28 +79,33 @@ const Header = () => {
   const [activeMenu, setActiveMenu] = useState<ActiveMenu>("");
 
   const [productDropdownVisible, setProductDropdownVisible] = useState(false);
+  const [serviceDropdownVisible, setServiceDropdownVisible] = useState(false);
   const [insightDropdownVisible, setInsightDropdownVisible] = useState(false);
   const [aboutDropdownVisible, setAboutDropdownVisible] = useState(false);
 
   const [mobileProductDropdownVisible, setMobileProductDropdownVisible] =
+    useState(false);
+  const [mobileServiceDropdownVisible, setMobileServiceDropdownVisible] =
     useState(false);
   const [mobileInsightDropdownVisible, setMobileInsightDropdownVisible] =
     useState(false);
   const [mobileAboutDropdownVisible, setMobileAboutDropdownVisible] =
     useState(false);
 
-  /* 🔥 NEW: Dynamic Products from Admin */
+  /* 🔥 Dynamic dropdown data */
   const [productLinks, setProductLinks] = useState<HeaderProduct[]>([]);
+  const [serviceLinks, setServiceLinks] = useState<HeaderService[]>([]);
 
   /* ================= EFFECTS ================= */
 
-  // Existing resize effect (UNCHANGED)
   useEffect(() => {
     const handleResize = () => {
       setProductDropdownVisible(false);
+      setServiceDropdownVisible(false);
       setInsightDropdownVisible(false);
       setAboutDropdownVisible(false);
       setMobileProductDropdownVisible(false);
+      setMobileServiceDropdownVisible(false);
       setMobileInsightDropdownVisible(false);
       setMobileAboutDropdownVisible(false);
     };
@@ -105,9 +114,10 @@ const Header = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // 🔥 NEW: Fetch products for header dropdown
+  /* 🔥 Fetch products */
   useEffect(() => {
     fetchHeaderProducts();
+    fetchHeaderServices();
   }, []);
 
   const fetchHeaderProducts = async () => {
@@ -120,13 +130,23 @@ const Header = () => {
     }
   };
 
+  const fetchHeaderServices = async () => {
+    try {
+      const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/service`);
+      const data = await res.json();
+      setServiceLinks(data.data || []);
+    } catch (err) {
+      console.error("Failed to load services for header", err);
+    }
+  };
+
   /* ================= NAVIGATION HANDLER ================= */
 
   const navigateWithMenu = (path: string) => {
     if (productRoutes.includes(path)) setActiveMenu("product");
+    else if (path.startsWith("/service")) setActiveMenu("service");
     else if (insightsRoutes.includes(path)) setActiveMenu("insights");
     else if (path.startsWith("/about")) setActiveMenu("about");
-    else if (path === "/service") setActiveMenu("service");
     else if (path === "/contact") setActiveMenu("contact");
     else if (path === "/quickmvp") setActiveMenu("quickmvp");
     else setActiveMenu("");
@@ -135,9 +155,11 @@ const Header = () => {
 
     setVisibility(false);
     setProductDropdownVisible(false);
+    setServiceDropdownVisible(false);
     setInsightDropdownVisible(false);
     setAboutDropdownVisible(false);
     setMobileProductDropdownVisible(false);
+    setMobileServiceDropdownVisible(false);
     setMobileInsightDropdownVisible(false);
     setMobileAboutDropdownVisible(false);
   };
@@ -146,10 +168,8 @@ const Header = () => {
 
   const navigationLinks = [
     { key: "product", label: "Products", hasDropdown: true },
-
     { key: "as-a", label: "as a", isStatic: true },
-
-    { key: "service", path: "/service", label: "Service" },
+    { key: "service", path: "/service", label: "Service", hasDropdown: true },
     { key: "insights", label: "Insights", hasDropdown: true },
     { key: "about", label: "About", hasDropdown: true },
     {
@@ -181,7 +201,7 @@ const Header = () => {
         <div />
       </Burger>
 
-      {/* DESKTOP NAV */}
+      {/* ================= DESKTOP NAV ================= */}
       <NavLinks>
         {navigationLinks.map((link) => (
           <div
@@ -189,11 +209,13 @@ const Header = () => {
             style={{ position: "relative" }}
             onMouseEnter={() => {
               if (link.key === "product") setProductDropdownVisible(true);
+              if (link.key === "service") setServiceDropdownVisible(true);
               if (link.key === "insights") setInsightDropdownVisible(true);
               if (link.key === "about") setAboutDropdownVisible(true);
             }}
             onMouseLeave={() => {
               setProductDropdownVisible(false);
+              setServiceDropdownVisible(false);
               setInsightDropdownVisible(false);
               setAboutDropdownVisible(false);
             }}
@@ -220,7 +242,7 @@ const Header = () => {
               </StyledButton>
             )}
 
-            {/* ================= PRODUCT DROPDOWN (DYNAMIC) ================= */}
+            {/* PRODUCT DROPDOWN */}
             {link.key === "product" && productDropdownVisible && (
               <DropdownWrapper className="visible">
                 <DropdownArrow />
@@ -229,7 +251,7 @@ const Header = () => {
                     key={item._id}
                     onClick={() =>
                       navigateWithMenu(
-                        `/ProductCompo/${encodeURIComponent(item.slug)}`
+                        `/ProductCompo/${encodeURIComponent(item.slug)}`,
                       )
                     }
                   >
@@ -239,7 +261,26 @@ const Header = () => {
               </DropdownWrapper>
             )}
 
-            {/* ================= INSIGHTS DROPDOWN ================= */}
+            {/* SERVICE DROPDOWN */}
+            {link.key === "service" && serviceDropdownVisible && (
+              <DropdownWrapper className="visible">
+                <DropdownArrow />
+                {serviceLinks.map((item) => (
+                  <DropdownContent
+                    key={item._id}
+                    onClick={() => {
+                      navigate(`/service?id=${item._id}`);
+                      window.dispatchEvent(new PopStateEvent("popstate"));
+                      setServiceDropdownVisible(false);
+                    }}
+                  >
+                    {item.title}
+                  </DropdownContent>
+                ))}
+              </DropdownWrapper>
+            )}
+
+            {/* INSIGHTS DROPDOWN */}
             {link.key === "insights" && insightDropdownVisible && (
               <DropdownWrapper className="visible">
                 <DropdownArrow />
@@ -254,7 +295,7 @@ const Header = () => {
               </DropdownWrapper>
             )}
 
-            {/* ================= ABOUT DROPDOWN ================= */}
+            {/* ABOUT DROPDOWN */}
             {link.key === "about" && aboutDropdownVisible && (
               <DropdownWrapper className="visible">
                 <DropdownArrow />
@@ -272,14 +313,14 @@ const Header = () => {
         ))}
       </NavLinks>
 
-      {/* MOBILE DRAWER */}
+      {/* ================= MOBILE DRAWER ================= */}
       <Drawer open={visible} placement="right" closable={false} width={300}>
         <DrawerHeader>
           <CloseIcon onClick={() => setVisibility(false)}>✕</CloseIcon>
         </DrawerHeader>
 
         {navigationLinks
-          .filter((link) => link.key !== "as-a") // 🔥 remove "as a" from mobile
+          .filter((link) => link.key !== "as-a")
           .map((link) => (
             <div key={link.key}>
               <MobileNavItem
@@ -291,6 +332,8 @@ const Header = () => {
                 onClick={() => {
                   if (link.key === "product")
                     setMobileProductDropdownVisible((p) => !p);
+                  else if (link.key === "service")
+                    setMobileServiceDropdownVisible((p) => !p);
                   else if (link.key === "insights")
                     setMobileInsightDropdownVisible((p) => !p);
                   else if (link.key === "about")
@@ -302,15 +345,36 @@ const Header = () => {
                 {link.isButton && <span className="arrow">→</span>}
               </MobileNavItem>
 
-              {/* MOBILE PRODUCT (DYNAMIC) */}
+              {/* MOBILE PRODUCT */}
               {link.key === "product" && mobileProductDropdownVisible && (
                 <MobileDropdown>
                   {productLinks.map((item) => (
                     <MobileDropdownItem
                       key={item._id}
                       onClick={() =>
-                        navigateWithMenu(`/ProductCompo/${item.slug}`)
+                        navigateWithMenu(
+                          `/ProductCompo/${encodeURIComponent(item.slug)}`,
+                        )
                       }
+                    >
+                      {item.title}
+                    </MobileDropdownItem>
+                  ))}
+                </MobileDropdown>
+              )}
+
+              {/* MOBILE SERVICE */}
+              {link.key === "service" && mobileServiceDropdownVisible && (
+                <MobileDropdown>
+                  {serviceLinks.map((item) => (
+                    <MobileDropdownItem
+                      key={item._id}
+                      onClick={() => {
+                        navigate(`/service?id=${item._id}`);
+                        window.dispatchEvent(new PopStateEvent("popstate"));
+                        setVisibility(false);
+                        setMobileServiceDropdownVisible(false);
+                      }}
                     >
                       {item.title}
                     </MobileDropdownItem>

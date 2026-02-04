@@ -26,6 +26,9 @@ import ResourceAdmin from "../ResourceAdmin";
 import ExpertAdmin from "../ExpertAdmin";
 import AdminBanner from "../AdminBanner";
 import AdminProducts from "../AdminProducts";
+import AdminQuickMvp from "../AdminQuickMvp";
+import AdminCustomPlanOptions from "../AdminCustomPlanOptions"; // 🔥 NEW
+import AdminServicePage from "../AdminServicePage";
 
 // 🔹 Assets
 import logo1 from "../../assets/shinelogics-logo.png";
@@ -40,7 +43,10 @@ type AdminComponent =
   | "EngagementModels"
   | "ResourceAdmin"
   | "ExpertsAdmin"
-  | "AdminProducts";
+  | "AdminProducts"
+  | "QuickMvpAdmin"
+  | "CustomPlanOptions"
+  | "AdminServices"; // ✅ NEW // 🔥 NEW
 
 const SideBar: React.FC = () => {
   const navigate = useNavigate();
@@ -48,7 +54,8 @@ const SideBar: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
   const [selectedComponent, setSelectedComponent] = useState<AdminComponent>(
-    (localStorage.getItem("selectedComponent") as AdminComponent) || "Dashboard"
+    (localStorage.getItem("selectedComponent") as AdminComponent) ||
+      "Dashboard",
   );
 
   // 🔹 Navigation handler
@@ -67,22 +74,39 @@ const SideBar: React.FC = () => {
   // 🔹 Render Selected Component
   const renderComponent = () => {
     switch (selectedComponent) {
+      case "AdminServices":
+        return <AdminServicePage />;
+
       case "PostJob":
         return <PostJob />;
+
       case "ViewJobs":
         return <ViewJobs />;
+
       case "ViewResumes":
         return <ViewProfile />;
+
       case "EngagementModels":
         return <EngagementModelAdmin />;
+
       case "ResourceAdmin":
         return <ResourceAdmin />;
+
       case "ExpertsAdmin":
         return <ExpertAdmin />;
+
       case "AdminBanner":
         return <AdminBanner />;
-      case "AdminProducts": // 👈 ADD
-        return <AdminProducts />; // 👈 ADD
+
+      case "AdminProducts":
+        return <AdminProducts />;
+
+      case "QuickMvpAdmin":
+        return <AdminQuickMvp />;
+
+      case "CustomPlanOptions":
+        return <AdminCustomPlanOptions />;
+
       case "Dashboard":
       default:
         return <Dashboard />;
@@ -113,6 +137,29 @@ const SideBar: React.FC = () => {
               onClick={() => handleNavigation("Dashboard")}
             >
               Dashboard
+            </NavItem>
+
+            <NavItem
+              active={selectedComponent === "AdminServices"}
+              onClick={() => handleNavigation("AdminServices")}
+            >
+              Services
+            </NavItem>
+
+            {/* 🔥 Quick MVP */}
+            <NavItem
+              active={selectedComponent === "QuickMvpAdmin"}
+              onClick={() => handleNavigation("QuickMvpAdmin")}
+            >
+              Quick MVP Plans
+            </NavItem>
+
+            {/* 🔥 Custom Plan Options */}
+            <NavItem
+              active={selectedComponent === "CustomPlanOptions"}
+              onClick={() => handleNavigation("CustomPlanOptions")}
+            >
+              Custom Plan Options
             </NavItem>
 
             <NavItem

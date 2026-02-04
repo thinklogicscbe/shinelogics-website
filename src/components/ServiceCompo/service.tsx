@@ -1,11 +1,8 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   SectionContainer,
-  SliderContainer,
-  ServiceBox,
   DetailsContainer,
-  ServiceTitle,
-  ServiceItem,
   Title,
   DescriptionTitle,
   DescriptionText,
@@ -14,90 +11,71 @@ import {
   ServiceCard,
   CardImage,
   CardContent,
-  CTAWrapper,
-  CTAButton,
 } from "./style";
 
-import { serviceData, ServiceKey } from "./servicesData";
+/* ================= TYPES ================= */
 
-/* ✅ derive keys safely */
-const keys = Object.keys(serviceData) as ServiceKey[];
+interface Expertise {
+  key: string;
+  image: string;
+  description: string[];
+}
 
-const Service: React.FC = () => {
-  const [selectedServiceKey, setSelectedServiceKey] = useState<ServiceKey>(
-    keys[0]
-  );
+interface Service {
+  _id: string;
+  title: string;
+  description: string;
+  image: string;
+  cta: string;
+  expertise: Expertise[];
+}
 
-  const [selectedService, setSelectedService] = useState<
-    (typeof serviceData)[ServiceKey]
-  >(serviceData[keys[0]]);
+/* ================= API ================= */
 
-  const sliderContainerRef = useRef<HTMLDivElement>(null);
+const API = `${process.env.REACT_APP_BACKEND_URL}/service`;
 
-  const handleServiceClick = (key: ServiceKey) => {
-    setSelectedServiceKey(key);
-    setSelectedService(serviceData[key]);
-  };
+/* ================= COMPONENT ================= */
 
-  const handleWheel = (event: WheelEvent) => {
-    if (!sliderContainerRef.current) return;
+const ServicePage: React.FC = () => {
+  const [service, setService] = useState<Service | null>(null);
 
-    if (event.deltaY !== 0) {
-      sliderContainerRef.current.scrollLeft += event.deltaY;
-      event.preventDefault();
-    }
-  };
+  /* ================= FETCH SERVICE ================= */
 
   useEffect(() => {
-    const slider = sliderContainerRef.current;
-    if (!slider) return;
+    const fetchService = async () => {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const serviceId = params.get("id");
 
-    slider.addEventListener("wheel", handleWheel, { passive: false });
-
-    return () => {
-      slider.removeEventListener("wheel", handleWheel);
+        // ✅ IF ID EXISTS → GET SINGLE SERVICE
+        if (serviceId) {
+          const res = await axios.get(`${API}/${serviceId}`);
+          setService(res.data.data);
+        } 
+        // ✅ FALLBACK → FIRST SERVICE
+        else {
+          const res = await axios.get(API);
+          setService(res.data.data?.[0] || null);
+        }
+      } catch (error) {
+        console.error("Failed to fetch service", error);
+      }
     };
+
+    fetchService();
+
+    // 🔥 handle header clicks on same route
+    window.addEventListener("popstate", fetchService);
+    return () => window.removeEventListener("popstate", fetchService);
   }, []);
+
+  if (!service) return null;
+
+  /* ================= UI ================= */
 
   return (
     <SectionContainer>
-      <h1
-        style={{
-          textAlign: "center",
-          marginTop: "20px",
-          marginBottom: "60px",
-          fontSize: "24px",
-          fontWeight: "bold",
-        }}
-      >
-        OUR SERVICES
-      </h1>
-
-      {/* ================= SLIDER ================= */}
-      <SliderContainer ref={sliderContainerRef}>
-        {keys.map((key, index) => (
-          <ServiceItem key={key}>
-            <ServiceBox
-              active={selectedServiceKey === key}
-              onClick={() => handleServiceClick(key)}
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <img
-                src={serviceData[key].image}
-                alt={serviceData[key].title}
-                loading="lazy"
-              />
-            </ServiceBox>
-
-            <ServiceTitle active={selectedServiceKey === key}>
-              {serviceData[key].title}
-            </ServiceTitle>
-          </ServiceItem>
-        ))}
-      </SliderContainer>
-
-      {/* ================= DETAILS ================= */}
-      <Title>{selectedService.title}</Title>
+      <Title>{service.title}</Title>
 
       <DescriptionText
         style={{
@@ -106,45 +84,34 @@ const Service: React.FC = () => {
           fontSize: "18px",
         }}
       >
-        {selectedService.description}
+        {service.description}
       </DescriptionText>
 
       <DetailsContainer>
         <CardsGrid>
-          {Object.entries(selectedService.expertise).map(
-            ([expertiseKey, expertise]) => (
-              <ServiceCard key={expertiseKey}>
-                <CardImage>
-                  <img
-                    src={expertise.image}
-                    alt={expertiseKey}
-                    loading="lazy"
-                  />
-                </CardImage>
+          {service.expertise.map((exp, index) => (
+            <ServiceCard key={index}>
+              <CardImage>
+                <img src={exp.image} alt={exp.key} loading="lazy" />
+              </CardImage>
 
-                <CardContent>
-                  <DescriptionTitle>
-                    {expertiseKey.replace(/_/g, " ")}
-                  </DescriptionTitle>
+              <CardContent>
+                <DescriptionTitle>
+                  {exp.key.replace(/_/g, " ")}
+                </DescriptionTitle>
 
-                  <DescriptionText1>
-                    {expertise.description.map(
-                      (item: string, index: number) => (
-                        <li key={index}>{item}</li>
-                      )
-                    )}
-                  </DescriptionText1>
-                </CardContent>
-              </ServiceCard>
-            )
-          )}
+                <DescriptionText1>
+                  {exp.description.map((item, i) => (
+                    <li key={i}>{item}</li>
+                  ))}
+                </DescriptionText1>
+              </CardContent>
+            </ServiceCard>
+          ))}
         </CardsGrid>
-        <CTAWrapper>
-          <CTAButton>{selectedService.cta}</CTAButton>
-        </CTAWrapper>
       </DetailsContainer>
     </SectionContainer>
   );
 };
 
-export default Service;
+export default ServicePage;
