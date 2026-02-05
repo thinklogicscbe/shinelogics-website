@@ -26,14 +26,18 @@ import {
   CloseButton,
 } from "./style";
 
+import { uploadFileToS3 } from "../API/s3Upload";
+
 /* ================= TYPES ================= */
 
 interface Expertise {
   key: string;
   description: string[];
+  image?: string;
+  video?: string;
 }
 
-interface ExpertiseImage {
+interface ExpertiseMedia {
   file: File | null;
   existing?: string;
 }
@@ -75,10 +79,11 @@ const AdminServicePage: React.FC = () => {
 
   const [serviceImage, setServiceImage] = useState<File | null>(null);
   const [expertise, setExpertise] = useState<Expertise[]>([]);
-  const [expertiseImages, setExpertiseImages] = useState<ExpertiseImage[]>([]);
+  const [expertiseImages, setExpertiseImages] = useState<ExpertiseMedia[]>([]);
+  const [expertiseVideos, setExpertiseVideos] = useState<ExpertiseMedia[]>([]);
   const [loading, setLoading] = useState(false);
 
-  /* ================= FETCH LIST ================= */
+  /* ================= FETCH ================= */
 
   useEffect(() => {
     fetchServices();
@@ -89,45 +94,50 @@ const AdminServicePage: React.FC = () => {
     setServices(res.data.data || []);
   };
 
-  /* ================= EDIT (AUTO-FILL) ================= */
+  /* ================= EDIT ================= */
 
   const handleEdit = async (id: string) => {
-    try {
-      const res = await axios.get(`${API}/${id}`);
-      const data = res.data.data;
+    const res = await axios.get(`${API}/${id}`);
+    const data = res.data.data;
 
-      setService({
-        title: data.title || "",
-        slug: data.slug || "",
-        description: data.description || "",
-        overview: data.overview || "",
-        cta: data.cta || "",
-        image: data.image || "",
-      });
+    setService({
+      title: data.title || "",
+      slug: data.slug || "",
+      description: data.description || "",
+      overview: data.overview || "",
+      cta: data.cta || "",
+      image: data.image || "",
+    });
 
-      setExpertise(
-        (data.expertise || []).map((exp: any) => ({
-          key: exp.key,
-          description: exp.description || [],
-        }))
-      );
+    setExpertise(
+      (data.expertise || []).map((exp: any) => ({
+        key: exp.key,
+        description: exp.description || [],
+        image: exp.image || "",
+        video: exp.video || "",
+      }))
+    );
 
-      setExpertiseImages(
-        (data.expertise || []).map((exp: any) => ({
-          file: null,
-          existing: exp.image || "",
-        }))
-      );
+    setExpertiseImages(
+      (data.expertise || []).map((exp: any) => ({
+        file: null,
+        existing: exp.image || "",
+      }))
+    );
 
-      setServiceImage(null);
-      setEditingId(id);
-      setShowForm(true);
-    } catch {
-      alert("Failed to load service details");
-    }
+    setExpertiseVideos(
+      (data.expertise || []).map((exp: any) => ({
+        file: null,
+        existing: exp.video || "",
+      }))
+    );
+
+    setServiceImage(null);
+    setEditingId(id);
+    setShowForm(true);
   };
 
-  /* ================= FORM HANDLERS ================= */
+  /* ================= FORM ================= */
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -136,18 +146,9 @@ const AdminServicePage: React.FC = () => {
   };
 
   const addExpertise = () => {
-    setExpertise([...expertise, { key: "", description: [""] }]);
+    setExpertise([...expertise, { key: "", description: [] }]);
     setExpertiseImages([...expertiseImages, { file: null }]);
-  };
-
-  const updateExpertise = (
-    index: number,
-    field: keyof Expertise,
-    value: any
-  ) => {
-    const updated = [...expertise];
-    updated[index][field] = value;
-    setExpertise(updated);
+    setExpertiseVideos([...expertiseVideos, { file: null }]);
   };
 
   const updateBullet = (
@@ -166,57 +167,64 @@ const AdminServicePage: React.FC = () => {
     setExpertise(updated);
   };
 
-  const handleExpertiseImageChange = (index: number, file: File | null) => {
-    const updated = [...expertiseImages];
-    updated[index].file = file;
-    setExpertiseImages(updated);
-  };
-
-  /* ================= SUBMIT ================= */
+  /* ================= SUBMIT (PRESIGNED UPLOAD) ================= */
 
   const submitService = async () => {
     try {
       setLoading(true);
-      const formData = new FormData();
 
-      Object.entries(service).forEach(([key, value]) => {
-        if (value) formData.append(key, value);
-      });
-
+      // 1️⃣ Upload service image
+      let serviceImageUrl = service.image || "";
       if (serviceImage) {
-        formData.append("image", serviceImage);
+        serviceImageUrl = await uploadFileToS3(serviceImage);
       }
 
-      formData.append("expertise", JSON.stringify(expertise));
+      // 2️⃣ Upload expertise media
+      const updatedExpertise = await Promise.all(
+        expertise.map(async (exp, index) => {
+          let imageUrl = expertiseImages[index]?.existing || "";
+          let videoUrl = expertiseVideos[index]?.existing || "";
 
-      expertise.forEach((_, index) => {
-        const file = expertiseImages[index]?.file;
-        if (file) {
-          formData.append(`expertiseImage_${index}`, file);
-        }
-      });
+          if (expertiseImages[index]?.file) {
+            imageUrl = await uploadFileToS3(
+              expertiseImages[index].file!
+            );
+          }
+
+          if (expertiseVideos[index]?.file) {
+            videoUrl = await uploadFileToS3(
+              expertiseVideos[index].file!
+            );
+          }
+
+          return {
+            ...exp,
+            image: imageUrl,
+            video: videoUrl,
+          };
+        })
+      );
+
+      // 3️⃣ Send JSON payload only
+      const payload = {
+        ...service,
+        image: serviceImageUrl,
+        expertise: updatedExpertise,
+      };
 
       if (editingId) {
-        await axios.put(`${API}/${editingId}`, formData);
+        await axios.put(`${API}/${editingId}`, payload);
       } else {
-        await axios.post(API, formData);
+        await axios.post(API, payload);
       }
 
       resetForm();
       fetchServices();
-    } catch (error: any) {
-      alert(error.response?.data?.message || "Error saving service");
+    } catch (err: any) {
+      alert(err.message || "Error saving service");
     } finally {
       setLoading(false);
     }
-  };
-
-  /* ================= DELETE ================= */
-
-  const deleteService = async (id: string) => {
-    if (!window.confirm("Delete this service?")) return;
-    await axios.delete(`${API}/${id}`);
-    fetchServices();
   };
 
   /* ================= RESET ================= */
@@ -234,6 +242,7 @@ const AdminServicePage: React.FC = () => {
     setServiceImage(null);
     setExpertise([]);
     setExpertiseImages([]);
+    setExpertiseVideos([]);
   };
 
   /* ================= UI ================= */
@@ -249,17 +258,17 @@ const AdminServicePage: React.FC = () => {
 
       {!showForm && (
         <CardGrid>
-          {services.map((service) => (
-            <ServiceCardBox key={service._id}>
-              <ServiceImage src={service.image} />
-              <ServiceName>{service.title}</ServiceName>
-              <ServiceDesc>{service.description}</ServiceDesc>
+          {services.map((s) => (
+            <ServiceCardBox key={s._id}>
+              <ServiceImage src={s.image} />
+              <ServiceName>{s.title}</ServiceName>
+              <ServiceDesc>{s.description}</ServiceDesc>
 
               <CardActions>
-                <ActionButton onClick={() => handleEdit(service._id)}>
+                <ActionButton onClick={() => handleEdit(s._id)}>
                   Edit
                 </ActionButton>
-                <ActionButton danger onClick={() => deleteService(service._id)}>
+                <ActionButton danger onClick={() => axios.delete(`${API}/${s._id}`).then(fetchServices)}>
                   Delete
                 </ActionButton>
               </CardActions>
@@ -292,21 +301,7 @@ const AdminServicePage: React.FC = () => {
 
           <Field>
             <Label>Service Image</Label>
-
-            {service.image && !serviceImage && (
-              <img
-                src={service.image}
-                alt="service"
-                style={{ width: 150, marginBottom: 10 }}
-              />
-            )}
-
-            <Input
-              type="file"
-              onChange={(e) =>
-                setServiceImage(e.target.files?.[0] || null)
-              }
-            />
+            <Input type="file" onChange={(e) => setServiceImage(e.target.files?.[0] || null)} />
           </Field>
 
           <Divider />
@@ -317,43 +312,30 @@ const AdminServicePage: React.FC = () => {
               <Input
                 placeholder="Expertise Key"
                 value={exp.key}
-                onChange={(e) =>
-                  updateExpertise(index, "key", e.target.value)
-                }
+                onChange={(e) => {
+                  const updated = [...expertise];
+                  updated[index].key = e.target.value;
+                  setExpertise(updated);
+                }}
               />
 
-              {expertiseImages[index]?.existing &&
-                !expertiseImages[index]?.file && (
-                  <img
-                    src={expertiseImages[index].existing}
-                    alt="expertise"
-                    style={{ width: 120, marginBottom: 8 }}
-                  />
-                )}
+              <Input type="file" onChange={(e) => {
+                const updated = [...expertiseImages];
+                updated[index].file = e.target.files?.[0] || null;
+                setExpertiseImages(updated);
+              }} />
 
-              <Input
-                type="file"
-                onChange={(e) =>
-                  handleExpertiseImageChange(
-                    index,
-                    e.target.files?.[0] || null
-                  )
-                }
-              />
+              <Input type="file" accept="video/*" onChange={(e) => {
+                const updated = [...expertiseVideos];
+                updated[index].file = e.target.files?.[0] || null;
+                setExpertiseVideos(updated);
+              }} />
 
-              {exp.description.map((bullet, bIndex) => (
-                <Input
-                  key={bIndex}
-                  value={bullet}
-                  onChange={(e) =>
-                    updateBullet(index, bIndex, e.target.value)
-                  }
-                />
+              {exp.description.map((b, i) => (
+                <Input key={i} value={b} onChange={(e) => updateBullet(index, i, e.target.value)} />
               ))}
 
-              <SmallButton onClick={() => addBullet(index)}>
-                + Add Bullet
-              </SmallButton>
+              <SmallButton onClick={() => addBullet(index)}>+ Add Bullet</SmallButton>
             </ExpertiseCard>
           ))}
 

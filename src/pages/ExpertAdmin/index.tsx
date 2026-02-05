@@ -20,6 +20,10 @@ import {
   Input,
 } from "./style";
 
+import { uploadFileToS3 } from "../API/s3Upload";
+
+/* ================= TYPES ================= */
+
 interface Expert {
   _id: string;
   name: string;
@@ -27,9 +31,7 @@ interface Expert {
   image: string;
 }
 
-
 const API_URL = `${process.env.REACT_APP_BACKEND_URL}/experts`;
-
 
 const ExpertAdmin: React.FC = () => {
   const [experts, setExperts] = useState<Expert[]>([]);
@@ -38,16 +40,18 @@ const ExpertAdmin: React.FC = () => {
 
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
-  const [imageFile, setImageFile] = useState<File | null>(null);
 
-  /* ================= FETCH EXPERTS ================= */
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [existingImage, setExistingImage] = useState<string>("");
+
+  /* ================= FETCH ================= */
+
   const fetchExperts = async () => {
     try {
       const res = await axios.get(API_URL);
-      // ✅ FIX: backend sends `result`, not `data`
       setExperts(res.data.result || []);
-    } catch (error) {
-      console.error("Failed to fetch experts", error);
+    } catch (err) {
+      console.error("Failed to fetch experts", err);
     }
   };
 
@@ -55,67 +59,87 @@ const ExpertAdmin: React.FC = () => {
     fetchExperts();
   }, []);
 
-  /* ================= RESET FORM ================= */
+  /* ================= RESET ================= */
+
   const resetForm = () => {
     setOpen(false);
     setEditingId(null);
     setName("");
     setRole("");
     setImageFile(null);
+    setExistingImage("");
   };
 
-  /* ================= SUBMIT ================= */
+  /* ================= SUBMIT (PRESIGNED UPLOAD) ================= */
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("role", role);
-    if (imageFile) formData.append("image", imageFile);
-
     try {
+      // 1️⃣ Upload image if new
+      let imageUrl = existingImage;
+
+      if (imageFile) {
+        imageUrl = await uploadFileToS3(imageFile);
+      }
+
+      if (!imageUrl) {
+        alert("Image is required");
+        return;
+      }
+
+      // 2️⃣ Send JSON payload
+      const payload = {
+        name,
+        role,
+        image: imageUrl,
+      };
+
       if (editingId) {
-        await axios.put(`${API_URL}/${editingId}`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        await axios.put(`${API_URL}/${editingId}`, payload);
       } else {
-        await axios.post(API_URL, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        await axios.post(API_URL, payload);
       }
 
       resetForm();
       fetchExperts();
-    } catch (error) {
-      console.error("Failed to save expert", error);
+    } catch (err) {
+      console.error("Failed to save expert", err);
+      alert("Failed to save expert");
     }
   };
 
   /* ================= EDIT ================= */
+
   const handleEdit = (expert: Expert) => {
     setEditingId(expert._id);
     setName(expert.name);
     setRole(expert.role);
+    setExistingImage(expert.image);
     setImageFile(null);
     setOpen(true);
   };
 
   /* ================= DELETE ================= */
+
   const handleDelete = async (id: string) => {
     if (!window.confirm("Delete this expert?")) return;
 
     try {
       await axios.delete(`${API_URL}/${id}`);
       fetchExperts();
-    } catch (error) {
-      console.error("Failed to delete expert", error);
+    } catch (err) {
+      console.error("Failed to delete expert", err);
     }
   };
 
   /* ================= LOCK BODY SCROLL ================= */
+
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "auto";
   }, [open]);
+
+  /* ================= UI ================= */
 
   return (
     <PageWrapper>
@@ -186,7 +210,7 @@ const ExpertAdmin: React.FC = () => {
                 type="file"
                 accept="image/*"
                 onChange={(e) =>
-                  setImageFile(e.target.files ? e.target.files[0] : null)
+                  setImageFile(e.target.files?.[0] || null)
                 }
                 required={!editingId}
               />

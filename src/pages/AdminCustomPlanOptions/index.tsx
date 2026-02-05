@@ -38,6 +38,7 @@ type OptionRow = {
 const AdminCustomPlanOptions: React.FC = () => {
   const [options, setOptions] = useState<CustomPlanOption[]>([]);
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   const [rows, setRows] = useState<OptionRow[]>([
     { title: "", price: "" },
@@ -49,7 +50,8 @@ const AdminCustomPlanOptions: React.FC = () => {
 
   const API = `${process.env.REACT_APP_BACKEND_URL}/custom-plan-options`;
 
-  // LOAD
+  /* ================= LOAD ================= */
+
   const fetchOptions = async () => {
     try {
       const res = await fetch(API);
@@ -64,8 +66,13 @@ const AdminCustomPlanOptions: React.FC = () => {
     fetchOptions();
   }, []);
 
-  // ROW HANDLERS
-  const handleRowChange = (index: number, field: "title" | "price", value: string) => {
+  /* ================= ROW HANDLERS ================= */
+
+  const handleRowChange = (
+    index: number,
+    field: "title" | "price",
+    value: string
+  ) => {
     const updated = [...rows];
     updated[index][field] = value;
     setRows(updated);
@@ -80,7 +87,18 @@ const AdminCustomPlanOptions: React.FC = () => {
     setRows(rows.filter((_, i) => i !== index));
   };
 
-  // SUBMIT BULK
+  /* ================= EDIT ================= */
+
+  const handleEdit = (opt: CustomPlanOption) => {
+    setRows([{ title: opt.title, price: String(opt.price) }]);
+    setEditingId(opt._id);
+    setShowForm(true);
+    setSuccess("");
+    setError("");
+  };
+
+  /* ================= SUBMIT ================= */
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -88,31 +106,51 @@ const AdminCustomPlanOptions: React.FC = () => {
     setSuccess("");
 
     try {
-      for (const row of rows) {
-        if (!row.title || !row.price) continue;
-
-        await fetch(API, {
-          method: "POST",
+      // EDIT MODE
+      if (editingId) {
+        const row = rows[0];
+        await fetch(`${API}/${editingId}`, {
+          method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             title: row.title,
             price: Number(row.price),
           }),
         });
+
+        setSuccess("Option updated successfully!");
+      }
+      // CREATE MODE (bulk)
+      else {
+        for (const row of rows) {
+          if (!row.title || !row.price) continue;
+
+          await fetch(API, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              title: row.title,
+              price: Number(row.price),
+            }),
+          });
+        }
+
+        setSuccess("Multiple options created successfully!");
       }
 
-      setSuccess("Multiple options created successfully!");
       setRows([{ title: "", price: "" }]);
+      setEditingId(null);
       setShowForm(false);
       fetchOptions();
-    } catch (err) {
-      setError("Failed to create some options");
+    } catch {
+      setError("Failed to save option(s)");
     } finally {
       setLoading(false);
     }
   };
 
-  // DELETE
+  /* ================= DELETE ================= */
+
   const handleDelete = async (id: string) => {
     if (!window.confirm("Delete this option?")) return;
     await fetch(`${API}/${id}`, { method: "DELETE" });
@@ -123,7 +161,13 @@ const AdminCustomPlanOptions: React.FC = () => {
     <PageWrapper>
       <PageHeader>
         <PageTitle>Custom Plan Options</PageTitle>
-        <CreateButton onClick={() => setShowForm((p) => !p)}>
+        <CreateButton
+          onClick={() => {
+            setShowForm((p) => !p);
+            setEditingId(null);
+            setRows([{ title: "", price: "" }]);
+          }}
+        >
           {showForm ? "Close" : "+ Add Options"}
         </CreateButton>
       </PageHeader>
@@ -139,7 +183,9 @@ const AdminCustomPlanOptions: React.FC = () => {
                 <Label>Option Title</Label>
                 <Input
                   value={row.title}
-                  onChange={(e) => handleRowChange(index, "title", e.target.value)}
+                  onChange={(e) =>
+                    handleRowChange(index, "title", e.target.value)
+                  }
                   placeholder="e.g. Last 4 election strategy"
                   required
                 />
@@ -150,24 +196,37 @@ const AdminCustomPlanOptions: React.FC = () => {
                 <Input
                   type="number"
                   value={row.price}
-                  onChange={(e) => handleRowChange(index, "price", e.target.value)}
+                  onChange={(e) =>
+                    handleRowChange(index, "price", e.target.value)
+                  }
                   placeholder="e.g. 50000"
                   required
                 />
               </FieldGroup>
 
-              <RemoveRowButton type="button" onClick={() => removeRow(index)}>
-                ✕
-              </RemoveRowButton>
+              {!editingId && (
+                <RemoveRowButton
+                  type="button"
+                  onClick={() => removeRow(index)}
+                >
+                  ✕
+                </RemoveRowButton>
+              )}
             </RowGrid>
           ))}
 
-          <AddRowButton type="button" onClick={addRow}>
-            + Add Another Option
-          </AddRowButton>
+          {!editingId && (
+            <AddRowButton type="button" onClick={addRow}>
+              + Add Another Option
+            </AddRowButton>
+          )}
 
           <SubmitButton type="submit" disabled={loading}>
-            {loading ? "Saving..." : "Create All Options"}
+            {loading
+              ? "Saving..."
+              : editingId
+              ? "Update Option"
+              : "Create All Options"}
           </SubmitButton>
         </Form>
       )}
@@ -179,6 +238,9 @@ const AdminCustomPlanOptions: React.FC = () => {
             <CardPrice>₹ {opt.price.toLocaleString()}</CardPrice>
 
             <CardActions>
+              <EditButton onClick={() => handleEdit(opt)}>
+                Edit
+              </EditButton>
               <DeleteButton onClick={() => handleDelete(opt._id)}>
                 Delete
               </DeleteButton>

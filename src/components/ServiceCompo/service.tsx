@@ -17,7 +17,7 @@ import {
 
 interface Expertise {
   key: string;
-  image: string;
+  image: string; // image OR video URL
   description: string[];
 }
 
@@ -34,12 +34,15 @@ interface Service {
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/service`;
 
+/* ================= UTILS ================= */
+
+const isVideo = (url: string) =>
+  /\.(mp4|webm|ogg)$/i.test(url);
+
 /* ================= COMPONENT ================= */
 
 const ServicePage: React.FC = () => {
   const [service, setService] = useState<Service | null>(null);
-
-  /* ================= FETCH SERVICE ================= */
 
   useEffect(() => {
     const fetchService = async () => {
@@ -47,13 +50,10 @@ const ServicePage: React.FC = () => {
         const params = new URLSearchParams(window.location.search);
         const serviceId = params.get("id");
 
-        // ✅ IF ID EXISTS → GET SINGLE SERVICE
         if (serviceId) {
           const res = await axios.get(`${API}/${serviceId}`);
           setService(res.data.data);
-        } 
-        // ✅ FALLBACK → FIRST SERVICE
-        else {
+        } else {
           const res = await axios.get(API);
           setService(res.data.data?.[0] || null);
         }
@@ -63,8 +63,6 @@ const ServicePage: React.FC = () => {
     };
 
     fetchService();
-
-    // 🔥 handle header clicks on same route
     window.addEventListener("popstate", fetchService);
     return () => window.removeEventListener("popstate", fetchService);
   }, []);
@@ -92,12 +90,36 @@ const ServicePage: React.FC = () => {
           {service.expertise.map((exp, index) => (
             <ServiceCard key={index}>
               <CardImage>
-                <img src={exp.image} alt={exp.key} loading="lazy" />
+                {isVideo(exp.image) ? (
+                  <video
+                    src={exp.image}
+                    controls
+                    preload="metadata"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                  />
+                ) : (
+                  <img
+                    src={exp.image}
+                    alt={exp.key}
+                    loading="lazy"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                    }}
+                  />
+                )}
               </CardImage>
 
               <CardContent>
                 <DescriptionTitle>
-                  {exp.key.replace(/_/g, " ")}
+                  {exp.key}
                 </DescriptionTitle>
 
                 <DescriptionText1>
