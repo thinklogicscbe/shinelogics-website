@@ -39,7 +39,7 @@ export const HeroButton = styled.button`
   gap: 0.6rem;
   padding: 0.9rem 1.8rem;
   border-radius: 14px;
-  background: #0B1D45;
+  background: #0b1d45;
   color: #ffffff;
   font-size: 0.95rem;
   font-weight: 700;
@@ -77,7 +77,7 @@ export const OfferTitle = styled.h2`
   text-align: center;
   font-size: 2.6rem;
   font-weight: 800;
-  color: #0B1D45;
+  color: #0b1d45;
   margin-bottom: 4rem;
 `;
 
@@ -104,30 +104,13 @@ export const MvpBadge = styled.span`
   padding: 0.4rem 1rem;
   border-radius: 999px;
   background: #ede9fe;
-  color: #0B1D45;
+  color: #0b1d45;
   font-size: 0.85rem;
   font-weight: 600;
   margin-bottom: 1.2rem;
 `;
 
 /* ===== GRIDS ===== */
-
-export const OfferGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2.5rem;
-
-  @media (max-width: 1024px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-export const UseCaseGrid = OfferGrid;
-export const WhyGrid = OfferGrid;
 
 export const PricingGrid = styled.div`
   display: grid;
@@ -143,56 +126,7 @@ export const PricingGrid = styled.div`
   }
 `;
 
-/* ===== CARDS ===== */
-
-export const OfferCard = styled.div`
-  padding: 2.8rem;
-  border-radius: 24px;
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
-  transition: all 0.35s ease;
-
-  h3 {
-    color: #111827;
-    font-size: 1.4rem;
-    margin-bottom: 0.8rem;
-  }
-
-  p {
-    color: #4b5563;
-    line-height: 1.7;
-    font-size: 0.95rem;
-  }
-
-  &:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 35px 90px rgba(99, 102, 241, 0.2);
-  }
-`;
-
-export const UseCaseCard = OfferCard;
-export const WhyCard = OfferCard;
-
-/* ===== ICONS ===== */
-
-export const OfferIcon = styled.div`
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  background: #ede9fe;
-  color: #7c3aed;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.4rem;
-  margin-bottom: 1.6rem;
-`;
-
-export const UseCaseIcon = OfferIcon;
-export const WhyIcon = OfferIcon;
-
-/* ===== PRICING ===== */
+/* ===== PRICING CARDS ===== */
 
 export const PricingCard = styled.div<{
   featured?: boolean;
@@ -220,7 +154,6 @@ export const PricingCard = styled.div<{
 
   transition: all 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* 🔥 GLOW RING */
   &::before {
     content: "";
     position: absolute;
@@ -240,8 +173,7 @@ export const PricingCard = styled.div<{
   &:hover {
     transform: translateY(-12px)
       ${({ featured }) => (featured ? "scale(1.04)" : "scale(1.02)")};
-
-    box-shadow: 0 60px 160px rgba(99,102,241,.35);
+    box-shadow: 0 60px 160px rgba(99, 102, 241, 0.35);
   }
 
   &:hover::before {
@@ -252,13 +184,13 @@ export const PricingCard = styled.div<{
     font-size: 0.95rem;
     font-weight: 700;
     letter-spacing: 0.06em;
+    margin-bottom: 0.8rem;
     color: ${({ accent }) =>
       accent === "green"
         ? "#16a34a"
         : accent === "blue"
         ? "#4f46e5"
         : "#ca8a04"};
-    margin-bottom: 0.8rem;
   }
 
   h2 {
@@ -301,6 +233,7 @@ export const PricingCard = styled.div<{
   }
 `;
 
+/* ===== BUTTONS ===== */
 
 export const PricingButton = styled.button<{ secondary?: boolean }>`
   width: 100%;
@@ -310,22 +243,34 @@ export const PricingButton = styled.button<{ secondary?: boolean }>`
   font-size: 0.95rem;
   font-weight: 800;
   cursor: pointer;
+
   background: ${({ secondary }) =>
-    secondary
-      ? "#f3f4f6"
-      : "#0B1D45"};
+    secondary ? "#f3f4f6" : "#0b1d45"};
   color: ${({ secondary }) => (secondary ? "#111827" : "#ffffff")};
+
+  transition: all 0.25s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+  }
 `;
 
 export const PricingGhostButton = styled.button`
   width: 100%;
   margin-top: 0.9rem;
   padding: 0.85rem;
-  background: transparent;
+  background: rgba(250, 204, 21, 0.08);
   border: 1px dashed #facc15;
   border-radius: 14px;
   color: #92400e;
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 800;
   cursor: pointer;
+  transition: all 0.25s ease;
+
+  &:hover {
+    background: rgba(250, 204, 21, 0.15);
+    transform: translateY(-2px);
+  }
 `;

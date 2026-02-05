@@ -11,7 +11,7 @@ import {
   Description,
 } from "./styles";
 
-const API_URL = "https://www.shinelogics.com/api/experts";
+const API_URL = `${process.env.REACT_APP_BACKEND_URL}/experts`;
 
 const Experts = () => {
   const [experts, setExperts] = useState([]);

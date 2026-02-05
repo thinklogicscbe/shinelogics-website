@@ -25,7 +25,7 @@ interface Resource {
   ctaLink?: string;
 }
 
-const API_URL = "https://www.shinelogics.com/api/resources";
+const API_URL = `${process.env.REACT_APP_BACKEND_URL}/resources`;
 
 const Resources: React.FC = () => {
   const [resources, setResources] = useState<Resource[]>([]);

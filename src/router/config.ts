@@ -16,6 +16,7 @@ const routes = [
   { path: "/career", exact: true, component: "Career" },
   { path: "/privacyPolicy", exact: true, component: "PrivacyPolicy" },
   { path: "/productEngineering", exact: true, component: "ProductEngineering" },
+  { path: "/custom-plan", exact: true, component: "CustomPlanForm" },
   {
     path: "/resourseEngineering",
     exact: true,
