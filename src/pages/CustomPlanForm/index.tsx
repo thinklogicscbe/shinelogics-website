@@ -19,6 +19,8 @@ import {
   ErrorText,
 } from "./style";
 
+/* ================= TYPES ================= */
+
 type CustomPlanOption = {
   _id: string;
   title: string;
@@ -35,6 +37,12 @@ type Props = {
   open: boolean;
   onClose: () => void;
 };
+
+/* ================= UTILS ================= */
+
+// Indian thousand separator
+const formatCurrency = (value: number) =>
+  value.toLocaleString("en-IN");
 
 const CustomPlanForm: React.FC<Props> = ({ open, onClose }) => {
   const [options, setOptions] = useState<CustomPlanOption[]>([]);
@@ -54,9 +62,8 @@ const CustomPlanForm: React.FC<Props> = ({ open, onClose }) => {
   const OPTIONS_API = `${process.env.REACT_APP_BACKEND_URL}/custom-plan-options`;
   const LEAD_API = `${process.env.REACT_APP_BACKEND_URL}/custom-plan-leads`;
 
-  // ================================
-  // LOAD OPTIONS
-  // ================================
+  /* ================= LOAD OPTIONS ================= */
+
   useEffect(() => {
     if (!open) return;
 
@@ -73,9 +80,8 @@ const CustomPlanForm: React.FC<Props> = ({ open, onClose }) => {
     fetchOptions();
   }, [open]);
 
-  // ================================
-  // HANDLERS
-  // ================================
+  /* ================= HANDLERS ================= */
+
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -100,9 +106,8 @@ const CustomPlanForm: React.FC<Props> = ({ open, onClose }) => {
 
   const totalPrice = selected.reduce((sum, o) => sum + o.price, 0);
 
-  // ================================
-  // SUBMIT
-  // ================================
+  /* ================= SUBMIT ================= */
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -123,7 +128,7 @@ const CustomPlanForm: React.FC<Props> = ({ open, onClose }) => {
           constituency: form.constituency,
           party: form.party,
           selectedOptions: selected,
-          totalPrice,
+          totalPrice, // clean number
         }),
       });
 
@@ -151,6 +156,8 @@ const CustomPlanForm: React.FC<Props> = ({ open, onClose }) => {
   };
 
   if (!open) return null;
+
+  /* ================= UI ================= */
 
   return (
     <Overlay>
@@ -206,11 +213,16 @@ const CustomPlanForm: React.FC<Props> = ({ open, onClose }) => {
           </FieldGroup>
 
           {/* OPTIONS */}
-          <h4>Select Plan Options</h4>
+          <ModalHeader>
+            <h3>Select Plan Options</h3>
+          </ModalHeader>
 
           <OptionsGrid>
             {options.map((opt) => {
-              const checked = selected.some((s) => s.optionId === opt._id);
+              const checked = selected.some(
+                (s) => s.optionId === opt._id
+              );
+
               return (
                 <OptionCard
                   key={opt._id}
@@ -220,7 +232,9 @@ const CustomPlanForm: React.FC<Props> = ({ open, onClose }) => {
                   <Checkbox type="checkbox" checked={checked} readOnly />
                   <div>
                     <OptionTitle>{opt.title}</OptionTitle>
-                    <OptionPrice>₹ {opt.price.toLocaleString()}</OptionPrice>
+                    <OptionPrice>
+                      ₹ {formatCurrency(opt.price)}
+                    </OptionPrice>
                   </div>
                 </OptionCard>
               );
@@ -230,7 +244,7 @@ const CustomPlanForm: React.FC<Props> = ({ open, onClose }) => {
           {/* TOTAL */}
           <TotalBar>
             <span>Total</span>
-            <strong>₹ {totalPrice.toLocaleString()}</strong>
+            <strong>₹ {formatCurrency(totalPrice)}</strong>
           </TotalBar>
 
           <SubmitButton type="submit" disabled={loading}>

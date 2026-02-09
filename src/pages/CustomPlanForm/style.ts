@@ -156,7 +156,23 @@ export const OptionCard = styled.div<{ active?: boolean }>`
 export const Checkbox = styled.input`
   margin-top: 6px;
   transform: scale(1.15);
+
+  /* REMOVE DEFAULT BORDER / OUTLINE */
+  outline: none;
+  box-shadow: none;
+  border: none;
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+
+  &:active {
+    outline: none;
+    box-shadow: none;
+  }
 `;
+
 
 export const OptionTitle = styled.div`
   font-size: 0.95rem;
