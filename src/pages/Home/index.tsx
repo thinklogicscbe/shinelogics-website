@@ -13,7 +13,7 @@ const OurProduct = lazy(() => import("../../components/HomeCompo/ourProduct"));
 const WhyChooseUs = lazy(
   () => import("../../components/Choose-Us/WhyChooseUs")
 );
-const ShinePlatforms = lazy(() => import("../../components/HomeCompo/Shineplatforms"));
+
 
 const Home = () => {
   return (

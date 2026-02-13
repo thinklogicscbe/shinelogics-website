@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   PageWrapper,
   PageHeader,
@@ -52,20 +52,19 @@ const AdminCustomPlanOptions: React.FC = () => {
 
   /* ================= LOAD ================= */
 
-  const fetchOptions = async () => {
-    try {
-      const res = await fetch(API);
-      const data = await res.json();
-      setOptions(data.data || []);
-    } catch {
-      console.error("Failed to load custom plan options");
-    }
-  };
+const fetchOptions = useCallback(async () => {
+  try {
+    const res = await fetch(API);
+    const data = await res.json();
+    setOptions(data.data || []);
+  } catch (error) {
+    console.error("Failed to load custom plan options", error);
+  }
+}, [API]); // include dependencies used inside
 
-  useEffect(() => {
-    fetchOptions();
-  }, []);
-
+useEffect(() => {
+  fetchOptions();
+}, [fetchOptions]);
   /* ================= ROW HANDLERS ================= */
 
   const handleRowChange = (

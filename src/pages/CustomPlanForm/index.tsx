@@ -64,21 +64,22 @@ const CustomPlanForm: React.FC<Props> = ({ open, onClose }) => {
 
   /* ================= LOAD OPTIONS ================= */
 
-  useEffect(() => {
-    if (!open) return;
+useEffect(() => {
+  if (!open) return;
 
-    const fetchOptions = async () => {
-      try {
-        const res = await fetch(OPTIONS_API);
-        const data = await res.json();
-        setOptions(data.data || []);
-      } catch {
-        setError("Failed to load plan options");
-      }
-    };
+  const fetchOptions = async () => {
+    try {
+      const res = await fetch(OPTIONS_API);
+      const data = await res.json();
+      setOptions(data.data || []);
+    } catch {
+      setError("Failed to load plan options");
+    }
+  };
 
-    fetchOptions();
-  }, [open]);
+  fetchOptions();
+}, [open, OPTIONS_API]);
+
 
   /* ================= HANDLERS ================= */
 
