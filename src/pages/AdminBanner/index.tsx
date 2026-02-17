@@ -84,25 +84,24 @@ const AdminBanner: React.FC = () => {
   /* ================= FORM HANDLERS ================= */
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-  const files = e.target.files;
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
 
-  if (!files || files.length === 0) return;
+    if (!files || files.length === 0) return;
 
-  const fileArray: File[] = Array.from(files);
+    const fileArray: File[] = Array.from(files);
 
-  setForm((prev) => ({
-    ...prev,
-    videos: fileArray,
-  }));
-};
-
+    setForm((prev) => ({
+      ...prev,
+      videos: fileArray,
+    }));
+  };
 
   /* ================= SUBMIT ================= */
 
@@ -112,14 +111,11 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
 
     try {
       const uploadedVideoUrls = await Promise.all(
-        form.videos.map((file) => uploadFileToS3(file))
+        form.videos.map((file) => uploadFileToS3(file)),
       );
 
       // ✅ FIX: New videos FIRST
-      const finalVideos = [
-        ...uploadedVideoUrls,
-        ...existingVideos,
-      ];
+      const finalVideos = [...uploadedVideoUrls, ...existingVideos];
 
       const payload = {
         heroTitle: form.heroTitle,
@@ -180,7 +176,9 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
   /* ================= RENDER ================= */
 
   return (
+    
     <div>
+      {error && <p style={{ color: "red" }}>{error}</p>}
       {/* HEADER */}
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <SectionTitle>Home Banner</SectionTitle>
@@ -200,7 +198,7 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
       {showForm && (
         <FormBox onSubmit={handleSubmit}>
           <h3>{editingId ? "Edit Banner" : "Create Banner"}</h3>
-
+          {loading && <p>Loading...</p>}
           <input
             name="heroTitle"
             value={form.heroTitle}
@@ -240,7 +238,12 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
             />
           </InputRow>
 
-          <input type="file" accept="video/*" multiple onChange={handleFileChange} />
+          <input
+            type="file"
+            accept="video/*"
+            multiple
+            onChange={handleFileChange}
+          />
 
           <button type="submit">
             {editingId ? "Update Banner" : "Create Banner"}
@@ -260,11 +263,7 @@ const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
             {item.videos?.length ? (
               <VideoPreview>
                 {/* ✅ FIX: key forces reload */}
-                <video
-                  key={item.videos[0]}
-                  src={item.videos[0]}
-                  controls
-                />
+                <video key={item.videos[0]} src={item.videos[0]} controls />
               </VideoPreview>
             ) : null}
 

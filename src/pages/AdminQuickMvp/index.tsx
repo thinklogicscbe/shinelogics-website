@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState , useCallback} from "react";
 import {
   PageWrapper,
   PageHeader,
@@ -66,7 +66,7 @@ const AdminQuickMvp: React.FC = () => {
   // ================================
   // LOAD PLANS
   // ================================
-  const fetchPlans = async () => {
+  const fetchPlans = useCallback(async () => {
     try {
       const res = await fetch(API);
       const data = await res.json();
@@ -74,11 +74,11 @@ const AdminQuickMvp: React.FC = () => {
     } catch (err) {
       console.error("Failed to load Quick MVP plans");
     }
-  };
+  }, [API]); // dependencies used inside function
 
   useEffect(() => {
     fetchPlans();
-  }, []);
+  }, [fetchPlans]);
 
   // ================================
   // FORM HANDLERS
@@ -128,7 +128,9 @@ const AdminQuickMvp: React.FC = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to save plan");
 
-      setSuccess(editingId ? "Plan updated successfully!" : "Plan created successfully!");
+      setSuccess(
+        editingId ? "Plan updated successfully!" : "Plan created successfully!",
+      );
       setShowForm(false);
       setEditingId(null);
 
@@ -206,17 +208,32 @@ const AdminQuickMvp: React.FC = () => {
         <Form onSubmit={handleSubmit}>
           <FieldGroup>
             <Label>Title</Label>
-            <Input name="title" value={form.title} onChange={handleChange} required />
+            <Input
+              name="title"
+              value={form.title}
+              onChange={handleChange}
+              required
+            />
           </FieldGroup>
 
           <FieldGroup>
             <Label>Price</Label>
-            <Input name="price" value={form.price} onChange={handleChange} required />
+            <Input
+              name="price"
+              value={form.price}
+              onChange={handleChange}
+              required
+            />
           </FieldGroup>
 
           <FieldGroup>
             <Label>Subtitle</Label>
-            <Textarea name="subtitle" value={form.subtitle} onChange={handleChange} required />
+            <Textarea
+              name="subtitle"
+              value={form.subtitle}
+              onChange={handleChange}
+              required
+            />
           </FieldGroup>
 
           <FieldGroup>
@@ -229,7 +246,12 @@ const AdminQuickMvp: React.FC = () => {
           </FieldGroup>
 
           <CheckboxRow>
-            <input type="checkbox" name="featured" checked={form.featured} onChange={handleChange} />
+            <input
+              type="checkbox"
+              name="featured"
+              checked={form.featured}
+              onChange={handleChange}
+            />
             <Label>Featured Plan</Label>
           </CheckboxRow>
 
@@ -243,7 +265,10 @@ const AdminQuickMvp: React.FC = () => {
                   required
                 />
                 {form.features.length > 1 && (
-                  <RemoveFeatureButton type="button" onClick={() => removeFeature(index)}>
+                  <RemoveFeatureButton
+                    type="button"
+                    onClick={() => removeFeature(index)}
+                  >
                     ✕
                   </RemoveFeatureButton>
                 )}
@@ -256,12 +281,21 @@ const AdminQuickMvp: React.FC = () => {
 
           <FieldGroup>
             <Label>Primary CTA</Label>
-            <Input name="cta" value={form.cta} onChange={handleChange} required />
+            <Input
+              name="cta"
+              value={form.cta}
+              onChange={handleChange}
+              required
+            />
           </FieldGroup>
 
           <FieldGroup>
             <Label>Ghost CTA</Label>
-            <Input name="ghostCta" value={form.ghostCta} onChange={handleChange} />
+            <Input
+              name="ghostCta"
+              value={form.ghostCta}
+              onChange={handleChange}
+            />
           </FieldGroup>
 
           <SubmitButton type="submit" disabled={loading}>
@@ -286,7 +320,9 @@ const AdminQuickMvp: React.FC = () => {
 
             <CardActions>
               <EditButton onClick={() => handleEdit(plan)}>Edit</EditButton>
-              <DeleteButton onClick={() => handleDelete(plan._id)}>Delete</DeleteButton>
+              <DeleteButton onClick={() => handleDelete(plan._id)}>
+                Delete
+              </DeleteButton>
             </CardActions>
           </AdminCard>
         ))}

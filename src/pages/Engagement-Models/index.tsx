@@ -41,7 +41,7 @@ const EngagementModels: React.FC = () => {
     };
 
     fetchModels();
-  }, []);
+  }, [API_URL]);
 
   if (loading) {
     return <Section>Loading engagement models...</Section>;
