@@ -1,25 +1,87 @@
 import styled from "styled-components";
 
+/* ================================
+   PAGE WRAPPER
+================================ */
+
 export const PageWrapper = styled.div`
-  max-width: 820px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 3rem 2rem;
+  padding: 2rem 1rem;
+
+  @media (min-width: 640px) {
+    padding: 3rem 2rem;
+  }
+
+  @media (min-width: 1440px) {
+    max-width: 1320px;
+  }
+`;
+
+/* ================================
+   HEADER
+================================ */
+
+export const PageHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
 `;
 
 export const PageTitle = styled.h2`
-  font-size: 2rem;
-  font-weight: 800;
+  font-size: 1.6rem;
+  font-weight: 900;
   color: #0b1d45;
-  margin-bottom: 2rem;
+
+  @media (min-width: 640px) {
+    font-size: 2rem;
+  }
 `;
+
+/* ================================
+   CREATE BUTTON
+================================ */
+
+export const CreateButton = styled.button`
+  align-self: flex-start;
+  background: #0b1d45;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 0.7rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.25s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(11, 29, 69, 0.35);
+  }
+`;
+
+/* ================================
+   FORM
+================================ */
 
 export const Form = styled.form`
   background: #ffffff;
-  border-radius: 24px;
-  padding: 2.5rem;
+  border-radius: 22px;
+  padding: 1.8rem;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.08);
   display: grid;
-  gap: 1.6rem;
+  gap: 1.4rem;
+
+  @media (min-width: 640px) {
+    padding: 2.5rem;
+  }
 `;
 
 export const FieldGroup = styled.div`
@@ -28,7 +90,7 @@ export const FieldGroup = styled.div`
 `;
 
 export const Label = styled.label`
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 700;
   color: #374151;
 `;
@@ -80,6 +142,10 @@ export const CheckboxRow = styled.div`
   gap: 0.6rem;
 `;
 
+/* ================================
+   FEATURES
+================================ */
+
 export const FeatureRow = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
@@ -107,6 +173,10 @@ export const RemoveFeatureButton = styled.button`
   cursor: pointer;
 `;
 
+/* ================================
+   SUBMIT
+================================ */
+
 export const SubmitButton = styled.button`
   margin-top: 1rem;
   padding: 0.9rem;
@@ -124,6 +194,10 @@ export const SubmitButton = styled.button`
   }
 `;
 
+/* ================================
+   STATUS TEXT
+================================ */
+
 export const SuccessText = styled.p`
   color: #16a34a;
   font-weight: 700;
@@ -134,40 +208,6 @@ export const ErrorText = styled.p`
   font-weight: 700;
 `;
 
-
-
-/* ================================
-   ADMIN HEADER (TITLE + CREATE BTN)
-================================ */
-
-export const PageHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 2rem;
-`;
-
-/* ================================
-   CREATE BUTTON (TOP RIGHT)
-================================ */
-
-export const CreateButton = styled.button`
-  background: #0b1d45;
-  color: #ffffff;
-  border: none;
-  border-radius: 12px;
-  padding: 0.7rem 1.2rem;
-  font-size: 0.85rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all 0.25s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(11, 29, 69, 0.35);
-  }
-`;
-
 /* ================================
    CARDS GRID
 ================================ */
@@ -175,15 +215,15 @@ export const CreateButton = styled.button`
 export const CardsGrid = styled.div`
   margin-top: 3rem;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
 
-  @media (max-width: 1024px) {
+  @media (min-width: 640px) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
   }
 `;
 
@@ -193,7 +233,7 @@ export const CardsGrid = styled.div`
 
 export const AdminCard = styled.div<{ accent: string }>`
   position: relative;
-  padding: 2rem;
+  padding: 1.8rem;
   border-radius: 22px;
   background: #ffffff;
 
@@ -215,7 +255,7 @@ export const AdminCard = styled.div<{ accent: string }>`
 `;
 
 /* ================================
-   FEATURED BADGE
+   CARD CONTENT
 ================================ */
 
 export const CardBadge = styled.div`
@@ -228,22 +268,16 @@ export const CardBadge = styled.div`
   font-weight: 900;
   padding: 0.25rem 0.6rem;
   border-radius: 999px;
-  letter-spacing: 0.05em;
 `;
 
-/* ================================
-   CARD TEXT
-================================ */
-
 export const CardTitle = styled.h3`
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 900;
-  color: #111827;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.3rem;
 `;
 
 export const CardPrice = styled.div`
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   font-weight: 900;
   color: #0b1d45;
   margin-bottom: 0.6rem;
@@ -253,7 +287,6 @@ export const CardSubtitle = styled.p`
   font-size: 0.85rem;
   color: #4b5563;
   margin-bottom: 1rem;
-  line-height: 1.5;
 `;
 
 export const CardFeature = styled.div`
@@ -262,10 +295,13 @@ export const CardFeature = styled.div`
   margin-bottom: 0.3rem;
 `;
 
+/* ================================
+   CARD ACTIONS
+================================ */
 
 export const CardActions = styled.div`
   display: flex;
-  gap: 0.5rem;
+  gap: 0.6rem;
   margin-top: 1.2rem;
 `;
 
@@ -275,7 +311,7 @@ export const EditButton = styled.button`
   color: #3730a3;
   border: none;
   border-radius: 10px;
-  padding: 0.45rem;
+  padding: 0.5rem;
   font-size: 0.75rem;
   font-weight: 800;
   cursor: pointer;
@@ -287,7 +323,7 @@ export const DeleteButton = styled.button`
   color: #991b1b;
   border: none;
   border-radius: 10px;
-  padding: 0.45rem;
+  padding: 0.5rem;
   font-size: 0.75rem;
   font-weight: 800;
   cursor: pointer;

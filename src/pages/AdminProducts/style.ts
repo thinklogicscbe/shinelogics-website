@@ -1,17 +1,43 @@
 import styled from "styled-components";
 
+/* ================================
+   PAGE WRAPPER
+================================ */
+
 export const PageWrapper = styled.div`
-  padding: 28px;
+  padding: 16px;
   background: #f8fafc;
   min-height: 100vh;
+
+  @media (min-width: 640px) {
+    padding: 24px;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 28px;
+  }
 `;
+
+/* ================================
+   HEADER BAR
+================================ */
 
 export const HeaderBar = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  gap: 12px;
   margin-bottom: 24px;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
 `;
+
+/* ================================
+   CREATE BUTTON
+================================ */
 
 export const CreateButton = styled.button`
   background: linear-gradient(135deg, #2563eb, #1d4ed8);
@@ -23,6 +49,7 @@ export const CreateButton = styled.button`
   cursor: pointer;
   box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
   transition: all 0.2s ease;
+  width: fit-content;
 
   &:hover {
     transform: translateY(-1px);
@@ -30,13 +57,21 @@ export const CreateButton = styled.button`
   }
 `;
 
+/* ================================
+   CREATE / EDIT FORM CARD
+================================ */
+
 export const CreateFormCard = styled.div`
   background: #ffffff;
   border-radius: 18px;
-  padding: 24px;
+  padding: 18px;
   margin-bottom: 32px;
   box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
   border: 1px solid #e5e7eb;
+
+  @media (min-width: 640px) {
+    padding: 24px;
+  }
 
   h3 {
     margin-bottom: 16px;
@@ -70,26 +105,33 @@ export const CreateFormCard = styled.div`
   }
 `;
 
+/* ================================
+   FORM GRID
+================================ */
+
 export const FormGrid = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 14px;
 
-  /* Default input (slug, others) */
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
   input {
     font-size: 14px;
     padding: 10px 12px;
   }
 
-  /* 🔥 Only Title input */
   .small-title {
-    font-size: 12px;   /* smaller text */
+    font-size: 12px;
     font-weight: 500;
   }
 `;
 
-
-
+/* ================================
+   DYNAMIC LIST
+================================ */
 
 export const DynamicList = styled.div`
   margin-top: 18px;
@@ -99,9 +141,11 @@ export const DynamicRow = styled.div`
   display: flex;
   gap: 8px;
   margin-bottom: 8px;
+  flex-wrap: wrap;
 
   input {
     flex: 1;
+    min-width: 180px;
   }
 
   button {
@@ -126,11 +170,16 @@ export const AddRowButton = styled.button`
   color: #2563eb;
 `;
 
+/* ================================
+   FORM ACTIONS
+================================ */
+
 export const FormActions = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 12px;
   margin-top: 24px;
+  flex-wrap: wrap;
 
   button {
     border: none;
@@ -147,11 +196,27 @@ export const FormActions = styled.div`
   }
 `;
 
+/* ================================
+   PRODUCT GRID
+================================ */
+
 export const ProductGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 26px;
+  grid-template-columns: 1fr;
+  gap: 22px;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  }
 `;
+
+/* ================================
+   PRODUCT CARD
+================================ */
 
 export const ProductCard = styled.div`
   border-radius: 20px;
@@ -182,12 +247,17 @@ export const ProductHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 10px;
   margin-bottom: 8px;
 
-  h3{
-    font-size: 18px;
+  h3 {
+    font-size: 16px;
     font-weight: 600;
     margin: 0;
+
+    @media (min-width: 768px) {
+      font-size: 18px;
+    }
   }
 `;
 
@@ -205,6 +275,10 @@ export const DescriptionText = styled.p`
   font-weight: bold;
 `;
 
+/* ================================
+   STATUS
+================================ */
+
 export const StatusBadge = styled.span<{ active: boolean }>`
   font-size: 12px;
   font-weight: 700;
@@ -213,6 +287,10 @@ export const StatusBadge = styled.span<{ active: boolean }>`
   background: ${({ active }) => (active ? "#dcfce7" : "#fee2e2")};
   color: ${({ active }) => (active ? "#166534" : "#991b1b")};
 `;
+
+/* ================================
+   SECTIONS
+================================ */
 
 export const Section = styled.div`
   margin-top: 14px;
@@ -239,9 +317,11 @@ export const SectionTitle = styled.div`
   color: #0f172a;
   text-transform: uppercase;
   letter-spacing: 0.6px;
-
-
 `;
+
+/* ================================
+   GALLERY
+================================ */
 
 export const GalleryRow = styled.div`
   display: flex;
@@ -257,8 +337,11 @@ export const GalleryThumb = styled.div`
   background-size: cover;
   background-position: center;
   border: 1px solid #e5e7eb;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.6);
 `;
+
+/* ================================
+   VIDEO INFO
+================================ */
 
 export const VideoInfo = styled.div`
   margin-top: 10px;
@@ -267,7 +350,9 @@ export const VideoInfo = styled.div`
   font-weight: 700;
 `;
 
-
+/* ================================
+   CARD ACTIONS
+================================ */
 
 export const CardActions = styled.div`
   display: flex;
@@ -275,6 +360,7 @@ export const CardActions = styled.div`
   margin-top: 18px;
   padding-top: 14px;
   border-top: 1px dashed #e5e7eb;
+  flex-wrap: wrap;
 `;
 
 export const ActionButton = styled.button<{ variant?: "edit" | "delete" }>`
@@ -300,6 +386,10 @@ export const ActionButton = styled.button<{ variant?: "edit" | "delete" }>`
   }
 `;
 
+/* ================================
+   MODAL
+================================ */
+
 export const ModalOverlay = styled.div`
   position: fixed;
   inset: 0;
@@ -308,9 +398,13 @@ export const ModalOverlay = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 40px 16px;
+  padding: 24px 12px;
   z-index: 9999;
   overflow-y: auto;
+
+  @media (min-width: 640px) {
+    padding: 40px 16px;
+  }
 `;
 
 export const ModalCard = styled(CreateFormCard)`

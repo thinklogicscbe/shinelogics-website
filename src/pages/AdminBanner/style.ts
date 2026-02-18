@@ -1,42 +1,120 @@
 import styled from "styled-components";
 
-/* ====== PAGE TITLE ====== */
+/* ================================
+   SPACER (REPLACES INLINE STYLES)
+================================ */
+
+export const Spacer30 = styled.div`
+  margin-top: 30px;
+`;
+
+/* ================================
+   SECTION TITLE
+================================ */
+
 export const SectionTitle = styled.h2`
-  font-size: 26px;
+  font-size: 1.45rem;
   font-weight: 700;
   color: #020617;
-  margin-bottom: 28px;
+  margin-bottom: 1.5rem;
+
+  @media (min-width: 480px) {
+    font-size: 1.55rem;
+  }
+
+  @media (min-width: 768px) {
+    font-size: 26px;
+    margin-bottom: 1.75rem;
+  }
 `;
-/* ====== FORM ====== */
-/* ====== FORM (EDITOR STYLE) ====== */
+
+/* ================================
+   PRIMARY ACTION BUTTON
+================================ */
+
+export const PrimaryActionButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 11px 18px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  color: #ffffff;
+
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+
+  box-shadow: 0 14px 32px rgba(37, 99, 235, 0.35);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 44px rgba(37, 99, 235, 0.5);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 10px 22px rgba(37, 99, 235, 0.35);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+  }
+
+  @media (min-width: 768px) {
+    padding: 12px 22px;
+    font-size: 14px;
+  }
+`;
+
+/* ================================
+   FORM (EDITOR STYLE)
+================================ */
+
 export const FormBox = styled.form`
   position: relative;
   background: linear-gradient(180deg, #f8fafc, #ffffff);
-  padding: 32px 32px 32px 40px;
+  padding: 22px 18px 22px 26px;
   border-radius: 20px;
-  margin-bottom: 56px;
+  margin-bottom: 3rem;
   display: grid;
   gap: 18px;
   border: 1px solid #e5e7eb;
   box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
 
-  /* LEFT ACCENT BAR */
+  @media (min-width: 640px) {
+    padding: 26px 24px 26px 32px;
+  }
+
+  @media (min-width: 768px) {
+    padding: 32px 32px 32px 40px;
+  }
+
   &::before {
     content: "";
     position: absolute;
     left: 0;
-    top: 20px;
-    bottom: 20px;
+    top: 16px;
+    bottom: 16px;
     width: 6px;
     border-radius: 6px;
     background: linear-gradient(180deg, #2563eb, #1e40af);
   }
 
   h3 {
-    font-size: 19px;
+    font-size: 16px;
     font-weight: 600;
     color: #020617;
-    margin-bottom: 6px;
+
+    @media (min-width: 768px) {
+      font-size: 19px;
+    }
   }
 
   input,
@@ -46,7 +124,6 @@ export const FormBox = styled.form`
     border: 1px solid #cbd5f5;
     font-size: 14px;
     background: #ffffff;
-    transition: border 0.2s, box-shadow 0.2s;
 
     &:focus {
       outline: none;
@@ -77,8 +154,6 @@ export const FormBox = styled.form`
     color: white;
     font-weight: 600;
     font-size: 15px;
-    letter-spacing: 0.2px;
-    transition: transform 0.15s, box-shadow 0.15s;
 
     &:hover {
       transform: translateY(-1px);
@@ -87,33 +162,50 @@ export const FormBox = styled.form`
   }
 `;
 
-/* ====== INPUT ROW ====== */
+/* ================================
+   INPUT ROW
+================================ */
+
 export const InputRow = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 14px;
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 1fr;
   }
 `;
 
-/* ====== CARDS GRID ====== */
+/* ================================
+   CARD GRID
+================================ */
+
 export const CardGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 28px;
+  grid-template-columns: 1fr;
+  gap: 22px;
+  margin-top: 1.5rem;
+
+  @media (min-width: 540px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  }
 `;
 
-/* ====== CARD ====== */
+/* ================================
+   CARD
+================================ */
+
 export const Card = styled.div`
   background: white;
-  padding: 24px;
+  padding: 22px;
   border-radius: 18px;
   box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s, box-shadow 0.2s;
 
   &:hover {
     transform: translateY(-3px);
@@ -121,10 +213,13 @@ export const Card = styled.div`
   }
 
   h3 {
-    font-size: 17px;
+    font-size: 15.5px;
     font-weight: 600;
     color: #020617;
-    margin-bottom: 8px;
+
+    @media (min-width: 768px) {
+      font-size: 17px;
+    }
   }
 
   p {
@@ -134,7 +229,10 @@ export const Card = styled.div`
   }
 `;
 
-/* ====== VIDEO PREVIEW ====== */
+/* ================================
+   VIDEO PREVIEW
+================================ */
+
 export const VideoPreview = styled.div`
   margin-top: 14px;
   border-radius: 14px;
@@ -148,12 +246,14 @@ export const VideoPreview = styled.div`
   }
 `;
 
-/* ====== CARD ACTIONS ====== */
+/* ================================
+   CARD ACTIONS
+================================ */
+
 export const CardActions = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin-top: 18px;
   gap: 10px;
+  margin-top: 18px;
 
   button {
     flex: 1;
@@ -163,24 +263,15 @@ export const CardActions = styled.div`
     cursor: pointer;
     font-weight: 600;
     font-size: 14px;
-    transition: transform 0.15s, box-shadow 0.15s;
   }
 
   .edit {
     background: #2563eb;
     color: white;
-
-    &:hover {
-      box-shadow: 0 10px 22px rgba(37, 99, 235, 0.4);
-    }
   }
 
   .delete {
     background: #dc2626;
     color: white;
-
-    &:hover {
-      box-shadow: 0 10px 22px rgba(220, 38, 38, 0.4);
-    }
   }
 `;

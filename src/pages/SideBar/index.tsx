@@ -29,6 +29,7 @@ import AdminProducts from "../AdminProducts";
 import AdminQuickMvp from "../AdminQuickMvp";
 import AdminCustomPlanOptions from "../AdminCustomPlanOptions"; // 🔥 NEW
 import AdminServicePage from "../AdminServicePage";
+import ContactLeadsAdmin from "../ContactLeadsAdmin";
 
 // 🔹 Assets
 import logo1 from "../../assets/shinelogics-logo.png";
@@ -46,7 +47,8 @@ type AdminComponent =
   | "AdminProducts"
   | "QuickMvpAdmin"
   | "CustomPlanOptions"
-  | "AdminServices"; // ✅ NEW // 🔥 NEW
+  | "AdminServices" // ✅ NEW // 🔥 NEW
+  | "ContactLeads"; // ✅ NEW
 
 const SideBar: React.FC = () => {
   const navigate = useNavigate();
@@ -76,6 +78,9 @@ const SideBar: React.FC = () => {
     switch (selectedComponent) {
       case "AdminServices":
         return <AdminServicePage />;
+
+      case "ContactLeads": // ✅ NEW
+        return <ContactLeadsAdmin />;
 
       case "PostJob":
         return <PostJob />;
@@ -144,6 +149,13 @@ const SideBar: React.FC = () => {
               onClick={() => handleNavigation("AdminServices")}
             >
               Services
+            </NavItem>
+
+            <NavItem
+              active={selectedComponent === "ContactLeads"}
+              onClick={() => handleNavigation("ContactLeads")}
+            >
+              Contact Leads
             </NavItem>
 
             {/* 🔥 Quick MVP */}

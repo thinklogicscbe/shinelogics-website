@@ -19,7 +19,7 @@ const Shineplatforms = () => {
       subtitle: "The Intelligence Engine",
       description:
         "Centralized data, analytics, and AI that powers every Shine platform and business decision.",
-      path: "/shinedatum",
+      path: "/ProductCompo/shinedatum",
     },
     {
       icon: "🛒",

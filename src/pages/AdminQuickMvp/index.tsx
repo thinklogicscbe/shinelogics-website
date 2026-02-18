@@ -61,7 +61,8 @@ const AdminQuickMvp: React.FC = () => {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
 
-  const API = `${process.env.REACT_APP_BACKEND_URL}custom-plan-options/bulk`;
+const API = `${process.env.REACT_APP_BACKEND_URL}/quick-mvp-plans`;
+
 
   // ================================
   // LOAD PLANS
