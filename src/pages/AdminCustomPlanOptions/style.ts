@@ -5,22 +5,44 @@ import styled from "styled-components";
 ================================ */
 
 export const PageWrapper = styled.div`
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 3rem 2rem;
+  padding: 1.5rem 1rem;
+
+  @media (min-width: 640px) {
+    padding: 2.5rem 2rem;
+  }
+
+  @media (min-width: 1440px) {
+    max-width: 1320px;
+  }
 `;
+
+/* ================================
+   HEADER
+================================ */
 
 export const PageHeader = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 1rem;
   margin-bottom: 2rem;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
 `;
 
 export const PageTitle = styled.h2`
-  font-size: 2rem;
+  font-size: 1.6rem;
   font-weight: 800;
   color: #0b1d45;
+
+  @media (min-width: 640px) {
+    font-size: 2rem;
+  }
 `;
 
 /* ================================
@@ -28,6 +50,7 @@ export const PageTitle = styled.h2`
 ================================ */
 
 export const CreateButton = styled.button`
+  align-self: flex-start;
   background: #0b1d45;
   color: #ffffff;
   border: none;
@@ -51,11 +74,15 @@ export const CreateButton = styled.button`
 export const Form = styled.form`
   background: #ffffff;
   border-radius: 22px;
-  padding: 2.2rem;
+  padding: 1.6rem;
   margin-bottom: 3rem;
   box-shadow: 0 25px 70px rgba(0, 0, 0, 0.08);
   display: grid;
   gap: 1.4rem;
+
+  @media (min-width: 640px) {
+    padding: 2.2rem;
+  }
 `;
 
 export const FieldGroup = styled.div`
@@ -108,19 +135,17 @@ export const SubmitButton = styled.button`
 `;
 
 /* ================================
-   FEEDBACK MESSAGES
+   FEEDBACK
 ================================ */
 
 export const SuccessText = styled.p`
   color: #16a34a;
   font-weight: 800;
-  margin-bottom: 1rem;
 `;
 
 export const ErrorText = styled.p`
   color: #dc2626;
   font-weight: 800;
-  margin-bottom: 1rem;
 `;
 
 /* ================================
@@ -129,15 +154,15 @@ export const ErrorText = styled.p`
 
 export const CardsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
 
-  @media (max-width: 1024px) {
+  @media (min-width: 640px) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (max-width: 640px) {
-    grid-template-columns: 1fr;
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
   }
 `;
 
@@ -147,7 +172,7 @@ export const CardsGrid = styled.div`
 
 export const AdminCard = styled.div<{ accent?: string }>`
   position: relative;
-  padding: 2rem;
+  padding: 1.8rem;
   border-radius: 22px;
   background: #ffffff;
 
@@ -195,6 +220,7 @@ export const CardPrice = styled.div`
 export const CardActions = styled.div`
   display: flex;
   gap: 0.6rem;
+  margin-top: auto;
 `;
 
 export const EditButton = styled.button`
@@ -203,11 +229,10 @@ export const EditButton = styled.button`
   color: #3730a3;
   border: none;
   border-radius: 10px;
-  padding: 0.45rem;
+  padding: 0.55rem;
   font-size: 0.75rem;
   font-weight: 900;
   cursor: pointer;
-  transition: all 0.2s ease;
 
   &:hover {
     background: #c7d2fe;
@@ -220,23 +245,29 @@ export const DeleteButton = styled.button`
   color: #991b1b;
   border: none;
   border-radius: 10px;
-  padding: 0.45rem;
+  padding: 0.55rem;
   font-size: 0.75rem;
   font-weight: 900;
   cursor: pointer;
-  transition: all 0.2s ease;
 
   &:hover {
     background: #fecaca;
   }
 `;
 
+/* ================================
+   ROW GRID (RESPONSIVE FIX)
+================================ */
 
 export const RowGrid = styled.div`
   display: grid;
-  grid-template-columns: 1.5fr 1fr auto;
+  grid-template-columns: 1fr;
   gap: 0.8rem;
-  align-items: end;
+
+  @media (min-width: 640px) {
+    grid-template-columns: 1.5fr 1fr auto;
+    align-items: end;
+  }
 `;
 
 export const AddRowButton = styled.button`

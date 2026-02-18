@@ -1,5 +1,12 @@
 import styled from "styled-components";
 
+/* ================= BREAKPOINTS ================= */
+const breakpoints = {
+  sm: "480px",
+  md: "768px",
+  lg: "1024px",
+};
+
 /* ================= LAYOUT ================= */
 
 export const Container = styled.div`
@@ -7,6 +14,14 @@ export const Container = styled.div`
   margin: auto;
   padding: 32px 40px;
   background: #f8f9fb;
+
+  @media (max-width: ${breakpoints.md}) {
+    padding: 24px 20px;
+  }
+
+  @media (max-width: ${breakpoints.sm}) {
+    padding: 20px 16px;
+  }
 `;
 
 export const HeaderRow = styled.div`
@@ -14,6 +29,12 @@ export const HeaderRow = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+  gap: 16px;
+
+  @media (max-width: ${breakpoints.sm}) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 export const Heading = styled.h2`
@@ -21,6 +42,10 @@ export const Heading = styled.h2`
   font-weight: 600;
   color: #1f2937;
   margin: 0;
+
+  @media (max-width: ${breakpoints.sm}) {
+    font-size: 18px;
+  }
 `;
 
 export const CreateButton = styled.button`
@@ -32,9 +57,15 @@ export const CreateButton = styled.button`
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
+  white-space: nowrap;
 
   &:hover {
     background: #1f2937;
+  }
+
+  @media (max-width: ${breakpoints.sm}) {
+    width: 100%;
+    text-align: center;
   }
 `;
 
@@ -44,6 +75,11 @@ export const CardGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
+
+  @media (max-width: ${breakpoints.sm}) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
 `;
 
 export const ServiceCardBox = styled.div`
@@ -53,6 +89,7 @@ export const ServiceCardBox = styled.div`
   padding: 16px;
   display: flex;
   flex-direction: column;
+  transition: box-shadow 0.2s ease;
 
   &:hover {
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
@@ -65,6 +102,10 @@ export const ServiceImage = styled.img`
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 12px;
+
+  @media (max-width: ${breakpoints.sm}) {
+    height: 140px;
+  }
 `;
 
 export const ServiceName = styled.h4`
@@ -77,15 +118,22 @@ export const ServiceName = styled.h4`
 export const ServiceDesc = styled.p`
   font-size: 13px;
   color: #6b7280;
-  line-height: 1.4;
+  line-height: 1.5;
   flex-grow: 1;
 `;
+
+/* ================= CARD ACTIONS ================= */
 
 export const CardActions = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 14px;
+
+  @media (max-width: ${breakpoints.sm}) {
+    flex-direction: column;
+    gap: 8px;
+  }
 `;
 
 export const ActionButton = styled.button<{ danger?: boolean }>`
@@ -97,6 +145,10 @@ export const ActionButton = styled.button<{ danger?: boolean }>`
   font-weight: 500;
   color: #fff;
   background: ${({ danger }) => (danger ? "#dc2626" : "#2563eb")};
+
+  @media (max-width: ${breakpoints.sm}) {
+    width: 100%;
+  }
 `;
 
 /* ================= FORM PANEL ================= */
@@ -107,12 +159,22 @@ export const FormPanel = styled.div`
   border: 1px solid #e5e7eb;
   padding: 24px;
   margin-top: 24px;
+
+  @media (max-width: ${breakpoints.sm}) {
+    padding: 20px 16px;
+  }
 `;
 
 export const FormHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
+
+  @media (max-width: ${breakpoints.sm}) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 export const CloseButton = styled.button`
@@ -153,6 +215,7 @@ export const Input = styled.input`
   padding: 10px 12px;
   border-radius: 6px;
   border: 1px solid #d1d5db;
+  font-size: 14px;
 `;
 
 export const Textarea = styled.textarea`
@@ -161,13 +224,18 @@ export const Textarea = styled.textarea`
   min-height: 100px;
   border-radius: 6px;
   border: 1px solid #d1d5db;
+  font-size: 14px;
 `;
+
+/* ================= DIVIDER ================= */
 
 export const Divider = styled.hr`
   margin: 32px 0;
   border: none;
   border-top: 1px solid #e5e7eb;
 `;
+
+/* ================= EXPERTISE ================= */
 
 export const ExpertiseCard = styled.div`
   border-radius: 8px;
@@ -177,6 +245,8 @@ export const ExpertiseCard = styled.div`
   background: #f9fafb;
 `;
 
+/* ================= BUTTONS ================= */
+
 export const SmallButton = styled.button`
   margin-top: 10px;
   padding: 6px 12px;
@@ -184,6 +254,11 @@ export const SmallButton = styled.button`
   background: #e5e7eb;
   border: none;
   cursor: pointer;
+  font-size: 13px;
+
+  @media (max-width: ${breakpoints.sm}) {
+    width: 100%;
+  }
 `;
 
 export const SubmitButton = styled.button`
@@ -195,4 +270,8 @@ export const SubmitButton = styled.button`
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
+
+  @media (max-width: ${breakpoints.sm}) {
+    width: 100%;
+  }
 `;

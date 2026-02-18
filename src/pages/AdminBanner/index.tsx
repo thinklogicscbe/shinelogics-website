@@ -1,5 +1,7 @@
 import React, { useEffect, useState, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
+
 import {
   CardGrid,
   Card,
@@ -8,6 +10,8 @@ import {
   SectionTitle,
   InputRow,
   VideoPreview,
+  PrimaryActionButton,
+  Spacer30,
 } from "./style";
 
 import { uploadFileToS3 } from "../API/s3Upload";
@@ -72,6 +76,7 @@ const AdminBanner: React.FC = () => {
       setItems(Array.isArray(res.data?.result) ? res.data.result : []);
     } catch {
       setError("Failed to load banner content.");
+      toast.error("Failed to load banner content ❌");
     } finally {
       setLoading(false);
     }
@@ -84,7 +89,7 @@ const AdminBanner: React.FC = () => {
   /* ================= FORM HANDLERS ================= */
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -92,14 +97,11 @@ const AdminBanner: React.FC = () => {
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-
-    if (!files || files.length === 0) return;
-
-    const fileArray: File[] = Array.from(files);
+    if (!files) return;
 
     setForm((prev) => ({
       ...prev,
-      videos: fileArray,
+      videos: Array.from(files),
     }));
   };
 
@@ -111,11 +113,8 @@ const AdminBanner: React.FC = () => {
 
     try {
       const uploadedVideoUrls = await Promise.all(
-        form.videos.map((file) => uploadFileToS3(file)),
+        form.videos.map((file) => uploadFileToS3(file))
       );
-
-      // ✅ FIX: New videos FIRST
-      const finalVideos = [...uploadedVideoUrls, ...existingVideos];
 
       const payload = {
         heroTitle: form.heroTitle,
@@ -125,13 +124,15 @@ const AdminBanner: React.FC = () => {
         primaryCtaRoute: form.primaryCtaRoute,
         secondaryCtaText: form.secondaryCtaText,
         secondaryCtaRoute: form.secondaryCtaRoute,
-        videos: finalVideos,
+        videos: [...uploadedVideoUrls, ...existingVideos],
       };
 
       if (editingId) {
         await axios.put(`${API_URL}/${editingId}`, payload);
+        toast.success("Banner updated successfully ✅");
       } else {
         await axios.post(API_URL, payload);
+        toast.success("Banner created successfully 🎉");
       }
 
       setForm(initialForm);
@@ -139,8 +140,8 @@ const AdminBanner: React.FC = () => {
       setEditingId(null);
       setShowForm(false);
       loadData();
-    } catch (err) {
-      alert("Failed to save banner");
+    } catch {
+      toast.error("Failed to save banner ❌");
     } finally {
       setLoading(false);
     }
@@ -149,6 +150,8 @@ const AdminBanner: React.FC = () => {
   /* ================= EDIT ================= */
 
   const handleEdit = (item: HomeContent) => {
+    toast.info("Editing banner ✏️");
+
     setEditingId(item._id);
     setExistingVideos(item.videos || []);
     setForm({
@@ -161,6 +164,7 @@ const AdminBanner: React.FC = () => {
       secondaryCtaRoute: item.secondaryCtaRoute || "",
       videos: [],
     });
+
     setShowForm(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -169,20 +173,37 @@ const AdminBanner: React.FC = () => {
 
   const handleDelete = async (id: string) => {
     if (!window.confirm("Delete this banner?")) return;
-    await axios.delete(`${API_URL}/${id}`);
-    loadData();
+
+    try {
+      await axios.delete(`${API_URL}/${id}`);
+      toast.success("Banner deleted successfully 🗑️");
+      loadData();
+    } catch {
+      toast.error("Failed to delete banner ❌");
+    }
   };
 
   /* ================= RENDER ================= */
 
   return (
-    
-    <div>
+    <>
+      <Spacer30 />
+
       {error && <p style={{ color: "red" }}>{error}</p>}
+
       {/* HEADER */}
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "16px",
+          flexWrap: "wrap",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <SectionTitle>Home Banner</SectionTitle>
-        <button
+
+        <PrimaryActionButton
           onClick={() => {
             setForm(initialForm);
             setExistingVideos([]);
@@ -191,14 +212,14 @@ const AdminBanner: React.FC = () => {
           }}
         >
           + Create Banner
-        </button>
+        </PrimaryActionButton>
       </div>
 
       {/* FORM */}
       {showForm && (
         <FormBox onSubmit={handleSubmit}>
           <h3>{editingId ? "Edit Banner" : "Create Banner"}</h3>
-          {loading && <p>Loading...</p>}
+
           <input
             name="heroTitle"
             value={form.heroTitle}
@@ -238,16 +259,12 @@ const AdminBanner: React.FC = () => {
             />
           </InputRow>
 
-          <input
-            type="file"
-            accept="video/*"
-            multiple
-            onChange={handleFileChange}
-          />
+          <input type="file" accept="video/*" multiple onChange={handleFileChange} />
 
-          <button type="submit">
+          <button type="submit" disabled={loading}>
             {editingId ? "Update Banner" : "Create Banner"}
           </button>
+
           <button type="button" onClick={() => setShowForm(false)}>
             Cancel
           </button>
@@ -262,19 +279,22 @@ const AdminBanner: React.FC = () => {
 
             {item.videos?.length ? (
               <VideoPreview>
-                {/* ✅ FIX: key forces reload */}
                 <video key={item.videos[0]} src={item.videos[0]} controls />
               </VideoPreview>
             ) : null}
 
             <CardActions>
-              <button onClick={() => handleEdit(item)}>Edit</button>
-              <button onClick={() => handleDelete(item._id)}>Delete</button>
+              <button className="edit" onClick={() => handleEdit(item)}>
+                Edit
+              </button>
+              <button className="delete" onClick={() => handleDelete(item._id)}>
+                Delete
+              </button>
             </CardActions>
           </Card>
         ))}
       </CardGrid>
-    </div>
+    </>
   );
 };
 

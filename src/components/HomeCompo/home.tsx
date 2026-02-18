@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
 import axios from "axios";
 import {
   SectionContainer,
@@ -99,7 +100,7 @@ const Home = () => {
           <p className="sub-hero">{banner.subDescription}</p>
 
           <ButtonGroup>
-            {banner.primaryCtaText && (
+            {/* {banner.primaryCtaText && (
               <button
                 className="primary"
                 onClick={() =>
@@ -109,19 +110,20 @@ const Home = () => {
               >
                 {banner.primaryCtaText}
               </button>
-            )}
+            )} */}
 
-            {banner.secondaryCtaText && (
+            {/* {banner.secondaryCtaText && (
+              
               <button
                 className="secondary"
                 onClick={() =>
                   banner.secondaryCtaRoute &&
-                  navigate(banner.secondaryCtaRoute)
+                  navigate("/service")
                 }
               >
                 {banner.secondaryCtaText}
               </button>
-            )}
+            )} */}
           </ButtonGroup>
         </LeftGrid>
 

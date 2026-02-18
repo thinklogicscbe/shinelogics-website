@@ -611,6 +611,7 @@ export const LeftGrid = styled.div`
     color: #0f172a;
     margin-bottom: 0.75rem;
     line-height: 1.25;
+    margin-top : 15px
   }
 
 .main-description {
@@ -619,6 +620,8 @@ export const LeftGrid = styled.div`
   line-height: 1.65;
   margin-bottom: 0.6rem;
   font-weight: 700; /* ✅ Bold */
+  margin-top: 15px;
+
 }
 
 
