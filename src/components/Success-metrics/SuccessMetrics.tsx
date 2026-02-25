@@ -21,7 +21,7 @@ const SuccessMetrics: React.FC = () => {
           security posture.
         </Description>
 
-        <CTAButton>See Case Studies</CTAButton>
+        {/* <CTAButton>See Case Studies</CTAButton> */}
       </MetricsContent>
     </MetricsContainer>
   );

@@ -1,51 +1,177 @@
-import { useState, useEffect, useRef } from 'react';
-import pdaasimg from '../../assets/home-image/pdaas.webp';
-import { PdaasContainer, AnimatedImage, PdaasContent } from './style';
+import { useState, useEffect, useRef } from "react";
+import axios from "axios";
+import {
+  PdaasContainer,
+  AnimatedImage,
+  PdaasContent,
+} from "./style";
+
+/* ================= API ================= */
+
+const API_URL = `${process.env.REACT_APP_BACKEND_URL}/home-sections`;
+
+/* ================= TYPES ================= */
+
+interface MediaItem {
+  type: "image" | "video";
+  url: string;
+}
+
+interface HomeSection {
+  _id?: string;
+  title: string;
+  description: string;
+  points: string[];
+  media: MediaItem[];
+  isActive?: boolean;
+}
+
+/* ================= COMPONENT ================= */
 
 const Pdaas = () => {
-    const [isVisible, setIsVisible] = useState(false);
-    const containerRef = useRef<HTMLDivElement | null>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [section, setSection] = useState<HomeSection | null>(null);
+  const [muted, setMuted] = useState(true);
 
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        setIsVisible(true);
-                        observer.disconnect(); // Stop observing once visible
-                    }
-                });
-            },
-            { threshold: 0.1 } // Trigger when 10% of the element is visible
-        );
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
-        if (containerRef.current) {
-            observer.observe(containerRef.current);
-        }
+  /* ================= FETCH DATA ================= */
 
-        return () => observer.disconnect();
-    }, []);
+  useEffect(() => {
+    fetchSection();
+  }, []);
 
-    return (
-        <PdaasContainer ref={containerRef}>
-            <AnimatedImage
-                src={pdaasimg}
-                alt="PDaaS Image"
-                className={isVisible ? 'animate' : ''}
-            />
-            <PdaasContent>
-                <h1>Our Process</h1>
-                <p>Product Development as a Service (PDaaS) is an outsourcing model that helps companies develop
-                products through third-party expertise. This model covers the entire product development lifecycle,
-                from design to deployment. Shinelogics aims to provide top-quality products using the PDaaS model.
-                Discover our range of products designed to streamline business operations, enhance productivity, and
-                provide exceptional service to our clients.</p>
-                <br /><br />
-                <p>We take pride in our diverse portfolio of software products that cater to various industries. From Human Resource Management and Hospital Management Systems to School and College Management Systems, our products are designed to optimize operations and improve productivity.</p>
-            </PdaasContent>
-        </PdaasContainer>
+  const fetchSection = async () => {
+    try {
+      const res = await axios.get(API_URL);
+
+      const sections: HomeSection[] =
+        res?.data?.result || res?.data?.data || [];
+
+      const pdaasSection = sections.find(
+        (item) =>
+          item.title?.toLowerCase() === "our process" &&
+          item.isActive !== false
+      );
+
+      if (pdaasSection) {
+        setSection(pdaasSection);
+      }
+    } catch (err) {
+      console.error("Failed to fetch PDaaS section", err);
+    }
+  };
+
+  /* ================= INTERSECTION ANIMATION ================= */
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            observer.disconnect();
+          }
+        });
+      },
+      { threshold: 0.1 }
     );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  /* ================= MUTE TOGGLE ================= */
+
+  const toggleMute = () => {
+    if (!videoRef.current) return;
+
+    const newMuted = !videoRef.current.muted;
+    videoRef.current.muted = newMuted;
+    setMuted(newMuted);
+  };
+
+  if (!section || !section.media?.length) return null;
+
+  const media = section.media[0];
+
+  return (
+    <PdaasContainer ref={containerRef}>
+      {/* ================= MEDIA ================= */}
+
+      {media.type === "image" ? (
+        <AnimatedImage
+          src={media.url}
+          alt={section.title}
+          className={isVisible ? "animate" : ""}
+        />
+      ) : (
+        <div style={{ position: "relative" }}>
+          <video
+            ref={videoRef}
+            src={media.url}
+            autoPlay
+            muted
+            loop
+            playsInline
+            className={isVisible ? "animate" : ""}
+            style={{
+              width: "100%",
+              maxWidth: "520px",
+              borderRadius: "18px",
+              objectFit: "cover",
+            }}
+          />
+
+          {/* 🔊 MUTE / UNMUTE BUTTON */}
+          <button
+            onClick={toggleMute}
+            style={{
+              position: "absolute",
+              bottom: "14px",
+              right: "14px",
+              background: "rgba(0,0,0,0.6)",
+              color: "#fff",
+              border: "none",
+              borderRadius: "50%",
+              width: "42px",
+              height: "42px",
+              cursor: "pointer",
+              fontSize: "18px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            aria-label={muted ? "Unmute video" : "Mute video"}
+          >
+            {muted ? "🔇" : "🔊"}
+          </button>
+        </div>
+      )}
+
+      {/* ================= CONTENT ================= */}
+
+      <PdaasContent>
+        <h1>{section.title}</h1>
+
+        {section.description?.split("\n").map((line, i) => (
+          <p key={i}>{line}</p>
+        ))}
+
+        {section.points?.length > 0 && (
+          <ul>
+            {section.points.map((point, i) => (
+              <li key={i}>{point}</li>
+            ))}
+          </ul>
+        )}
+      </PdaasContent>
+    </PdaasContainer>
+  );
 };
 
 export default Pdaas;
-

@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+
 import {
   Section,
   Header,
@@ -13,74 +15,63 @@ import {
   LogoWrapper,
 } from "./styled";
 
+/* ================= API ================= */
 
-import datapatternlogo from "../../assets/data-pattern(1).png"
-import aws from "../../assets/aws-logo(1).png"
+const API_URL = `${process.env.REACT_APP_BACKEND_URL}/partners`;
 
-const partners = [
-  {
-    name: "AWS",
-    desc: "Scalable cloud infrastructure and AI tools",
-    logo: aws,
-  },
-  {
-    name: "Google Cloud",
-    desc: "Advanced AI, ML, and cloud-native solutions",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg",
-  },
-  {
-    name: "GitHub",
-    desc: "World's largest open-source development platform",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg",
-  },
-  {
-    name: "Otis AI",
-    desc: "Cross-channel AI-powered ad optimization",
-    logo: "https://meetotis.com/static/media/otis-logo-blue.a85ab8568632b8084e4f.svgz",
-  },
-  {
-    name: "DataPattern US",
-    desc: "Precision engineering and defense solutions",
-    logo: datapatternlogo,
-  },
-  {
-    name: "The Hindu",
-    desc: "One of India's leading national dailies",
-    logo: "https://crystalpng.com/wp-content/uploads/2025/11/the_hindu_logo.png",
-  },
-  {
-    name: "Keerthi Pumps",
-    desc: "Industrial pump manufacturing experts",
-    logo: "https://keerthipumps.com/wp-content/themes/keerthipumps/img/logoimg.png",
-  },
-  {
-    name: "Farm2Bag",
-    desc: "Farm-to-table organic produce distribution",
-    logo: "https://farm2bag.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FLogo%20with%20text%20png.32343519.png&w=3840&q=75",
-  },
-  {
-    name: "Varam.app",
-    desc: "A modern digital matrimonial platform",
-    logo: "https://varam.app/logo.png",
-  },
-  {
-    name: "Web3 Technologies",
-    desc: "Blockchain, DeFi, and decentralized apps",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/3/36/Blockchain_icon.svg",
-  },
-  {
-    name: "DC Tech",
-    desc: "End-to-end digital solutions provider",
-    logo: "https://cdn-icons-png.flaticon.com/512/3064/3064197.png",
-  },
-  {
-    name: "Amazon",
-    desc: "Global e-commerce & cloud leader",
-    logo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
-  },
-];
+/* ================= TYPES ================= */
+
+interface Partner {
+  _id: string;
+  name: string;
+  description: string;
+  logo: string;
+  isActive: boolean;
+  order: number;
+}
+
+/* ================= COMPONENT ================= */
 
 const TrustedPartners: React.FC = () => {
+  const [partners, setPartners] = useState<Partner[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchPartners();
+  }, []);
+
+  /* ================= API CALL ================= */
+
+  const fetchPartners = async () => {
+    try {
+      const res = await axios.get(API_URL);
+
+      const apiData =
+        res?.data?.result ||
+        res?.data?.data ||
+        [];
+
+      // ✅ show only active partners, ordered
+      const activePartners = Array.isArray(apiData)
+        ? apiData
+            .filter((item: Partner) => item.isActive)
+            .sort(
+              (a: Partner, b: Partner) =>
+                (a.order || 0) - (b.order || 0)
+            )
+        : [];
+
+      setPartners(activePartners);
+    } catch (error) {
+      console.error("Failed to load partners", error);
+      setPartners([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* ================= RENDER ================= */
+
   return (
     <Section>
       <Header>
@@ -91,18 +82,26 @@ const TrustedPartners: React.FC = () => {
         </Subtitle>
       </Header>
 
-      {/* 🔥 SINGLE CONTINUOUS SLIDER */}
       <CardsWrapper>
         <CardsGrid>
-          {[...partners, ...partners].map((item, index) => (
-            <PartnerCard key={`${item.name}-${index}`}>
-              <LogoWrapper>
-                <PartnerLogo src={item.logo} alt={item.name} />
-              </LogoWrapper>
-              <PartnerName>{item.name}</PartnerName>
-              <PartnerDesc>{item.desc}</PartnerDesc>
-            </PartnerCard>
-          ))}
+          {loading
+            ? null
+            : [...partners, ...partners].map((item, index) => (
+                <PartnerCard key={`${item._id}-${index}`}>
+                  <LogoWrapper>
+                    <PartnerLogo
+                      src={item.logo}
+                      alt={item.name}
+                    />
+                  </LogoWrapper>
+
+                  <PartnerName>{item.name}</PartnerName>
+
+                  <PartnerDesc>
+                    {item.description}
+                  </PartnerDesc>
+                </PartnerCard>
+              ))}
         </CardsGrid>
       </CardsWrapper>
     </Section>

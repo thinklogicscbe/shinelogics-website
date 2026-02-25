@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { getAllWithCount, updateJobById, deleteJobById } from "../API/AdminUser";
+import {
+  getAllWithCount,
+  updateJobById,
+  deleteJobById,
+} from "../API/AdminUser";
 import { Select, MenuItem } from "@mui/material";
 import TablePagination from "@mui/material/TablePagination";
 import { MdDelete, MdEdit, MdClose } from "react-icons/md";
@@ -18,10 +22,16 @@ import {
   Modal,
   ModalContent,
   ModalHeader,
+  ModalBody,
   Input,
-  Heading,
-  BtnContainer,
-  Btn,
+  TextArea,
+  FormSection,
+  FormGrid,
+  Label,
+  ModalFooter,
+  PrimaryBtn,
+  SecondaryBtn,
+  CloseBtn,
 } from "./style";
 
 interface Job {
@@ -48,7 +58,6 @@ const ViewJobs: React.FC = () => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [editingJob, setEditingJob] = useState<Job | null>(null);
   const [formData, setFormData] = useState<Job | null>(null);
-
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -67,20 +76,36 @@ const ViewJobs: React.FC = () => {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     if (!formData) return;
     const { name, value } = e.target;
 
     if (name.startsWith("summary.")) {
       const field = name.split(".")[1];
+
       setFormData({
         ...formData,
-        summary: { ...formData.summary, [field]: value },
+        summary: {
+          ...formData.summary,
+          [field]: field === "numberOfPositions" ? Number(value) : value,
+        },
       });
     } else {
-      setFormData({ ...formData, [name]: value });
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
     }
+  };
+
+  const handleSkillsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!formData) return;
+
+    setFormData({
+      ...formData,
+      skills: e.target.value.split(",").map((s) => s.trim()),
+    });
   };
 
   const handleUpdate = async (e: React.FormEvent) => {
@@ -95,11 +120,6 @@ const ViewJobs: React.FC = () => {
   const handleDelete = async (id: string) => {
     if (!window.confirm("Delete this job?")) return;
     await deleteJobById(id);
-    fetchJobs();
-  };
-
-  const handleCloseJob = async (id: string) => {
-    await updateJobById(id, { status: 0 });
     fetchJobs();
   };
 
@@ -131,7 +151,7 @@ const ViewJobs: React.FC = () => {
           <tbody>
             {jobs
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map(job => (
+              .map((job) => (
                 <TableRow key={job._id}>
                   <TableData>{job.jobTitle}</TableData>
                   <TableData>{job.summary.location}</TableData>
@@ -146,7 +166,7 @@ const ViewJobs: React.FC = () => {
                     <Select
                       size="small"
                       value={job.status}
-                      onChange={e =>
+                      onChange={(e) =>
                         handleStatusChange(job._id, e.target.value as string)
                       }
                     >
@@ -160,9 +180,6 @@ const ViewJobs: React.FC = () => {
                     </IconBtn>
                     <IconBtn danger onClick={() => handleDelete(job._id)}>
                       <MdDelete />
-                    </IconBtn>
-                    <IconBtn onClick={() => handleCloseJob(job._id)}>
-                      <MdClose />
                     </IconBtn>
                   </TableData>
                 </TableRow>
@@ -179,7 +196,7 @@ const ViewJobs: React.FC = () => {
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={(_, p) => setPage(p)}
-          onRowsPerPageChange={e => {
+          onRowsPerPageChange={(e) => {
             setRowsPerPage(parseInt(e.target.value, 10));
             setPage(0);
           }}
@@ -189,22 +206,138 @@ const ViewJobs: React.FC = () => {
       {editingJob && formData && (
         <Modal>
           <ModalContent>
-            <ModalHeader>Edit Job</ModalHeader>
+            <ModalHeader>
+              <div>
+                <h2>Edit Job</h2>
+                <p>Update job details</p>
+              </div>
+              <CloseBtn onClick={() => setEditingJob(null)}>
+                <MdClose />
+              </CloseBtn>
+            </ModalHeader>
 
-            <form onSubmit={handleUpdate}>
-              <Heading>Job Title</Heading>
-              <Input name="jobTitle" value={formData.jobTitle} onChange={handleChange} />
+            {/* 🔥 IMPORTANT FIX */}
+            <form
+              onSubmit={handleUpdate}
+              style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                overflow: "hidden",
+              }}
+            >
+              {/* SCROLL AREA */}
+              <ModalBody>
+                <FormSection>
+                  <Label>Job Title</Label>
+                  <Input
+                    name="jobTitle"
+                    value={formData.jobTitle}
+                    onChange={handleChange}
+                  />
+                </FormSection>
 
-              <Heading>Description</Heading>
-              <Input name="jobDescription" value={formData.jobDescription} onChange={handleChange} />
+                <FormSection>
+                  <Label>Short Description</Label>
+                  <TextArea
+                    name="shortDescription"
+                    value={formData.shortDescription}
+                    onChange={handleChange}
+                  />
+                </FormSection>
 
-              <Heading>Location</Heading>
-              <Input name="summary.location" value={formData.summary.location} onChange={handleChange} />
+                <FormSection>
+                  <Label>Full Description</Label>
+                  <TextArea
+                    name="jobDescription"
+                    value={formData.jobDescription}
+                    onChange={handleChange}
+                  />
+                </FormSection>
 
-              <BtnContainer>
-                <Btn className="update" type="submit">Update</Btn>
-                <Btn className="close" type="button" onClick={() => setEditingJob(null)}>Cancel</Btn>
-              </BtnContainer>
+                <FormGrid>
+                  <FormSection>
+                    <Label>Location</Label>
+                    <Input
+                      name="summary.location"
+                      value={formData.summary.location}
+                      onChange={handleChange}
+                    />
+                  </FormSection>
+
+                  <FormSection>
+                    <Label>Job Type</Label>
+                    <Input
+                      name="summary.jobType"
+                      value={formData.summary.jobType}
+                      onChange={handleChange}
+                    />
+                  </FormSection>
+
+                  <FormSection>
+                    <Label>Positions</Label>
+                    <Input
+                      type="number"
+                      name="summary.numberOfPositions"
+                      value={formData.summary.numberOfPositions}
+                      onChange={handleChange}
+                    />
+                  </FormSection>
+
+                  <FormSection>
+                    <Label>Experience</Label>
+                    <Input
+                      name="summary.experience"
+                      value={formData.summary.experience}
+                      onChange={handleChange}
+                    />
+                  </FormSection>
+
+                  <FormSection>
+                    <Label>Date Posted</Label>
+                    <Input
+                      type="date"
+                      name="summary.datePosted"
+                      value={formData.summary.datePosted?.slice(0, 10)}
+                      onChange={handleChange}
+                    />
+                  </FormSection>
+                </FormGrid>
+
+                <FormSection>
+                  <Label>Requirements</Label>
+                  <TextArea
+                    name="requirements"
+                    value={formData.requirements}
+                    onChange={handleChange}
+                  />
+                </FormSection>
+
+                <FormSection>
+                  <Label>Qualifications</Label>
+                  <TextArea
+                    name="qualifications"
+                    value={formData.qualifications}
+                    onChange={handleChange}
+                  />
+                </FormSection>
+
+                <FormSection>
+                  <Label>Skills (comma separated)</Label>
+                  <Input
+                    value={formData.skills.join(", ")}
+                    onChange={handleSkillsChange}
+                  />
+                </FormSection>
+              </ModalBody>
+
+              {/* FIXED FOOTER */}
+              <ModalFooter>
+                <SecondaryBtn type="button" onClick={() => setEditingJob(null)}>
+                  Cancel
+                </SecondaryBtn>
+                <PrimaryBtn type="submit">Save Changes</PrimaryBtn>
+              </ModalFooter>
             </form>
           </ModalContent>
         </Modal>

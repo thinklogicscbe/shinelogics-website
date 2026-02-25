@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
 import {
   SectionContainer,
   GridWrapper,
@@ -11,19 +11,23 @@ import {
   ButtonGroup,
 } from "./style";
 
+/* ================= API ================= */
+
 const API_URL = `${process.env.REACT_APP_BACKEND_URL}/home-content`;
+
+/* ================= TYPES ================= */
 
 interface HomeContent {
   _id: string;
   heroTitle: string;
-  mainDescription: string;
-  subDescription: string;
-  primaryCtaText?: string;
-  primaryCtaRoute?: string;
-  secondaryCtaText?: string;
-  secondaryCtaRoute?: string;
+  description: string;
+  points?: string[];
+  buttonText?: string;
+  buttonRoute?: string;
   videos: string[];
 }
+
+/* ================= COMPONENT ================= */
 
 const Home = () => {
   const navigate = useNavigate();
@@ -31,7 +35,9 @@ const Home = () => {
 
   const [banner, setBanner] = useState<HomeContent | null>(null);
   const [loading, setLoading] = useState(true);
-  const [muted, setMuted] = useState(true); // 🔊 sound state
+  const [muted, setMuted] = useState(true);
+
+  /* ================= LOAD BANNER ================= */
 
   const loadBanner = async () => {
     try {
@@ -39,14 +45,19 @@ const Home = () => {
         headers: { "Cache-Control": "no-cache" },
       });
 
-      const list = Array.isArray(res.data?.result)
-        ? res.data.result
-        : [];
+      const list = Array.isArray(res.data?.result) ? res.data.result : [];
 
       if (list.length > 0) {
+        const item = list[0];
+
         setBanner({
-          ...list[0],
-          videos: list[0].videos ?? [],
+          _id: item._id,
+          heroTitle: item.heroTitle,
+          description: item.description,
+          points: Array.isArray(item.points) ? item.points : [],
+          buttonText: item.buttonText,
+          buttonRoute: item.buttonRoute,
+          videos: Array.isArray(item.videos) ? item.videos : [],
         });
       } else {
         setBanner(null);
@@ -63,7 +74,8 @@ const Home = () => {
     loadBanner();
   }, []);
 
-  // ▶️ Ensure autoplay works after refresh
+  /* ================= VIDEO AUTOPLAY ================= */
+
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.muted = true;
@@ -80,6 +92,8 @@ const Home = () => {
     setMuted(next);
   };
 
+  /* ================= STATES ================= */
+
   if (loading) {
     return (
       <SectionContainer>
@@ -90,40 +104,44 @@ const Home = () => {
 
   if (!banner) return null;
 
+  /* ================= RENDER ================= */
+
   return (
     <SectionContainer>
       <GridWrapper>
         {/* LEFT GRID */}
         <LeftGrid>
+          {/* HERO TITLE */}
           <h1>{banner.heroTitle}</h1>
-          <p className="main-description">{banner.mainDescription}</p>
-          <p className="sub-hero">{banner.subDescription}</p>
 
+          {/* DESCRIPTION */}
+          {banner.description && (
+            <p className="main-description">{banner.description}</p>
+          )}
+
+          {/* POINTS */}
+          {banner.points && banner.points.length > 0 && (
+            <ul className="sub-hero">
+              {banner.points.map((point, index) => (
+                <li key={index}>{point}</li>
+              ))}
+            </ul>
+          )}
+
+          {/* CTA BUTTON */}
           <ButtonGroup>
-            {/* {banner.primaryCtaText && (
-              <button
-                className="primary"
-                onClick={() =>
-                  banner.primaryCtaRoute &&
-                  navigate(banner.primaryCtaRoute)
-                }
-              >
-                {banner.primaryCtaText}
-              </button>
-            )} */}
+            {(() => {
+              const route = banner.buttonRoute;
+              const text = banner.buttonText;
 
-            {/* {banner.secondaryCtaText && (
-              
-              <button
-                className="secondary"
-                onClick={() =>
-                  banner.secondaryCtaRoute &&
-                  navigate("/service")
-                }
-              >
-                {banner.secondaryCtaText}
-              </button>
-            )} */}
+              if (!route || !text) return null;
+
+              return (
+                <button className="primary" onClick={() => navigate(route)}>
+                  {text}
+                </button>
+              );
+            })()}
           </ButtonGroup>
         </LeftGrid>
 
@@ -132,24 +150,40 @@ const Home = () => {
           {banner.videos.length > 0 && (
             <VideoBox>
               <video
-                key={banner.videos[0]} // forces remount if video changes
                 ref={videoRef}
                 autoPlay
                 loop
                 muted={muted}
                 playsInline
                 preload="auto"
-                onClick={toggleMute} // click video to unmute
               >
                 <source src={banner.videos[0]} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
 
-              {/* 🔊 Sound Toggle */}
+              {/* 🔊 MUTE / UNMUTE ICON */}
               <button
-                className="sound-toggle"
                 onClick={toggleMute}
-                aria-label="Toggle sound"
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  right: "20px",
+                  transform: "translateY(-50%)",
+                  width: "44px",
+                  height: "44px",
+                  borderRadius: "50%",
+                  border: "none",
+                  background: "rgba(0,0,0,0.65)",
+                  color: "#fff",
+                  fontSize: "18px",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  zIndex: 10,
+                  backdropFilter: "blur(6px)",
+                  transition: "all 0.2s ease",
+                }}
               >
                 {muted ? "🔇" : "🔊"}
               </button>
