@@ -18,7 +18,7 @@ const OurProduct = () => {
 
     return (
         <div>
-            <ProductContainer>
+            {/* <ProductContainer>
                 <ProductTitle>Products Overview</ProductTitle>
                 <p>Discover our range of products designed to streamline business operations, enhance productivity, and provide exceptional service to our clients.</p>
                 <div className="services-grid">
@@ -44,7 +44,7 @@ const OurProduct = () => {
                     </ProductCard>
                         
                 </div>
-            </ProductContainer>
+            </ProductContainer> */}
 
             <div>
                 <TechnologiesHeading>Technologies</TechnologiesHeading>

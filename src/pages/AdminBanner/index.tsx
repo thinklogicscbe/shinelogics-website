@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent, FormEvent } from "react";
+import React, { useEffect, useState, FormEvent } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -16,8 +16,6 @@ import {
 
 import { uploadFileToS3 } from "../API/s3Upload";
 
-/* ================= API ================= */
-
 const API_URL = `${process.env.REACT_APP_BACKEND_URL}/home-content`;
 
 /* ================= TYPES ================= */
@@ -25,60 +23,42 @@ const API_URL = `${process.env.REACT_APP_BACKEND_URL}/home-content`;
 interface HomeContent {
   _id: string;
   heroTitle: string;
-  mainDescription: string;
-  subDescription: string;
-  primaryCtaText?: string;
-  primaryCtaRoute?: string;
-  secondaryCtaText?: string;
-  secondaryCtaRoute?: string;
-  videos?: string[];
+  description: string;
+  points: string[];
+  videos: string[];
+  buttonText?: string;
+  buttonRoute?: string;
 }
 
-interface FormState {
-  heroTitle: string;
-  mainDescription: string;
-  subDescription: string;
-  primaryCtaText: string;
-  primaryCtaRoute: string;
-  secondaryCtaText: string;
-  secondaryCtaRoute: string;
-  videos: File[];
-}
+/* ================= INITIAL ================= */
 
-/* ================= INITIAL FORM ================= */
-
-const initialForm: FormState = {
+const initialForm = {
   heroTitle: "",
-  mainDescription: "",
-  subDescription: "",
-  primaryCtaText: "",
-  primaryCtaRoute: "",
-  secondaryCtaText: "",
-  secondaryCtaRoute: "",
-  videos: [],
+  description: "",
+  points: [] as string[],
+  videos: [] as File[],
+  buttonText: "",
+  buttonRoute: "",
 };
+
+/* ================= COMPONENT ================= */
 
 const AdminBanner: React.FC = () => {
   const [items, setItems] = useState<HomeContent[]>([]);
-  const [form, setForm] = useState<FormState>(initialForm);
+  const [form, setForm] = useState(initialForm);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [existingVideos, setExistingVideos] = useState<string[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  /* ================= LOAD DATA ================= */
+  /* ================= LOAD ================= */
 
   const loadData = async () => {
     try {
-      setLoading(true);
       const res = await axios.get(API_URL);
-      setItems(Array.isArray(res.data?.result) ? res.data.result : []);
+      setItems(res.data?.result || []);
     } catch {
-      setError("Failed to load banner content.");
-      toast.error("Failed to load banner content ❌");
-    } finally {
-      setLoading(false);
+      toast.error("Failed to load banners ❌");
     }
   };
 
@@ -86,45 +66,76 @@ const AdminBanner: React.FC = () => {
     loadData();
   }, []);
 
-  /* ================= FORM HANDLERS ================= */
+  /* ================= CANCEL ================= */
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+  const handleCancel = () => {
+    setShowForm(false);
+    setEditingId(null);
+    setForm(initialForm);
+    setExistingVideos([]);
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
+  /* ================= POINT ACTIONS ================= */
 
+  const addPoint = () => {
     setForm((prev) => ({
       ...prev,
-      videos: Array.from(files),
+      points: [...prev.points, ""],
     }));
+  };
+
+  const updatePoint = (index: number, value: string) => {
+    const updated = [...form.points];
+    updated[index] = value;
+    setForm({ ...form, points: updated });
+  };
+
+  const removePoint = (index: number) => {
+    setForm({
+      ...form,
+      points: form.points.filter((_, i) => i !== index),
+    });
   };
 
   /* ================= SUBMIT ================= */
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (!form.heroTitle.trim()) {
+      toast.error("Hero title is required");
+      return;
+    }
+
+    if (!form.description.trim()) {
+      toast.error("Description is required");
+      return;
+    }
+
+    if (form.videos.length === 0 && existingVideos.length === 0) {
+      toast.error("At least one video is required");
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const uploadedVideoUrls = await Promise.all(
-        form.videos.map((file) => uploadFileToS3(file))
+      const uploadedVideos = await Promise.all(
+        form.videos.map((file) => uploadFileToS3(file)),
       );
 
+      const cleanedPoints = form.points.map((p) => p.trim()).filter(Boolean);
+
       const payload = {
-        heroTitle: form.heroTitle,
-        mainDescription: form.mainDescription,
-        subDescription: form.subDescription,
-        primaryCtaText: form.primaryCtaText,
-        primaryCtaRoute: form.primaryCtaRoute,
-        secondaryCtaText: form.secondaryCtaText,
-        secondaryCtaRoute: form.secondaryCtaRoute,
-        videos: [...uploadedVideoUrls, ...existingVideos],
+        heroTitle: form.heroTitle.trim(),
+        description: form.description.trim(),
+        points: cleanedPoints,
+        videos:
+          uploadedVideos.length > 0
+            ? uploadedVideos // replace
+            : existingVideos, // keep old if no new upload
+        buttonText: form.buttonText.trim(),
+        buttonRoute: form.buttonRoute.trim(),
       };
 
       if (editingId) {
@@ -135,13 +146,10 @@ const AdminBanner: React.FC = () => {
         toast.success("Banner created successfully 🎉");
       }
 
-      setForm(initialForm);
-      setExistingVideos([]);
-      setEditingId(null);
-      setShowForm(false);
+      handleCancel();
       loadData();
-    } catch {
-      toast.error("Failed to save banner ❌");
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "Failed to save banner ❌");
     } finally {
       setLoading(false);
     }
@@ -150,21 +158,16 @@ const AdminBanner: React.FC = () => {
   /* ================= EDIT ================= */
 
   const handleEdit = (item: HomeContent) => {
-    toast.info("Editing banner ✏️");
-
     setEditingId(item._id);
     setExistingVideos(item.videos || []);
     setForm({
       heroTitle: item.heroTitle,
-      mainDescription: item.mainDescription,
-      subDescription: item.subDescription,
-      primaryCtaText: item.primaryCtaText || "",
-      primaryCtaRoute: item.primaryCtaRoute || "",
-      secondaryCtaText: item.secondaryCtaText || "",
-      secondaryCtaRoute: item.secondaryCtaRoute || "",
+      description: item.description,
+      points: item.points || [],
       videos: [],
+      buttonText: item.buttonText || "",
+      buttonRoute: item.buttonRoute || "",
     });
-
     setShowForm(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -172,14 +175,18 @@ const AdminBanner: React.FC = () => {
   /* ================= DELETE ================= */
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm("Delete this banner?")) return;
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this banner?",
+    );
+
+    if (!confirmDelete) return;
 
     try {
       await axios.delete(`${API_URL}/${id}`);
       toast.success("Banner deleted successfully 🗑️");
       loadData();
-    } catch {
-      toast.error("Failed to delete banner ❌");
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "Failed to delete banner ❌");
     }
   };
 
@@ -189,105 +196,129 @@ const AdminBanner: React.FC = () => {
     <>
       <Spacer30 />
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      {/* HEADER */}
-      <div
-        style={{
-          display: "flex",
-          gap: "16px",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
         <SectionTitle>Home Banner</SectionTitle>
-
         <PrimaryActionButton
           onClick={() => {
-            setForm(initialForm);
-            setExistingVideos([]);
-            setEditingId(null);
             setShowForm(true);
+            setForm(initialForm);
+            setEditingId(null);
+            setExistingVideos([]);
           }}
         >
           + Create Banner
         </PrimaryActionButton>
       </div>
 
-      {/* FORM */}
       {showForm && (
         <FormBox onSubmit={handleSubmit}>
-          <h3>{editingId ? "Edit Banner" : "Create Banner"}</h3>
+          <input
+            placeholder="Hero Title"
+            value={form.heroTitle}
+            onChange={(e) => setForm({ ...form, heroTitle: e.target.value })}
+          />
+
+          <textarea
+            placeholder="Description"
+            value={form.description}
+            onChange={(e) => setForm({ ...form, description: e.target.value })}
+          />
 
           <input
-            name="heroTitle"
-            value={form.heroTitle}
-            onChange={handleChange}
-            placeholder="Hero Title"
-            required
+            placeholder="Button Text (optional)"
+            value={form.buttonText}
+            onChange={(e) => setForm({ ...form, buttonText: e.target.value })}
           />
 
-          <textarea
-            name="mainDescription"
-            value={form.mainDescription}
-            onChange={handleChange}
-            placeholder="Main Description"
-            required
+          <input
+            placeholder="Button Route (e.g. /contact)"
+            value={form.buttonRoute}
+            onChange={(e) => setForm({ ...form, buttonRoute: e.target.value })}
           />
 
-          <textarea
-            name="subDescription"
-            value={form.subDescription}
-            onChange={handleChange}
-            placeholder="Sub Description"
-            required
-          />
+          <SectionTitle>Optional Points</SectionTitle>
+
+          {form.points.map((point, index) => (
+            <div key={index} style={{ marginBottom: 10 }}>
+              <input
+                placeholder={`Point ${index + 1}`}
+                value={point}
+                onChange={(e) => updatePoint(index, e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => removePoint(index)}
+                style={{ color: "red", marginLeft: 10 }}
+              >
+                Remove
+              </button>
+            </div>
+          ))}
 
           <InputRow>
-            <input
-              name="primaryCtaText"
-              value={form.primaryCtaText}
-              onChange={handleChange}
-              placeholder="Primary CTA"
-            />
-            <input
-              name="secondaryCtaText"
-              value={form.secondaryCtaText}
-              onChange={handleChange}
-              placeholder="Secondary CTA"
-            />
+            <button type="button" onClick={addPoint}>
+              + Add Point
+            </button>
           </InputRow>
 
-          <input type="file" accept="video/*" multiple onChange={handleFileChange} />
+          <input
+            type="file"
+            accept="video/*"
+            multiple
+            onChange={(e) =>
+              setForm({
+                ...form,
+                videos: Array.from(e.target.files || []),
+              })
+            }
+          />
 
-          <button type="submit" disabled={loading}>
-            {editingId ? "Update Banner" : "Create Banner"}
-          </button>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button type="submit" disabled={loading}>
+              {loading
+                ? "Saving..."
+                : editingId
+                  ? "Update Banner"
+                  : "Save Banner"}
+            </button>
 
-          <button type="button" onClick={() => setShowForm(false)}>
-            Cancel
-          </button>
+            <button
+              type="button"
+              onClick={handleCancel}
+              style={{ background: "#ccc" }}
+            >
+              Cancel
+            </button>
+          </div>
         </FormBox>
       )}
 
-      {/* LIST */}
       <CardGrid>
         {items.map((item) => (
           <Card key={item._id}>
             <h3>{item.heroTitle}</h3>
 
-            {item.videos?.length ? (
+            <p style={{ fontSize: 14 }}>{item.description.slice(0, 120)}...</p>
+
+            {item.buttonText && (
+              <p style={{ fontSize: 13, opacity: 0.7 }}>
+                Button: {item.buttonText}
+              </p>
+            )}
+
+            {item.videos?.[0] && (
               <VideoPreview>
-                <video key={item.videos[0]} src={item.videos[0]} controls />
+                <video src={item.videos[0]} controls />
               </VideoPreview>
-            ) : null}
+            )}
 
             <CardActions>
-              <button className="edit" onClick={() => handleEdit(item)}>
-                Edit
-              </button>
-              <button className="delete" onClick={() => handleDelete(item._id)}>
+              <button onClick={() => handleEdit(item)}>Edit</button>
+
+              <button
+                onClick={() => handleDelete(item._id)}
+                style={{ color: "red" }}
+              >
                 Delete
               </button>
             </CardActions>

@@ -64,10 +64,11 @@ const insightsDropdownLinks = [
 
 const aboutDropdownLinks = [
   { path: "/career", label: "Career" },
-  { path: "/about/mission", label: "Mission & Vision" },
-  { path: "/about/services", label: "What We Do" },
-  { path: "/about/industries", label: "Industries" },
+  // { path: "/about/mission", label: "Mission & Vision" },
+  // { path: "/about/services", label: "What We Do" },
+  // { path: "/about/industries", label: "Industries" },
   { path: "/about/experts", label: "Our Experts" },
+  { path: "/About", label: "About Us" },
 ];
 
 const Header = () => {

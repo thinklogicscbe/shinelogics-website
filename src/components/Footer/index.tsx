@@ -41,7 +41,7 @@ const Footer = () => {
           <FooterLink as={Link} to="/">
             Home
           </FooterLink>
-          <FooterLink as={Link} to="/about">
+          <FooterLink as={Link} to="/about/mission">
             About Us
           </FooterLink>
           <FooterLink as={Link} to="/service">
@@ -60,9 +60,9 @@ const Footer = () => {
           <FooterLink as={Link} to="/privacyPolicy">
             Privacy Policy
           </FooterLink>
-          <FooterLink as={Link} to="/terms">
+          {/* <FooterLink as={Link} to="/terms">
             Terms & Conditions
-          </FooterLink>
+          </FooterLink> */}
         </FooterColumn>
 
         {/* ===== Newsletter ===== */}

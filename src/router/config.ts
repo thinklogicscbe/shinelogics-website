@@ -8,9 +8,10 @@ const routes = [
   { path: "/about/services", exact: true, component: "AboutServices" },
   { path: "/about/industries", exact: true, component: "AboutIndustries" },
   { path: "/about/experts", exact: true, component: "AboutExperts" },
+  { path: "/about", exact: true, component: "About" },
 
   { path: "/service", exact: true, component: "Service" },
-{ path: "/ProductCompo/:slug", exact: true, component: "Products" },
+  { path: "/ProductCompo/:slug", exact: true, component: "Products" },
 
   { path: "/contact", exact: true, component: "Contact" },
   { path: "/career", exact: true, component: "Career" },

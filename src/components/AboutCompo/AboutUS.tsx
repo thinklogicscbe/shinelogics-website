@@ -20,11 +20,11 @@ import {
 
   TitleSmall,
   Description,
-} from "./style";
+} from "./styles";
 
 /* ================= COMPONENT ================= */
 
-const About: React.FC = () => {
+const AboutUS: React.FC = () => {
   return (
     <>
       {/* ================= MISSION & VISION ================= */}
@@ -114,4 +114,4 @@ const About: React.FC = () => {
   );
 };
 
-export default About;
+export default AboutUS;

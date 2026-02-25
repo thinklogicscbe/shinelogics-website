@@ -30,6 +30,8 @@ import AdminQuickMvp from "../AdminQuickMvp";
 import AdminCustomPlanOptions from "../AdminCustomPlanOptions"; // 🔥 NEW
 import AdminServicePage from "../AdminServicePage";
 import ContactLeadsAdmin from "../ContactLeadsAdmin";
+import HomeSectionAdmin from "../HomeSectionAdmin";
+import PartnerAdmin from "../PartnerAdmin";
 
 // 🔹 Assets
 import logo1 from "../../assets/shinelogics-logo.png";
@@ -48,7 +50,9 @@ type AdminComponent =
   | "QuickMvpAdmin"
   | "CustomPlanOptions"
   | "AdminServices" // ✅ NEW // 🔥 NEW
-  | "ContactLeads"; // ✅ NEW
+  | "ContactLeads"
+  | "HomeSectionAdmin"
+  | "PartnerAdmin"; // ✅ NEW
 
 const SideBar: React.FC = () => {
   const navigate = useNavigate();
@@ -78,6 +82,12 @@ const SideBar: React.FC = () => {
     switch (selectedComponent) {
       case "AdminServices":
         return <AdminServicePage />;
+
+      case "HomeSectionAdmin":
+        return <HomeSectionAdmin />;
+
+      case "PartnerAdmin":
+        return <PartnerAdmin />;
 
       case "ContactLeads": // ✅ NEW
         return <ContactLeadsAdmin />;
@@ -142,6 +152,20 @@ const SideBar: React.FC = () => {
               onClick={() => handleNavigation("Dashboard")}
             >
               Dashboard
+            </NavItem>
+
+            <NavItem
+              active={selectedComponent === "HomeSectionAdmin"}
+              onClick={() => handleNavigation("HomeSectionAdmin")}
+            >
+              Home Sections
+            </NavItem>
+
+            <NavItem
+              active={selectedComponent === "PartnerAdmin"}
+              onClick={() => handleNavigation("PartnerAdmin")}
+            >
+              Partners
             </NavItem>
 
             <NavItem

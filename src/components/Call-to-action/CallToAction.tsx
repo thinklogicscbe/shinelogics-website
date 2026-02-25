@@ -25,7 +25,7 @@ const CallToAction: React.FC = () => {
         </TextBlock>
 
         <ButtonBlock>
-          <CTAButton>Start a Project</CTAButton>
+          {/* <CTAButton>Start a Project</CTAButton> */}
         </ButtonBlock>
       </CTABox>
     </CTAWrapper>

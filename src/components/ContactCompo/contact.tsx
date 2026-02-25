@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+
 import {
   PageWrapper,
   Header,
@@ -17,6 +18,12 @@ import {
   Select,
   SubmitButton,
 } from "./styles";
+
+/* ================= API ================= */
+
+const API_URL = `${process.env.REACT_APP_BACKEND_URL}/contact-leads`;
+
+/* ================= COMPONENT ================= */
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -49,7 +56,7 @@ const Contact: React.FC = () => {
     try {
       setLoading(true);
 
-      await axios.post("http://localhost:5000/api/contact-leads", formData);
+      await axios.post(API_URL, formData);
 
       toast.success("Thank you! We will contact you soon.");
 
@@ -67,6 +74,8 @@ const Contact: React.FC = () => {
       setLoading(false);
     }
   };
+
+  /* ================= RENDER ================= */
 
   return (
     <PageWrapper>

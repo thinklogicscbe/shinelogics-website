@@ -68,7 +68,7 @@ const WhyChooseUs: React.FC = () => {
       </CardsGrid>
 
       <CTASection>
-        <CTAButton>Book a Strategy Call</CTAButton>
+        {/* <CTAButton>Book a Strategy Call</CTAButton> */}
       </CTASection>
     </WhyChooseContainer>
   );
