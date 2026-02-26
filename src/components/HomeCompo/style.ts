@@ -209,20 +209,20 @@ export const ImageContainer = styled.div`
 
 export const PdaasContainer = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr; /* Two equal-width columns for larger screens */
-  gap: 20px; /* Space between columns */
-  align-items: center; /* Align items vertically */
-  padding: 60px; /* Padding for the container */
+  grid-template-columns: 1fr 1fr;
+  gap: 36px;
+  align-items: center;
 
-  /* Responsive design for tablets */
+  padding: 60px;
+  max-width: 1200px;   /* ✅ keeps layout tight */
+  margin: 0 auto;
+
   @media (max-width: 1024px) {
-    grid-template-columns: 1fr; /* Single column layout for tablets */
+    grid-template-columns: 1fr;
     padding: 40px;
   }
 
-  /* Responsive design for mobile phones */
   @media (max-width: 768px) {
-    grid-template-columns: 1fr; /* Single column layout for phones */
     padding: 20px;
   }
 `;
@@ -260,39 +260,102 @@ export const PdaasContent = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  font-size: 20px;
-  line-height: 1.5;
+
+  max-width: 520px;        /* ✅ SAME as video max-width */
+  margin-left: auto;      /* aligns with video column */
+  margin-right: auto;
+
   color: #333;
+
+  /* ================= TITLE ================= */
 
   h1 {
     color: #003366;
-    font-size: 40px;
-    margin: 0 0 8px 0; /* ✅ control space after heading */
+    font-size: 32px;       /* 🔽 reduced */
+    line-height: 1.25;
+    margin-bottom: 10px;
   }
+
+  /* ================= DESCRIPTION ================= */
 
   p {
     color: #3a4048ff;
-    font-weight: 700;
-    font-size: 17px;
-    line-height: 1.6;
-    margin: 0; /* ✅ REMOVE bottom gap completely */
+    font-weight: 600;      /* 🔽 slightly lighter */
+    font-size: 15.5px;     /* 🔽 reduced */
+    line-height: 1.55;
+    margin: 0;
   }
 
-  /* If you want a LITTLE space before the next heading */
-  p + h1 {
-    margin-top: 8px; /* optional, controlled spacing */
+  /* ================= POINTS ================= */
+
+  .points-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 14px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    max-height: 220px;     /* ✅ prevents overflow */
+    overflow: hidden;
   }
 
-  @media (max-width: 1024px) {
-    font-size: 18px;
+  .points-list li {
+    position: relative;
+
+    font-size: 14.5px;     /* 🔽 reduced */
+    font-weight: 600;
+    line-height: 1.5;
+    color: #3a4048ff;
+
+    padding: 10px 12px 10px 34px;
+
+    background: #f8fafc;
+    border: 1px solid #eef2f7;
+    border-radius: 8px;
+
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
   }
+
+  .points-list li::before {
+    content: "✔";
+    position: absolute;
+    left: 12px;
+    top: 10px;
+    font-size: 12px;
+    color: #2563eb;
+  }
+
+  /* ================= RESPONSIVE ================= */
 
   @media (max-width: 768px) {
-    font-size: 16px;
+    max-width: 100%;
     text-align: center;
+
+    h1 {
+      font-size: 28px;
+    }
+
+    p {
+      font-size: 15px;
+    }
+
+    .points-list {
+      max-height: none;
+      align-items: center;
+    }
+
+    .points-list li {
+      padding: 10px 14px;
+    }
+
+    .points-list li::before {
+      position: static;
+      margin-right: 6px;
+    }
   }
 `;
-
 
 //BELOW GIVEN CSS CODE FOR [ OURSERVICE ] PAGE STYLE
 
