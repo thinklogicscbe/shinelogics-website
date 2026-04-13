@@ -215,7 +215,8 @@ export const MainContainer = styled.div`
   .heading-banner {
     position: relative;
     width: 100%;
-    height: 400px; /* Adjust height as needed */
+    min-height: 520px;
+    padding: 40px 20px;
     background-size: cover;
     background-position: center;
     display: flex;
@@ -224,7 +225,7 @@ export const MainContainer = styled.div`
 
     /* Add an overlay */
     ::before {
-      content: '';
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
@@ -237,19 +238,14 @@ export const MainContainer = styled.div`
 
   .heading-content {
     position: relative;
-    z-index: 2; /* Ensure the content is above the overlay */
+    z-index: 2;
     text-align: center;
-    padding: 20px;
-    background: rgba(
-      255,
-      255,
-      255,
-      0.8
-    ); /* Semi-transparent white background for text */
-    border-radius: 8px;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 12px;
     width: 60%;
-    height: 60%;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Optional: Adds a subtle shadow */
+    max-width: 900px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   }
 
   .heading-content h1 {

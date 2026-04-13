@@ -10,7 +10,7 @@ export const BannerContainer = styled.div`
   .heading-banner {
     position: relative;
     width: 100%;
-    height: 400px; /* Adjust height as needed */
+    height: 450px; /* Adjust height as needed */
     background-size: cover;
     background-position: center;
     display: flex;
