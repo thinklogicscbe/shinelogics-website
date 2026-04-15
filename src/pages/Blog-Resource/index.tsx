@@ -171,6 +171,7 @@ const API_URL = `${process.env.REACT_APP_BACKEND_URL}/resources`;
 
 const Resources: React.FC = () => {
   const [resources, setResources] = useState<Resource[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedCategory, _setSelectedCategory] = useState<string>("ALL");
   const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
 
