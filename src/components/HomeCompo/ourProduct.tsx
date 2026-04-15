@@ -1,20 +1,6 @@
-import  { useEffect, useRef } from 'react';
-import { ProductContainer, ProductCard, ProductTitle, Video, BannerImage, TechnologiesHeading, TechnologiesParagraph } from './style';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import EMS from '../../assets/video/EMSvideo.mp4';
-import eOpSys from '../../assets/video/eOpSys.mp4';
-import E_commerce from '../../assets/video/E-commerce.mp4';
+import { BannerImage, TechnologiesHeading, TechnologiesParagraph } from './style';
 
 const OurProduct = () => {
-    const eOpSysRef = useRef<HTMLVideoElement>(null);
-    const eComRef = useRef<HTMLVideoElement>(null);
-    const emsRef = useRef<HTMLVideoElement>(null);
-
-    useEffect(() => {
-        if (eOpSysRef.current) eOpSysRef.current.play();
-        if (eComRef.current) eComRef.current.play();
-        if (emsRef.current) emsRef.current.play();
-    }, []);
 
     return (
         <div>

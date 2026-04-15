@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import {
   PageWrapper,
@@ -44,14 +44,14 @@ const EngagementModelAdmin = () => {
 
   const API_URL = `${process.env.REACT_APP_BACKEND_URL}/engagement-models`;
 
-  const fetchModels = async () => {
+  const fetchModels = useCallback(async () => {
     const res = await axios.get(API_URL);
     setModels(res.data.data || res.data);
-  };
+  }, [API_URL]);
 
   useEffect(() => {
     fetchModels();
-  }, []);
+  }, [fetchModels]);
 
   const resetForm = () => {
     setOpen(false);

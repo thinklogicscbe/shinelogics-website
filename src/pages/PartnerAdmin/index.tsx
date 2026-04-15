@@ -29,8 +29,6 @@ import {
   LogoBox,
   Name,
   Desc,
-  Footer,
-  Actions,
   Preview,
   StyledModalWrapper,
   UploadButton,
@@ -150,7 +148,7 @@ const PartnerAdmin: React.FC = () => {
 
   /* ================= TOGGLE ACTIVE ================= */
 
-  const toggleActive = async (id: string, checked: boolean) => {
+  const _toggleActive = async (id: string, checked: boolean) => {
     try {
       await axios.put(`${API_URL}/${id}`, { isActive: checked });
 
