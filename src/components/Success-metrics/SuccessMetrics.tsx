@@ -4,7 +4,6 @@ import {
   MetricsContent,
   MetricHighlight,
   Description,
-  CTAButton,
 } from "./style";
 
 const SuccessMetrics: React.FC = () => {

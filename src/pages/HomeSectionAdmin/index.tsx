@@ -360,7 +360,7 @@ const HomeSectionAdmin = () => {
                     {formData.media.map((m, i) => (
                       <div key={i}>
                         {m.type === "image" ? (
-                          <img src={m.url} />
+                          <img src={m.url} alt="Media preview" />
                         ) : (
                           <video src={m.url} muted controls />
                         )}
