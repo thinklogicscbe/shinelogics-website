@@ -148,19 +148,19 @@ const PartnerAdmin: React.FC = () => {
 
   /* ================= TOGGLE ACTIVE ================= */
 
-  const _toggleActive = async (id: string, checked: boolean) => {
-    try {
-      await axios.put(`${API_URL}/${id}`, { isActive: checked });
+  // const _toggleActive = async (id: string, checked: boolean) => {
+  //   try {
+  //     await axios.put(`${API_URL}/${id}`, { isActive: checked });
 
-      setPartners((prev) =>
-        prev.map((item) =>
-          item._id === id ? { ...item, isActive: checked } : item,
-        ),
-      );
-    } catch {
-      message.error("Update failed");
-    }
-  };
+  //     setPartners((prev) =>
+  //       prev.map((item) =>
+  //         item._id === id ? { ...item, isActive: checked } : item,
+  //       ),
+  //     );
+  //   } catch {
+  //     message.error("Update failed");
+  //   }
+  // };
 
   /* ================= CLOSE ================= */
 
