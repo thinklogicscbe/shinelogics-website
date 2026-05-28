@@ -73,6 +73,7 @@ const EmployeeDashboard: React.FC = () => {
     setEmployee(emp);
     fetchTodayTask(emp.id);
     fetchPastTasks(emp.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchTodayTask = async (empId: string) => {
