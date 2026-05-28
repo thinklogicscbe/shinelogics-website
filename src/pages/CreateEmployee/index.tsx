@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { CreateEmployeeContainer } from "./style";
 
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000/api";
 
 interface Employee {
   _id: string;

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { EmployeeLoginContainer } from "./style";
 
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000/api";
 
 const EmployeeLogin: React.FC = () => {
   const [email, setEmail] = useState("");
