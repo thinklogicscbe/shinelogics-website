@@ -27,11 +27,13 @@ import ExpertAdmin from "../ExpertAdmin";
 import AdminBanner from "../AdminBanner";
 import AdminProducts from "../AdminProducts";
 import AdminQuickMvp from "../AdminQuickMvp";
-import AdminCustomPlanOptions from "../AdminCustomPlanOptions"; // 🔥 NEW
+import AdminCustomPlanOptions from "../AdminCustomPlanOptions";
 import AdminServicePage from "../AdminServicePage";
 import ContactLeadsAdmin from "../ContactLeadsAdmin";
 import HomeSectionAdmin from "../HomeSectionAdmin";
 import PartnerAdmin from "../PartnerAdmin";
+import CreateEmployee from "../CreateEmployee"; // ✅ NEW
+import PerformanceDashboard from "../PerformanceDashboard";
 
 // 🔹 Assets
 import logo1 from "../../assets/shinelogics-logo.png";
@@ -49,10 +51,12 @@ type AdminComponent =
   | "AdminProducts"
   | "QuickMvpAdmin"
   | "CustomPlanOptions"
-  | "AdminServices" // ✅ NEW // 🔥 NEW
+  | "AdminServices"
   | "ContactLeads"
   | "HomeSectionAdmin"
-  | "PartnerAdmin"; // ✅ NEW
+  | "PartnerAdmin"
+  | "CreateEmployee"
+  | "PerformanceDashboard"; // ✅ NEW
 
 const SideBar: React.FC = () => {
   const navigate = useNavigate();
@@ -61,7 +65,7 @@ const SideBar: React.FC = () => {
 
   const [selectedComponent, setSelectedComponent] = useState<AdminComponent>(
     (localStorage.getItem("selectedComponent") as AdminComponent) ||
-      "Dashboard",
+    "Dashboard",
   );
 
   // 🔹 Navigation handler
@@ -80,6 +84,9 @@ const SideBar: React.FC = () => {
   // 🔹 Render Selected Component
   const renderComponent = () => {
     switch (selectedComponent) {
+      case "CreateEmployee": // ✅ NEW
+        return <CreateEmployee />;
+
       case "AdminServices":
         return <AdminServicePage />;
 
@@ -89,7 +96,7 @@ const SideBar: React.FC = () => {
       case "PartnerAdmin":
         return <PartnerAdmin />;
 
-      case "ContactLeads": // ✅ NEW
+      case "ContactLeads":
         return <ContactLeadsAdmin />;
 
       case "PostJob":
@@ -109,6 +116,9 @@ const SideBar: React.FC = () => {
 
       case "ExpertsAdmin":
         return <ExpertAdmin />;
+
+      case "PerformanceDashboard":
+        return <PerformanceDashboard />;
 
       case "AdminBanner":
         return <AdminBanner />;
@@ -155,6 +165,21 @@ const SideBar: React.FC = () => {
             </NavItem>
 
             <NavItem
+              active={selectedComponent === "PerformanceDashboard"}
+              onClick={() => handleNavigation("PerformanceDashboard")}
+            >
+              🤖 AI Employee Performance
+            </NavItem>
+
+            {/* ✅ NEW */}
+            <NavItem
+              active={selectedComponent === "CreateEmployee"}
+              onClick={() => handleNavigation("CreateEmployee")}
+            >
+              Employees
+            </NavItem>
+
+            <NavItem
               active={selectedComponent === "HomeSectionAdmin"}
               onClick={() => handleNavigation("HomeSectionAdmin")}
             >
@@ -182,7 +207,6 @@ const SideBar: React.FC = () => {
               Contact Leads
             </NavItem>
 
-            {/* 🔥 Quick MVP */}
             <NavItem
               active={selectedComponent === "QuickMvpAdmin"}
               onClick={() => handleNavigation("QuickMvpAdmin")}
@@ -190,7 +214,6 @@ const SideBar: React.FC = () => {
               Quick MVP Plans
             </NavItem>
 
-            {/* 🔥 Custom Plan Options */}
             <NavItem
               active={selectedComponent === "CustomPlanOptions"}
               onClick={() => handleNavigation("CustomPlanOptions")}

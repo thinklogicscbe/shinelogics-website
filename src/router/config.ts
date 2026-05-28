@@ -40,6 +40,8 @@ const routes = [
   { path: "/quickmvp", exact: true, component: "Quickmvp" },
   { path: "/engagementModels", exact: true, component: "Engagement-Models" },
   { path: "/Blog-Resource", exact: true, component: "Blog-Resource" },
+  { path: "/employee", exact: true, component: "EmployeeLogin" },
+  { path: "/employee/dashboard", exact: true, component: "EmployeeDashboard" },
   {
     path: "/ProductCompo/SoftwareDevelopment",
     exact: true,
