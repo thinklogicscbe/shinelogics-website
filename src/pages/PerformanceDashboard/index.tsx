@@ -63,6 +63,7 @@ const PerformanceDashboard: React.FC = () => {
 
   useEffect(() => {
     fetchAll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [period]);
 
   const fetchAll = async () => {
