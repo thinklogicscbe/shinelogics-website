@@ -34,6 +34,7 @@ import HomeSectionAdmin from "../HomeSectionAdmin";
 import PartnerAdmin from "../PartnerAdmin";
 import CreateEmployee from "../CreateEmployee"; // ✅ NEW
 import PerformanceDashboard from "../PerformanceDashboard";
+import PayslipAdmin from "../PayslipAdmin";
 
 // 🔹 Assets
 import logo1 from "../../assets/shinelogics-logo.png";
@@ -56,7 +57,8 @@ type AdminComponent =
   | "HomeSectionAdmin"
   | "PartnerAdmin"
   | "CreateEmployee"
-  | "PerformanceDashboard"; // ✅ NEW
+  | "PerformanceDashboard"
+  | "PayslipAdmin";// ✅ NEW
 
 const SideBar: React.FC = () => {
   const navigate = useNavigate();
@@ -89,6 +91,10 @@ const SideBar: React.FC = () => {
 
       case "AdminServices":
         return <AdminServicePage />;
+
+      case "PayslipAdmin":
+        return <PayslipAdmin />;
+
 
       case "HomeSectionAdmin":
         return <HomeSectionAdmin />;
@@ -177,6 +183,13 @@ const SideBar: React.FC = () => {
               onClick={() => handleNavigation("CreateEmployee")}
             >
               Employees
+            </NavItem>
+
+            <NavItem
+              active={selectedComponent === "PayslipAdmin"}
+              onClick={() => handleNavigation("PayslipAdmin")}
+            >
+              💰 Payslip
             </NavItem>
 
             <NavItem
