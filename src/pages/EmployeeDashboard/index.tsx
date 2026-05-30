@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { DashboardContainer } from "./style";
 
@@ -76,17 +76,7 @@ const EmployeeDashboard: React.FC = () => {
   const [leaveLoading, setLeaveLoading] = useState(false);
   const [leaveMessage, setLeaveMessage] = useState({ text: "", type: "" });
 
-  useEffect(() => {
-    const stored = localStorage.getItem("employee");
-    if (!stored) { navigate("/Employee"); return; }
-    const emp = JSON.parse(stored);
-    setEmployee(emp);
-    fetchTodayTask(emp.id);
-    fetchPastTasks(emp.id);
-    fetchLeaves(emp.id);
-  }, []);
-
-  const fetchTodayTask = async (empId: string) => {
+  const fetchTodayTask = useCallback(async (empId: string) => {
     try {
       const res = await fetch(`${BASE_URL}/tasks/employee/${empId}?date=${today}`);
       const result = await res.json();
@@ -107,23 +97,33 @@ const EmployeeDashboard: React.FC = () => {
         setOverallScore(task.overallScore || "");
       }
     } catch (err) { console.error(err); }
-  };
+  }, []);
 
-  const fetchPastTasks = async (empId: string) => {
+  const fetchPastTasks = useCallback(async (empId: string) => {
     try {
       const res = await fetch(`${BASE_URL}/tasks/employee/${empId}`);
       const result = await res.json();
       if (result.success) setPastTasks(result.result?.tasks || []);
     } catch (err) { console.error(err); }
-  };
+  }, []);
 
-  const fetchLeaves = async (empId: string) => {
+  const fetchLeaves = useCallback(async (empId: string) => {
     try {
       const res = await fetch(`${BASE_URL}/leaves/employee/${empId}`);
       const result = await res.json();
       if (result.success) setLeaves(result.result?.leaves || []);
     } catch (err) { console.error(err); }
-  };
+  }, []);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("employee");
+    if (!stored) { navigate("/Employee"); return; }
+    const emp = JSON.parse(stored);
+    setEmployee(emp);
+    fetchTodayTask(emp.id);
+    fetchPastTasks(emp.id);
+    fetchLeaves(emp.id);
+  }, [navigate, fetchTodayTask, fetchPastTasks, fetchLeaves]);
 
   // ── IN handlers ──────────────────────────────────────────────────────────────
 
