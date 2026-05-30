@@ -3,6 +3,30 @@ import { useNavigate } from "react-router-dom"; // For redirecting to home page
 import { LoginSignupContainer } from "./style"; // Importing the CSS file
 import { loginUser } from "../API/LoginUser";
 
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
+
+const loginEmployee = async (email: string, password: string) => {
+  try {
+    const response = await fetch(`${BASE_URL}/employees/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ emailId: email, password }),
+    });
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+      return { success: true, user: result.result?.user };
+    }
+
+    return {
+      success: false,
+      message: result.message || "Invalid login credentials",
+    };
+  } catch (error) {
+    return { success: false, message: "Server error. Please try again." };
+  }
+};
+
 const Login: React.FC = () => {
   const [email, setEmail] = useState(""); // To track the email input
   const [password, setPassword] = useState(""); // To track the password input
@@ -15,22 +39,37 @@ const Login: React.FC = () => {
     setPassword("");
   }, []);
 
-// Handle login form submission
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  // Handle login form submission
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage("");
 
-  const result = await loginUser(email, password);
-  console.log(result);
+    const adminResult = await loginUser(email, password);
 
-    if (result.success) {
-      localStorage.setItem("user", JSON.stringify(result.user));
+    if (adminResult.success) {
+      localStorage.removeItem("employee");
+      localStorage.setItem("user", JSON.stringify(adminResult.user));
       navigate("/SideBar");
-      window.location.reload(); 
-    } else {
-      setErrorMessage(result.message || "Invalid login credentials");
+      window.location.reload();
+      return;
     }
+
+    const employeeResult = await loginEmployee(email, password);
+
+    if (employeeResult.success) {
+      localStorage.removeItem("user");
+      localStorage.setItem("employee", JSON.stringify(employeeResult.user));
+      navigate("/employee/dashboard");
+      window.location.reload();
+      return;
+    }
+
+    setErrorMessage(
+      employeeResult.message ||
+        adminResult.message ||
+        "Invalid login credentials",
+    );
   };
-  
 
   return (
     <LoginSignupContainer>
@@ -40,7 +79,7 @@ const handleSubmit = async (e: React.FormEvent) => {
         </div>
         <div className="auth-container">
           <div className="auth-box">
-            <h2>Login</h2>
+            <h2>Login Portal</h2>
             {errorMessage && <p className="error-message">{errorMessage}</p>}
             <form onSubmit={handleSubmit} autoComplete="off"> {/* Disable form-level autocomplete */}
               <div className="input-group">
@@ -68,7 +107,7 @@ const handleSubmit = async (e: React.FormEvent) => {
                 />
               </div>
               <button type="submit" className="auth-button">
-                Login
+                Sign In
               </button>
             </form>
           </div>

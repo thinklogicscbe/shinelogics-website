@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Drawer } from "antd";
+import { FaRegUserCircle } from "react-icons/fa";
 
 import {
   HeaderSection,
@@ -17,6 +18,8 @@ import {
   DrawerHeader,
   CloseIcon,
   AsAText,
+  PortalWrapper,
+  PortalButton,
 } from "./styles";
 
 import logo1 from "../../assets/logo_3.png";
@@ -163,6 +166,11 @@ const Header = () => {
     setMobileServiceDropdownVisible(false);
     setMobileInsightDropdownVisible(false);
     setMobileAboutDropdownVisible(false);
+  };
+
+  const navigateToPortal = () => {
+    navigate("/login");
+    setVisibility(false);
   };
 
   /* ================= NAV DATA ================= */
@@ -312,6 +320,17 @@ const Header = () => {
             )}
           </div>
         ))}
+
+        <PortalWrapper>
+          <PortalButton
+            type="button"
+            aria-label="Open login"
+            title="Login portal"
+            onClick={navigateToPortal}
+          >
+            <FaRegUserCircle />
+          </PortalButton>
+        </PortalWrapper>
       </NavLinks>
 
       {/* ================= MOBILE DRAWER ================= */}
@@ -412,6 +431,10 @@ const Header = () => {
               )}
             </div>
           ))}
+
+        <MobileNavItem onClick={navigateToPortal}>
+          <span className="main-label">Login Portal</span>
+        </MobileNavItem>
       </Drawer>
     </HeaderSection>
   );

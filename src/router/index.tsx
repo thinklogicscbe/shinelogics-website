@@ -18,7 +18,15 @@ import NotFoundPage from "../components/NotFoundCompo";
 
 const AppRouter: React.FC = () => {
   const location = useLocation();
-  const hideHeaderFooterPaths = ["/viewJobs", "/SideBar", "/viewProfile", "/PostJob", "/login"];
+  const hideHeaderFooterPaths = [
+    "/viewJobs",
+    "/SideBar",
+    "/viewProfile",
+    "/PostJob",
+    "/login",
+    "/employee",
+    "/employee/dashboard",
+  ];
   const shouldHideHeaderFooter = hideHeaderFooterPaths.includes(location.pathname);
 
   useEffect(() => {
