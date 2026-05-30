@@ -6,7 +6,6 @@ import {
   Title,
   Description,
   ButtonBlock,
-  CTAButton,
 } from "./styles";
 
 const CallToAction: React.FC = () => {

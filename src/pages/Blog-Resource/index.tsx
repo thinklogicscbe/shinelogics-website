@@ -97,21 +97,22 @@ const ModalText = styled.p`
   margin-bottom: 2.2rem;
 `;
 
-const ModalSource = styled.a`
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  color: #4f46e5;
-  font-weight: 600;
-  font-size: 1.02rem;
-  text-decoration: none;
-  padding: 12px 0;
-
-  &:hover {
-    color: #4338ca;
-    text-decoration: underline;
-  }
-`;
+// ModalSource styled component removed — uncomment when source links are re-enabled
+// const ModalSource = styled.a`
+//   display: inline-flex;
+//   align-items: center;
+//   gap: 10px;
+//   color: #4f46e5;
+//   font-weight: 600;
+//   font-size: 1.02rem;
+//   text-decoration: none;
+//   padding: 12px 0;
+//
+//   &:hover {
+//     color: #4338ca;
+//     text-decoration: underline;
+//   }
+// `;
 
 const BackButton = styled.button`
   padding: 14px 36px;
@@ -170,7 +171,8 @@ const API_URL = `${process.env.REACT_APP_BACKEND_URL}/resources`;
 
 const Resources: React.FC = () => {
   const [resources, setResources] = useState<Resource[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [selectedCategory, _setSelectedCategory] = useState<string>("ALL");
   const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
 
   useEffect(() => {

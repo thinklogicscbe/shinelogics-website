@@ -6,7 +6,6 @@ import {
   CardsGrid,
   FeatureCard,
   CTASection,
-  CTAButton,
 } from "./styles";
 
 const WhyChooseUs: React.FC = () => {
