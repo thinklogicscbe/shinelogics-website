@@ -36,6 +36,7 @@ import CreateEmployee from "../CreateEmployee"; // ✅ NEW
 import PerformanceDashboard from "../PerformanceDashboard";
 import PayslipAdmin from "../PayslipAdmin";
 import LeaveAdmin from "../LeaveAdmin";
+import ProductivityAdmin from "../ProductivityAdmin";
 
 // 🔹 Assets
 import logo1 from "../../assets/shinelogics-logo.png";
@@ -59,6 +60,7 @@ type AdminComponent =
   | "PartnerAdmin"
   | "CreateEmployee"
   | "PerformanceDashboard"
+  | "ProductivityAdmin"
   | "PayslipAdmin"
   | "LeaveAdmin";// ✅ NEW
 
@@ -131,6 +133,9 @@ const SideBar: React.FC = () => {
       case "PerformanceDashboard":
         return <PerformanceDashboard />;
 
+      case "ProductivityAdmin":
+        return <ProductivityAdmin />;
+
       case "AdminBanner":
         return <AdminBanner />;
 
@@ -183,6 +188,13 @@ const SideBar: React.FC = () => {
             </NavItem>
 
             {/* ✅ NEW */}
+            <NavItem
+              active={selectedComponent === "ProductivityAdmin"}
+              onClick={() => handleNavigation("ProductivityAdmin")}
+            >
+              Productivity Management
+            </NavItem>
+
             <NavItem
               active={selectedComponent === "CreateEmployee"}
               onClick={() => handleNavigation("CreateEmployee")}
