@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PerformanceContainer } from "./style";
 
-const BASE_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000/api";
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 interface EmployeeSummary {
   employee: {
@@ -63,7 +63,6 @@ const PerformanceDashboard: React.FC = () => {
 
   useEffect(() => {
     fetchAll();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [period]);
 
   const fetchAll = async () => {

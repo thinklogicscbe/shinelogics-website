@@ -3,7 +3,7 @@ import { PayslipContainer } from "./style";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-const BASE_URL = process.env.REACT_APP_BACKEND_URL || "http://localhost:5000/api";
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 interface Employee {
     _id: string;
@@ -458,7 +458,7 @@ const PayslipAdmin: React.FC = () => {
                                         <label>Employee <span className="required">*</span></label>
                                         <select value={selectedEmployeeId} onChange={(e) => setSelectedEmployeeId(e.target.value)} required>
                                             <option value="">-- Select Employee --</option>
-                                            {availableEmployees.map(emp => (
+                                            {employees.map(emp => (
                                                 <option key={emp._id} value={emp._id}>
                                                     #{emp.employeeCode} — {emp.firstName} ({emp.designation || "—"})
                                                 </option>
