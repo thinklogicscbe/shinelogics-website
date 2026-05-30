@@ -458,7 +458,7 @@ const PayslipAdmin: React.FC = () => {
                                         <label>Employee <span className="required">*</span></label>
                                         <select value={selectedEmployeeId} onChange={(e) => setSelectedEmployeeId(e.target.value)} required>
                                             <option value="">-- Select Employee --</option>
-                                            {employees.map(emp => (
+                                            {availableEmployees.map(emp => (
                                                 <option key={emp._id} value={emp._id}>
                                                     #{emp.employeeCode} — {emp.firstName} ({emp.designation || "—"})
                                                 </option>

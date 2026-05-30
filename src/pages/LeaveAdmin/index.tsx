@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { LeaveAdminContainer } from "./style";
 
 const BASE_URL = process.env.REACT_APP_BACKEND_URL;
@@ -43,9 +43,7 @@ const LeaveAdmin: React.FC = () => {
   const [detailModal, setDetailModal] = useState(false);
   const [selectedLeave, setSelectedLeave] = useState<Leave | null>(null);
 
-  useEffect(() => { fetchLeaves(); }, [filterStatus]);
-
-  const fetchLeaves = async () => {
+  const fetchLeaves = useCallback(async () => {
     setLoading(true);
     try {
       const url = filterStatus === "all"
@@ -56,7 +54,9 @@ const LeaveAdmin: React.FC = () => {
       if (result.success) setLeaves(result.result?.leaves || []);
     } catch (err) { console.error(err); }
     finally { setLoading(false); }
-  };
+  }, [filterStatus]);
+
+  useEffect(() => { fetchLeaves(); }, [fetchLeaves]);
 
   const handleApprove = async (id: string) => {
     try {

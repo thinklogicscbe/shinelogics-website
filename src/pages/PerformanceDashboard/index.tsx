@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { PerformanceContainer } from "./style";
 
 const BASE_URL = process.env.REACT_APP_BACKEND_URL;
@@ -61,11 +61,7 @@ const PerformanceDashboard: React.FC = () => {
   const [detailData, setDetailData] = useState<DetailData | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
 
-  useEffect(() => {
-    fetchAll();
-  }, [period]);
-
-  const fetchAll = async () => {
+  const fetchAll = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch(`${BASE_URL}/performance/all?period=${period}`);
@@ -79,7 +75,11 @@ const PerformanceDashboard: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [period]);
+
+  useEffect(() => {
+    fetchAll();
+  }, [fetchAll]);
 
   const fetchDetail = async (empId: string) => {
     setDetailOpen(true);
