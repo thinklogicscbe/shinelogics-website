@@ -143,6 +143,34 @@ export const NavLinks = styled.div`
   }
 `;
 
+export const PortalWrapper = styled.div`
+  position: relative;
+  margin-left: 14px;
+`;
+
+export const PortalButton = styled.button`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #0f172a;
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 19px;
+  transition: all 0.25s ease;
+
+  &:hover {
+    color: #2563eb;
+    border-color: #bfdbfe;
+    background: #eff6ff;
+  }
+`;
+
 /* ================= BUTTONS ================= */
 
 export const StyledButton = styled.button`
