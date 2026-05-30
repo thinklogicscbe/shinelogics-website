@@ -3,7 +3,7 @@ import { PayslipContainer } from "./style";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-const BASE_URL = "http://localhost:5000/api";
+const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 
 interface Employee {
     _id: string;

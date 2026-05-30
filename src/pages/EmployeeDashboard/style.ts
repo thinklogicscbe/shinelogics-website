@@ -696,4 +696,293 @@ export const DashboardContainer = styled.div`
     padding: 32px;
     font-size: 0.9rem;
   }
+
+  /* TASK NUM HEADER */
+  .task-num-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .remove-task-btn {
+    padding: 4px 10px;
+    background: #ffebee;
+    color: #c62828;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    &:hover { background: #e53935; color: #fff; }
+  }
+
+  /* SUB POINTS */
+  .subpoints-section {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed #e5e7eb;
+  }
+
+  .subpoints-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .subpoint-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .bullet {
+    color: #007bff;
+    font-size: 1.1rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .subpoint-input {
+    flex: 1;
+    padding: 7px 10px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.2s;
+    &:focus { border-color: #007bff; }
+    &::placeholder { color: #c4c4c4; }
+  }
+
+  .remove-subpoint {
+    background: none;
+    border: none;
+    color: #e53935;
+    cursor: pointer;
+    font-size: 0.8rem;
+    padding: 4px 6px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    &:hover { background: #ffebee; }
+  }
+
+  .add-subpoint-btn {
+    margin-top: 6px;
+    padding: 5px 14px;
+    background: transparent;
+    color: #007bff;
+    border: 1px dashed #007bff;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    &:hover { background: #007bff; color: #fff; border-style: solid; }
+  }
+
+  /* PREVIEW SUBPOINTS */
+  .preview-task-block {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    &:last-child { border-bottom: none; }
+  }
+
+  .preview-task-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .preview-subpoints {
+    padding-left: 56px;
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .preview-subpoint {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  .preview-bullet {
+    color: #007bff;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* OUT SUBPOINTS */
+  .out-subpoints {
+    padding-left: 0;
+    margin: 6px 0 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  /* HISTORY SUBPOINTS */
+  .history-task-block {
+    padding: 6px 0;
+    border-bottom: 1px solid #f5f5f5;
+    &:last-of-type { border-bottom: none; }
+  }
+
+  .history-subpoints {
+    padding-left: 56px;
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .history-subpoint {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 0.78rem;
+    color: #6b7280;
+    line-height: 1.4;
+  }
+
+  /* DAYS PREVIEW */
+  .days-preview {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #1565c0;
+    background: #e3f2fd;
+    padding: 6px 12px;
+    border-radius: 6px;
+    margin-bottom: 14px;
+    display: inline-block;
+  }
+
+  /* LEAVE PENDING DOT */
+  .leave-pending-dot {
+    background: #ef4444;
+    color: #fff;
+    border-radius: 20px;
+    padding: 1px 6px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    margin-left: 5px;
+  }
+
+  /* LEAVE HISTORY */
+  .leave-history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .leave-history-item {
+    border-radius: 10px;
+    padding: 14px 16px;
+    border: 1px solid #eee;
+
+    &.approved { border-left: 4px solid #15803d; background: #f0fdf4; }
+    &.rejected { border-left: 4px solid #b91c1c; background: #fff5f5; }
+    &.pending  { border-left: 4px solid #f59e0b; background: #fffbeb; }
+  }
+
+  .lhi-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .lhi-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .lhi-type {
+    display: inline-block;
+    background: #e0f2fe;
+    color: #0369a1;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  .lhi-dates {
+    font-size: 0.85rem;
+    color: #374151;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  .lhi-days {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-left: 6px;
+  }
+
+  .lhi-reason {
+    font-size: 0.82rem;
+    color: #555;
+    font-style: italic;
+    margin: 0;
+  }
+
+  .lhi-applied {
+    font-size: 0.72rem;
+    color: #9ca3af;
+  }
+
+  .lhi-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+  }
+
+  .lhi-status {
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+
+    &.approved { background: #dcfce7; color: #15803d; }
+    &.rejected  { background: #fee2e2; color: #b91c1c; }
+    &.pending   { background: #fef9c3; color: #854d0e; }
+  }
+
+  .lhi-rejection {
+    margin-top: 10px;
+    padding: 10px 12px;
+    background: #fff1f1;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+
+    .lhi-rejection-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #b91c1c;
+    }
+
+    p {
+      font-size: 0.82rem;
+      color: #b91c1c;
+      margin: 4px 0 0 0;
+      font-style: italic;
+      line-height: 1.4;
+    }
+  }
 `;

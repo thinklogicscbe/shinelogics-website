@@ -64,6 +64,8 @@ const routes = [
     component: "DataEngineering-Analytics",
   },
   { path: "/Staff-Agumentation", exact: true, component: "Staff-Agumentation" },
+
+  { path: "/Team-Wall", exact: true, component: "TeamWall" },
 ];
 
 export default routes;
