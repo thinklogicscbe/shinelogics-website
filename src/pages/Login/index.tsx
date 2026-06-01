@@ -15,7 +15,7 @@ const loginEmployee = async (email: string, password: string) => {
     const result = await response.json();
 
     if (response.ok && result.success) {
-      return { success: true, user: result.result?.user };
+      return { success: true, user: result.result?.user, token: result.result?.token };
     }
 
     return {
@@ -49,6 +49,7 @@ const Login: React.FC = () => {
     if (adminResult.success) {
       localStorage.removeItem("employee");
       localStorage.setItem("user", JSON.stringify(adminResult.user));
+      if ((adminResult as any).token) localStorage.setItem("authToken", (adminResult as any).token);
       navigate("/SideBar");
       window.location.reload();
       return;
@@ -59,6 +60,7 @@ const Login: React.FC = () => {
     if (employeeResult.success) {
       localStorage.removeItem("user");
       localStorage.setItem("employee", JSON.stringify(employeeResult.user));
+      if ((employeeResult as any).token) localStorage.setItem("authToken", (employeeResult as any).token);
       navigate("/employee/dashboard");
       window.location.reload();
       return;

@@ -10,6 +10,15 @@ interface Employee {
   department: string;
   designation: string;
   phone: string;
+  mobileNumber?: string;
+  role?: string;
+  skillSet?: string[];
+  location?: string;
+  experience?: string;
+  profilePhoto?: string;
+  companyId?: any;
+  teamIds?: any[];
+  reportingManager?: any;
   status: number;
   createdAt: string;
 }
@@ -47,7 +56,17 @@ const CreateEmployee: React.FC = () => {
   const [department, setDepartment] = useState("");
   const [designation, setDesignation] = useState("");
   const [phone, setPhone] = useState("");
+  const [companyId, setCompanyId] = useState("");
+  const [teamIds, setTeamIds] = useState<string[]>([]);
+  const [reportingManager, setReportingManager] = useState("");
+  const [role, setRole] = useState("Developer");
+  const [skillSet, setSkillSet] = useState("");
+  const [location, setLocation] = useState("");
+  const [experience, setExperience] = useState("");
+  const [profilePhoto, setProfilePhoto] = useState("");
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [companies, setCompanies] = useState<any[]>([]);
+  const [teams, setTeams] = useState<any[]>([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -64,6 +83,8 @@ const CreateEmployee: React.FC = () => {
 
   useEffect(() => {
     fetchEmployees();
+    fetchCompanies();
+    fetchTeams();
   }, []);
 
   const fetchEmployees = async () => {
@@ -73,6 +94,26 @@ const CreateEmployee: React.FC = () => {
       if (result.success) setEmployees(result.result?.users || []);
     } catch (error) {
       console.error("Failed to fetch employees", error);
+    }
+  };
+
+  const fetchCompanies = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/companies`);
+      const result = await response.json();
+      if (result.success) setCompanies(result.result?.companies || []);
+    } catch (error) {
+      console.error("Failed to fetch companies", error);
+    }
+  };
+
+  const fetchTeams = async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/teams`);
+      const result = await response.json();
+      if (result.success) setTeams(result.result?.teams || []);
+    } catch (error) {
+      console.error("Failed to fetch teams", error);
     }
   };
 
@@ -119,6 +160,14 @@ const CreateEmployee: React.FC = () => {
     setDepartment(emp.department || "");
     setDesignation(emp.designation || "");
     setPhone(emp.phone || "");
+    setCompanyId(emp.companyId?._id || emp.companyId || "");
+    setTeamIds((emp.teamIds || []).map((team: any) => team._id || team));
+    setReportingManager(emp.reportingManager?._id || emp.reportingManager || "");
+    setRole(emp.role || "Developer");
+    setSkillSet((emp.skillSet || []).join(", "));
+    setLocation(emp.location || "");
+    setExperience(emp.experience || "");
+    setProfilePhoto(emp.profilePhoto || "");
     setErrorMessage("");
     setSuccessMessage("");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -133,6 +182,14 @@ const CreateEmployee: React.FC = () => {
     setDepartment("");
     setDesignation("");
     setPhone("");
+    setCompanyId("");
+    setTeamIds([]);
+    setReportingManager("");
+    setRole("Developer");
+    setSkillSet("");
+    setLocation("");
+    setExperience("");
+    setProfilePhoto("");
     setErrorMessage("");
     setSuccessMessage("");
   };
@@ -171,7 +228,11 @@ const CreateEmployee: React.FC = () => {
 
     try {
       if (editMode) {
-        const body: any = { firstName, email: emailId, department, designation, phone };
+        const body: any = {
+          firstName, email: emailId, department, designation, phone,
+          companyId, teamIds, mobileNumber: phone, reportingManager, role,
+          skillSet, location, experience, profilePhoto,
+        };
         if (password) body.password = password;
         const response = await fetch(`${BASE_URL}/employees/${editId}`, {
           method: "PUT",
@@ -190,13 +251,20 @@ const CreateEmployee: React.FC = () => {
         const response = await fetch(`${BASE_URL}/employees/create`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ firstName, emailId, password, department, designation, phone }),
+          body: JSON.stringify({
+            firstName, emailId, password, department, designation, phone,
+            companyId, teamIds, mobileNumber: phone, reportingManager, role,
+            skillSet, location, experience, profilePhoto,
+          }),
         });
         const result = await response.json();
         if (result.success) {
           setSuccessMessage("Employee created successfully!");
           setFirstName(""); setEmailId(""); setPassword("");
           setDepartment(""); setDesignation(""); setPhone("");
+          setCompanyId(""); setTeamIds([]); setReportingManager("");
+          setRole("Developer"); setSkillSet(""); setLocation("");
+          setExperience(""); setProfilePhoto("");
           fetchEmployees();
         } else {
           setErrorMessage(result.message || "Failed to create employee");
@@ -259,6 +327,61 @@ const CreateEmployee: React.FC = () => {
               <input type="text" placeholder="e.g. 9876543210" value={phone}
                 onChange={(e) => setPhone(e.target.value)} />
             </div>
+            <div className="input-group">
+              <label>Company</label>
+              <select value={companyId} onChange={(e) => setCompanyId(e.target.value)}>
+                <option value="">Select company</option>
+                {companies.map((company) => (
+                  <option key={company._id} value={company._id}>{company.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="input-group">
+              <label>Team</label>
+              <select value={teamIds[0] || ""} onChange={(e) => setTeamIds(e.target.value ? [e.target.value] : [])}>
+                <option value="">Select team</option>
+                {teams.map((team) => (
+                  <option key={team._id} value={team._id}>{team.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="input-group">
+              <label>Reporting Manager</label>
+              <select value={reportingManager} onChange={(e) => setReportingManager(e.target.value)}>
+                <option value="">Select manager</option>
+                {employees.map((emp) => (
+                  <option key={emp._id} value={emp._id}>{emp.firstName}</option>
+                ))}
+              </select>
+            </div>
+            <div className="input-group">
+              <label>Role</label>
+              <select value={role} onChange={(e) => setRole(e.target.value)}>
+                {["Admin", "Manager", "Team Lead", "Developer", "Tester", "Designer", "Marketing", "Sales", "Support"].map((item) => (
+                  <option key={item}>{item}</option>
+                ))}
+              </select>
+            </div>
+            <div className="input-group">
+              <label>Skill Set</label>
+              <input type="text" placeholder="React, Node, Testing" value={skillSet}
+                onChange={(e) => setSkillSet(e.target.value)} />
+            </div>
+            <div className="input-group">
+              <label>Location</label>
+              <input type="text" placeholder="e.g. Coimbatore" value={location}
+                onChange={(e) => setLocation(e.target.value)} />
+            </div>
+            <div className="input-group">
+              <label>Experience</label>
+              <input type="text" placeholder="e.g. 3 years" value={experience}
+                onChange={(e) => setExperience(e.target.value)} />
+            </div>
+            <div className="input-group">
+              <label>Profile Photo URL</label>
+              <input type="text" placeholder="S3 image URL" value={profilePhoto}
+                onChange={(e) => setProfilePhoto(e.target.value)} />
+            </div>
           </div>
 
           {errorMessage && <p className="error-msg">{errorMessage}</p>}
@@ -287,6 +410,9 @@ const CreateEmployee: React.FC = () => {
                 <th>Email</th>
                 <th>Department</th>
                 <th>Designation</th>
+                <th>Role</th>
+                <th>Company</th>
+                <th>Team</th>
                 <th>Phone</th>
                 <th>Status</th>
                 <th>Created At</th>
@@ -296,7 +422,7 @@ const CreateEmployee: React.FC = () => {
             </thead>
             <tbody>
               {employees.length === 0 ? (
-                <tr><td colSpan={10} className="empty-row">No employees found</td></tr>
+                <tr><td colSpan={13} className="empty-row">No employees found</td></tr>
               ) : (
                 employees.map((emp, i) => (
                   <tr key={emp._id}>
@@ -305,6 +431,9 @@ const CreateEmployee: React.FC = () => {
                     <td>{emp.email}</td>
                     <td>{emp.department || "-"}</td>
                     <td>{emp.designation || "-"}</td>
+                    <td>{emp.role || "-"}</td>
+                    <td>{emp.companyId?.name || "-"}</td>
+                    <td>{emp.teamIds?.map((team: any) => team.name || team).join(", ") || "-"}</td>
                     <td>{emp.phone || "-"}</td>
                     <td>
                       <span

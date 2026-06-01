@@ -48,7 +48,7 @@ const EmployeeDashboard: React.FC = () => {
 
   const [todayTask, setTodayTask] = useState<TaskDoc | null>(null);
   const [pastTasks, setPastTasks] = useState<TaskDoc[]>([]);
-  const [activeTab, setActiveTab] = useState<"today" | "history" | "leave">("today");
+  const [activeTab, setActiveTab] = useState<"attendance" | "productivity" | "today" | "history" | "leave">("attendance");
 
   // IN form
   const [location, setLocation] = useState("O-CBE");
@@ -75,6 +75,21 @@ const EmployeeDashboard: React.FC = () => {
   const [leaveReason, setLeaveReason] = useState("");
   const [leaveLoading, setLeaveLoading] = useState(false);
   const [leaveMessage, setLeaveMessage] = useState({ text: "", type: "" });
+  const [attendance, setAttendance] = useState<any | null>(null);
+  const [workMode, setWorkMode] = useState("Office");
+  const [checkInLocation, setCheckInLocation] = useState("O-CBE");
+  const [productivityTasks, setProductivityTasks] = useState<any[]>([]);
+  const [planForm, setPlanForm] = useState({
+    title: "",
+    shortDesc: "",
+    plannedStart: "09:00",
+    plannedEnd: "18:00",
+    estimatedHours: 8,
+    targetPercent: 100,
+    priority: "Medium",
+    dependency: "",
+    businessImpact: "",
+  });
 
   const fetchTodayTask = useCallback(async (empId: string) => {
     try {
@@ -115,6 +130,22 @@ const EmployeeDashboard: React.FC = () => {
     } catch (err) { console.error(err); }
   }, []);
 
+  const fetchAttendance = useCallback(async (empId: string) => {
+    try {
+      const res = await fetch(`${BASE_URL}/attendance?employeeId=${empId}&date=${today}`);
+      const result = await res.json();
+      setAttendance(result.result?.attendance?.[0] || null);
+    } catch (err) { console.error(err); }
+  }, []);
+
+  const fetchProductivityTasks = useCallback(async (empId: string) => {
+    try {
+      const res = await fetch(`${BASE_URL}/productivity/tasks?employeeId=${empId}&date=${today}`);
+      const result = await res.json();
+      if (result.success) setProductivityTasks(result.result?.tasks || []);
+    } catch (err) { console.error(err); }
+  }, []);
+
   useEffect(() => {
     const stored = localStorage.getItem("employee");
     if (!stored) { navigate("/Employee"); return; }
@@ -123,7 +154,9 @@ const EmployeeDashboard: React.FC = () => {
     fetchTodayTask(emp.id);
     fetchPastTasks(emp.id);
     fetchLeaves(emp.id);
-  }, [navigate, fetchTodayTask, fetchPastTasks, fetchLeaves]);
+    fetchAttendance(emp.id);
+    fetchProductivityTasks(emp.id);
+  }, [navigate, fetchTodayTask, fetchPastTasks, fetchLeaves, fetchAttendance, fetchProductivityTasks]);
 
   // ── IN handlers ──────────────────────────────────────────────────────────────
 
@@ -358,6 +391,115 @@ const EmployeeDashboard: React.FC = () => {
     navigate("/Employee");
   };
 
+  const handleCheckIn = async () => {
+    if (!employee) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`${BASE_URL}/attendance/check-in`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          companyId: (employee as any).companyId,
+          employeeId: employee.id,
+          employeeName: employee.firstName,
+          checkInLocation,
+          workMode,
+          date: today,
+        }),
+      });
+      const result = await res.json();
+      if (result.success) {
+        setAttendance(result.result.attendance);
+        setMessage({ text: "Check-in saved.", type: "success" });
+      } else {
+        setMessage({ text: result.message || "Check-in failed", type: "error" });
+      }
+    } catch {
+      setMessage({ text: "Server error", type: "error" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCheckOut = async () => {
+    if (!employee) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`${BASE_URL}/attendance/check-out`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ employeeId: employee.id, checkOutLocation: checkInLocation, date: today }),
+      });
+      const result = await res.json();
+      if (result.success) {
+        setAttendance(result.result.attendance);
+        setMessage({ text: "Check-out saved.", type: "success" });
+      } else {
+        setMessage({ text: result.message || "Check-out failed", type: "error" });
+      }
+    } catch {
+      setMessage({ text: "Server error", type: "error" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePlanSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!employee) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`${BASE_URL}/productivity/tasks`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...planForm,
+          companyId: (employee as any).companyId,
+          teamId: (employee as any).teamIds?.[0],
+          employeeId: employee.id,
+          employeeName: employee.firstName,
+          date: today,
+          status: "Planned",
+        }),
+      });
+      const result = await res.json();
+      if (result.success) {
+        setPlanForm({
+          title: "",
+          shortDesc: "",
+          plannedStart: "09:00",
+          plannedEnd: "18:00",
+          estimatedHours: 8,
+          targetPercent: 100,
+          priority: "Medium",
+          dependency: "",
+          businessImpact: "",
+        });
+        fetchProductivityTasks(employee.id);
+        setMessage({ text: "Plan saved.", type: "success" });
+      } else {
+        setMessage({ text: result.message || "Plan failed", type: "error" });
+      }
+    } catch {
+      setMessage({ text: "Server error", type: "error" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateProductivityTask = async (task: any, updates: any) => {
+    if (!employee) return;
+    try {
+      const res = await fetch(`${BASE_URL}/productivity/tasks/${task._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...task, ...updates }),
+      });
+      const result = await res.json();
+      if (result.success) fetchProductivityTasks(employee.id);
+    } catch (err) { console.error(err); }
+  };
+
   if (!employee) return null;
 
   const pendingLeaves = leaves.filter((l) => l.status === "Pending").length;
@@ -409,6 +551,18 @@ const EmployeeDashboard: React.FC = () => {
         {/* TABS */}
         <div className="tabs">
           <button
+            className={`tab ${activeTab === "attendance" ? "active" : ""}`}
+            onClick={() => setActiveTab("attendance")}
+          >
+            Attendance
+          </button>
+          <button
+            className={`tab ${activeTab === "productivity" ? "active" : ""}`}
+            onClick={() => setActiveTab("productivity")}
+          >
+            Planning
+          </button>
+          <button
             className={`tab ${activeTab === "today" ? "active" : ""}`}
             onClick={() => setActiveTab("today")}
           >
@@ -435,6 +589,160 @@ const EmployeeDashboard: React.FC = () => {
           <p className={message.type === "success" ? "success-msg" : "error-msg"}>
             {message.text}
           </p>
+        )}
+
+        {activeTab === "attendance" && (
+          <div className="card">
+            <div className="card-header in">
+              <span className="tag in-tag">Daily Attendance</span>
+              <span className="date-tag">{today}</span>
+            </div>
+            <div className="meta-row">
+              <div className="input-group">
+                <label>Check-In Location</label>
+                <input value={checkInLocation} onChange={(e) => setCheckInLocation(e.target.value)} />
+              </div>
+              <div className="input-group">
+                <label>Work Mode</label>
+                <select value={workMode} onChange={(e) => setWorkMode(e.target.value)}>
+                  <option>Office</option>
+                  <option>Remote</option>
+                  <option>Hybrid</option>
+                </select>
+              </div>
+            </div>
+            {attendance && (
+              <div className="update-preview">
+                <p><strong>Status:</strong> {attendance.status}</p>
+                <p><strong>Login:</strong> {attendance.loginTime || "-"} | <strong>Logout:</strong> {attendance.logoutTime || "-"}</p>
+                <p><strong>Mode:</strong> {attendance.workMode} | <strong>Location:</strong> {attendance.checkInLocation}</p>
+              </div>
+            )}
+            <div className="form-actions">
+              <button className="submit-btn in-btn" onClick={handleCheckIn} disabled={loading || !!attendance}>
+                Check In
+              </button>
+              <button className="submit-btn out-btn" onClick={handleCheckOut} disabled={loading || !attendance || attendance.isCheckedOut}>
+                Check Out
+              </button>
+            </div>
+          </div>
+        )}
+
+        {activeTab === "productivity" && (
+          <>
+            <div className="card">
+              <div className="card-header in">
+                <span className="tag in-tag">Morning Planning</span>
+                <span className="date-tag">{today}</span>
+              </div>
+              <form onSubmit={handlePlanSubmit}>
+                <div className="meta-row">
+                  <div className="input-group">
+                    <label>Task Title</label>
+                    <input value={planForm.title} onChange={(e) => setPlanForm({ ...planForm, title: e.target.value })} required />
+                  </div>
+                  <div className="input-group">
+                    <label>Priority</label>
+                    <select value={planForm.priority} onChange={(e) => setPlanForm({ ...planForm, priority: e.target.value })}>
+                      <option>High</option>
+                      <option>Medium</option>
+                      <option>Low</option>
+                    </select>
+                  </div>
+                </div>
+                <div className="meta-row">
+                  <div className="input-group">
+                    <label>Start Time</label>
+                    <input type="time" value={planForm.plannedStart} onChange={(e) => setPlanForm({ ...planForm, plannedStart: e.target.value })} />
+                  </div>
+                  <div className="input-group">
+                    <label>End Time</label>
+                    <input type="time" value={planForm.plannedEnd} onChange={(e) => setPlanForm({ ...planForm, plannedEnd: e.target.value })} />
+                  </div>
+                  <div className="input-group">
+                    <label>Estimated Hours</label>
+                    <input type="number" step="0.5" value={planForm.estimatedHours} onChange={(e) => setPlanForm({ ...planForm, estimatedHours: Number(e.target.value) })} />
+                  </div>
+                  <div className="input-group">
+                    <label>Target %</label>
+                    <input type="number" value={planForm.targetPercent} onChange={(e) => setPlanForm({ ...planForm, targetPercent: Number(e.target.value) })} />
+                  </div>
+                </div>
+                <div className="meta-row">
+                  <div className="input-group">
+                    <label>Dependency</label>
+                    <input value={planForm.dependency} onChange={(e) => setPlanForm({ ...planForm, dependency: e.target.value })} />
+                  </div>
+                  <div className="input-group">
+                    <label>Business Impact</label>
+                    <input value={planForm.businessImpact} onChange={(e) => setPlanForm({ ...planForm, businessImpact: e.target.value })} />
+                  </div>
+                </div>
+                <div className="input-group" style={{ marginBottom: "16px" }}>
+                  <label>Short Description</label>
+                  <input value={planForm.shortDesc} onChange={(e) => setPlanForm({ ...planForm, shortDesc: e.target.value })} />
+                </div>
+                <div className="form-actions">
+                  <button type="submit" className="submit-btn in-btn" disabled={loading}>Save Plan</button>
+                </div>
+              </form>
+            </div>
+
+            <div className="card">
+              <div className="card-header out">
+                <span className="tag out-tag">Task Execution Tracking</span>
+              </div>
+              {productivityTasks.length === 0 ? (
+                <p className="empty-msg">No plans saved for today.</p>
+              ) : (
+                <div className="tasks-list">
+                  {productivityTasks.map((task) => (
+                    <div className="task-row out-task-row" key={task._id}>
+                      <div className="task-fields out-fields">
+                        <div className="task-title-display">{task.title}</div>
+                        <div className="out-grid">
+                          <div className="input-group small">
+                            <label>Status</label>
+                            <select value={task.status} onChange={(e) => updateProductivityTask(task, { status: e.target.value })}>
+                              {["Started", "In Progress", "Paused", "Blocked", "Completed Local", "Ready For Testing", "Closed"].map((status) => (
+                                <option key={status}>{status}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="input-group small">
+                            <label>Actual Start</label>
+                            <input type="time" value={task.actualStart || ""} onChange={(e) => updateProductivityTask(task, { actualStart: e.target.value })} />
+                          </div>
+                          <div className="input-group small">
+                            <label>Actual End</label>
+                            <input type="time" value={task.actualEnd || ""} onChange={(e) => updateProductivityTask(task, { actualEnd: e.target.value })} />
+                          </div>
+                          <div className="input-group small">
+                            <label>Actual %</label>
+                            <input type="number" value={task.actualPercent || 0} onChange={(e) => updateProductivityTask(task, { actualPercent: Number(e.target.value) })} />
+                          </div>
+                          <div className="input-group small">
+                            <label>Actual Hours</label>
+                            <input type="number" step="0.25" value={task.actualHours || 0} onChange={(e) => updateProductivityTask(task, { actualHours: Number(e.target.value), manualActualHours: true })} />
+                          </div>
+                          <div className="input-group small">
+                            <label>Score</label>
+                            <input value={`${task.productivityScore || 0}%`} disabled />
+                          </div>
+                        </div>
+                        <div className="history-overall-bar">
+                          <span>Planned: <strong>{task.estimatedHours}h</strong></span>
+                          <span>Target: <strong>{task.targetPercent}%</strong></span>
+                          <span>Dependency: <strong>{task.dependency || "-"}</strong></span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </>
         )}
 
         {/* ── TODAY TAB ── */}

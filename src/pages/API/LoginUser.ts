@@ -19,6 +19,7 @@ export const loginUser = async (email: string, password: string) => {
       return {
         success: true,
         user: data.result.user?.role?.role || "Unknown Role", // Avoids errors if user/role is undefined
+        token: data.result.token,
       };
     } else {
       return { success: false, message: data.message || "Invalid login credentials" };
