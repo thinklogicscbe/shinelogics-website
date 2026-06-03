@@ -48,16 +48,6 @@ const fadeUp = keyframes`
   to   { opacity: 1; transform: translateY(0); }
 `;
 
-const shimmer = keyframes`
-  0%   { background-position: -200% center; }
-  100% { background-position:  200% center; }
-`;
-
-const pulse = keyframes`
-  0%, 100% { box-shadow: 0 0 0 0 ${tokens.accentGlow}; }
-  50%       { box-shadow: 0 0 0 8px transparent; }
-`;
-
 // ─── Google Fonts import via GlobalStyle ──────────────────────────────────────
 
 export const GlobalFonts = createGlobalStyle`
