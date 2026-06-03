@@ -144,7 +144,6 @@ const CreateEmployee: React.FC = () => {
   const [companyError, setCompanyError] = useState("");
   const [companySuccess, setCompanySuccess] = useState("");
   const [deleteCompanyId, setDeleteCompanyId] = useState<string | null>(null);
-  const [companyLogoFile, setCompanyLogoFile] = useState<File | null>(null);
 
   // ── Team state ───────────────────────────────────────────────────────────
   const [teams, setTeams] = useState<Team[]>([]);
@@ -715,7 +714,7 @@ const CreateEmployee: React.FC = () => {
                     accept="image/*"
                     onChange={(e) => {
                       if (e.target.files?.[0]) {
-                        setCompanyLogoFile(e.target.files[0]);
+                        // companyLogoFile state is not used in the JSON payload submission
                       }
                     }}
                   />
