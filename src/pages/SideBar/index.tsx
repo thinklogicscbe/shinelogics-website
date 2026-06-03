@@ -37,9 +37,10 @@ import PerformanceDashboard from "../PerformanceDashboard";
 import PayslipAdmin from "../PayslipAdmin";
 import LeaveAdmin from "../LeaveAdmin";
 import ProductivityAdmin from "../ProductivityAdmin";
-
+import CompanySetup from "../Companysetup";
 // 🔹 Assets
 import logo1 from "../../assets/shinelogics-logo.png";
+import TeamManagement from "../TeamManagement";
 
 // 🔹 Allowed component keys (STRICT typing)
 type AdminComponent =
@@ -62,7 +63,9 @@ type AdminComponent =
   | "PerformanceDashboard"
   | "ProductivityAdmin"
   | "PayslipAdmin"
-  | "LeaveAdmin";// ✅ NEW
+  | "LeaveAdmin"
+  | "CompanySetup"
+  | "TeamManagement";// ✅ NEW
 
 const SideBar: React.FC = () => {
   const navigate = useNavigate();
@@ -93,12 +96,17 @@ const SideBar: React.FC = () => {
       case "CreateEmployee": // ✅ NEW
         return <CreateEmployee />;
 
+      case "TeamManagement": // ✅ NEW
+        return <TeamManagement />;
+
       case "AdminServices":
         return <AdminServicePage />;
 
       case "PayslipAdmin":
         return <PayslipAdmin />;
 
+      case "CompanySetup":
+        return <CompanySetup />;
 
       case "HomeSectionAdmin":
         return <HomeSectionAdmin />;
@@ -188,19 +196,33 @@ const SideBar: React.FC = () => {
             </NavItem>
 
             {/* ✅ NEW */}
-            <NavItem
+            {/* <NavItem
               active={selectedComponent === "ProductivityAdmin"}
               onClick={() => handleNavigation("ProductivityAdmin")}
             >
               Productivity Management
-            </NavItem>
+            </NavItem> */}
+
+            {/* <NavItem
+              active={selectedComponent === "CompanySetup"}
+              onClick={() => handleNavigation("CompanySetup")}
+            >
+              Company Setup
+            </NavItem> */}
 
             <NavItem
               active={selectedComponent === "CreateEmployee"}
               onClick={() => handleNavigation("CreateEmployee")}
             >
-              Employees
+              Organization Management
             </NavItem>
+
+            {/* <NavItem
+              active={selectedComponent === "TeamManagement"}
+              onClick={() => handleNavigation("TeamManagement")}
+            >
+              Team Management
+            </NavItem> */}
 
             <NavItem
               active={selectedComponent === "PayslipAdmin"}
