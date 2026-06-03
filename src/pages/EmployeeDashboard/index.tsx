@@ -98,11 +98,6 @@ const EmployeeDashboard: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
 
-  // Attendance
-  const [attendance, setAttendance] = useState<any | null>(null);
-  const [checkInLocation, setCheckInLocation] = useState("O-CBE");
-  const [attendanceWorkMode, setAttendanceWorkMode] = useState("Office");
-
   // Leave
   const [leaves, setLeaves] = useState<any[]>([]);
   const [leaveType, setLeaveType] = useState("Sick Leave");
@@ -151,13 +146,6 @@ const EmployeeDashboard: React.FC = () => {
     } catch (err) { console.error(err); }
   }, []);
 
-  const fetchAttendance = useCallback(async (empId: string) => {
-    try {
-      const res = await fetch(`${BASE_URL}/attendance?employeeId=${empId}&date=${today}`);
-      const result = await res.json();
-      setAttendance(result.result?.attendance?.[0] || null);
-    } catch (err) { console.error(err); }
-  }, []);
 
   useEffect(() => {
     const stored = localStorage.getItem("employee");
@@ -167,8 +155,7 @@ const EmployeeDashboard: React.FC = () => {
     fetchTodayTask(emp.id);
     fetchPastTasks(emp.id);
     fetchLeaves(emp.id);
-    fetchAttendance(emp.id);
-  }, [navigate, fetchTodayTask, fetchPastTasks, fetchLeaves, fetchAttendance]);
+  }, [navigate, fetchTodayTask, fetchPastTasks, fetchLeaves]);
 
   // ── IN handlers ───────────────────────────────────────────────────────────
 
