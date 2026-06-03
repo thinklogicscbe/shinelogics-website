@@ -5,12 +5,12 @@ import { DashboardContainer } from "./style";
 const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 const today = new Date().toLocaleDateString("en-GB").split("/").join("-");
 
-
 const calcScore = (task: any) => {
   const pct = Math.min((task.actualPercent || 0) / (task.targetPercent || 100), 1) * 60;
-  const hrs = task.estimatedHours > 0
-    ? Math.min(task.estimatedHours / Math.max(task.actualHours || 0.1, 0.1), 1) * 40
-    : 40;
+  const hrs =
+    task.estimatedHours > 0
+      ? Math.min(task.estimatedHours / Math.max(task.actualHours || 0.1, 0.1), 1) * 40
+      : 40;
   return Math.round(pct + hrs);
 };
 
@@ -64,6 +64,7 @@ const STATUS_OPTIONS = [
   "Test Passed", "Ready For Production", "Production Released", "Closed",
 ];
 
+// ── empty task for NEW in-form rows only ────────────────────────────────────
 const emptyInTask = () => ({
   title: "",
   shortDesc: "",
@@ -78,43 +79,39 @@ const EmployeeDashboard: React.FC = () => {
   const [employee, setEmployee] = useState<EmployeeUser | null>(null);
   const navigate = useNavigate();
 
-  const [todayTask, setTodayTask] = useState<TaskDoc | null>(null);
-  const [pastTasks, setPastTasks] = useState<TaskDoc[]>([]);
-  const [activeTab, setActiveTab] = useState<"attendance" | "today" | "history" | "leave">("attendance");
+  const [todayTask, setTodayTask]   = useState<TaskDoc | null>(null);
+  const [pastTasks, setPastTasks]   = useState<TaskDoc[]>([]);
+  const [activeTab, setActiveTab]   = useState<"today" | "history" | "leave">("today");
 
   // IN form
-  const [location, setLocation] = useState("O-CBE");
-  const [dependency, setDependency] = useState("");
-  const [workMode, setWorkMode] = useState("Office");
-  const [inTasks, setInTasks] = useState<any[]>([emptyInTask()]);
+  const [location,    setLocation]    = useState("O-CBE");
+  const [dependency,  setDependency]  = useState("");
+  const [workMode,    setWorkMode]    = useState("Office");
+  const [inTasks,     setInTasks]     = useState<any[]>([emptyInTask()]);
   const [isEditingIN, setIsEditingIN] = useState(false);
 
   // OUT form
-  const [outTasks, setOutTasks] = useState<TaskItem[]>([]);
-  const [overallHours, setOverallHours] = useState(0);
-  const [overallScore, setOverallScore] = useState("");
-  const [isEditingOUT, setIsEditingOUT] = useState(false);
+  const [outTasks,      setOutTasks]      = useState<TaskItem[]>([]);
+  const [overallHours,  setOverallHours]  = useState(0);
+  const [overallScore,  setOverallScore]  = useState("");
+  const [isEditingOUT,  setIsEditingOUT]  = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: "", type: "" });
 
-  // Attendance
-  const [attendance, setAttendance] = useState<any | null>(null);
-  const [checkInLocation, setCheckInLocation] = useState("O-CBE");
-  const [attendanceWorkMode, setAttendanceWorkMode] = useState("Office");
-
   // Leave
-  const [leaves, setLeaves] = useState<any[]>([]);
-  const [leaveType, setLeaveType] = useState("Sick Leave");
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
-  const [leaveReason, setLeaveReason] = useState("");
+  const [leaves,       setLeaves]       = useState<any[]>([]);
+  const [leaveType,    setLeaveType]    = useState("Sick Leave");
+  const [fromDate,     setFromDate]     = useState("");
+  const [toDate,       setToDate]       = useState("");
+  const [leaveReason,  setLeaveReason]  = useState("");
   const [leaveLoading, setLeaveLoading] = useState(false);
   const [leaveMessage, setLeaveMessage] = useState({ text: "", type: "" });
 
+  // ── fetchers ────────────────────────────────────────────────────────────────
   const fetchTodayTask = useCallback(async (empId: string) => {
     try {
-      const res = await fetch(`${BASE_URL}/tasks/employee/${empId}?date=${today}`);
+      const res    = await fetch(`${BASE_URL}/tasks/employee/${empId}?date=${today}`);
       const result = await res.json();
       if (result.success && result.result?.tasks?.length > 0) {
         const task = result.result.tasks[0];
@@ -122,22 +119,24 @@ const EmployeeDashboard: React.FC = () => {
         setOutTasks(
           task.tasks.map((t: TaskItem) => ({
             ...t,
-            actualHours: t.actualHours || t.estimatedHours,
-            actualPercent: t.actualPercent || 0,
-            score: t.score || "N/A",
-            impact: t.impact || "",
-            status: t.status || "Todo",
+            actualHours:   t.actualHours   ?? t.estimatedHours,
+            actualPercent: t.actualPercent  ?? 0,
+            actualStart:   (t as any).actualStart ?? "",
+            actualEnd:     (t as any).actualEnd   ?? "",
+            score:         t.score  || "N/A",
+            impact:        t.impact || "",
+            status:        t.status || "Todo",
           }))
         );
         setOverallHours(task.overallHours || 0);
-        setOverallScore(task.overallScore || "");
+        setOverallScore(task.overallScore  || "");
       }
     } catch (err) { console.error(err); }
   }, []);
 
   const fetchPastTasks = useCallback(async (empId: string) => {
     try {
-      const res = await fetch(`${BASE_URL}/tasks/employee/${empId}`);
+      const res    = await fetch(`${BASE_URL}/tasks/employee/${empId}`);
       const result = await res.json();
       if (result.success) setPastTasks(result.result?.tasks || []);
     } catch (err) { console.error(err); }
@@ -145,17 +144,9 @@ const EmployeeDashboard: React.FC = () => {
 
   const fetchLeaves = useCallback(async (empId: string) => {
     try {
-      const res = await fetch(`${BASE_URL}/leaves/employee/${empId}`);
+      const res    = await fetch(`${BASE_URL}/leaves/employee/${empId}`);
       const result = await res.json();
       if (result.success) setLeaves(result.result?.leaves || []);
-    } catch (err) { console.error(err); }
-  }, []);
-
-  const fetchAttendance = useCallback(async (empId: string) => {
-    try {
-      const res = await fetch(`${BASE_URL}/attendance?employeeId=${empId}&date=${today}`);
-      const result = await res.json();
-      setAttendance(result.result?.attendance?.[0] || null);
     } catch (err) { console.error(err); }
   }, []);
 
@@ -167,69 +158,54 @@ const EmployeeDashboard: React.FC = () => {
     fetchTodayTask(emp.id);
     fetchPastTasks(emp.id);
     fetchLeaves(emp.id);
-    fetchAttendance(emp.id);
-  }, [navigate, fetchTodayTask, fetchPastTasks, fetchLeaves, fetchAttendance]);
+  }, [navigate, fetchTodayTask, fetchPastTasks, fetchLeaves]);
 
-  // ── IN handlers ───────────────────────────────────────────────────────────
-
-  const addInTask = () => setInTasks([...inTasks, emptyInTask()]);
-
-  const removeInTask = (i: number) => {
-    if (inTasks.length === 1) return;
-    setInTasks(inTasks.filter((_, idx) => idx !== i));
-  };
+  // ── IN handlers ─────────────────────────────────────────────────────────────
+  const addInTask    = () => setInTasks([...inTasks, emptyInTask()]);
+  const removeInTask = (i: number) => { if (inTasks.length > 1) setInTasks(inTasks.filter((_, idx) => idx !== i)); };
 
   const updateInTask = (i: number, field: string, value: any) => {
-    const updated = [...inTasks];
-    updated[i] = { ...updated[i], [field]: value };
-    setInTasks(updated);
+    const u = [...inTasks]; u[i] = { ...u[i], [field]: value }; setInTasks(u);
   };
 
   const addSubPoint = (ti: number) => {
-    const updated = [...inTasks];
-    updated[ti] = { ...updated[ti], subPoints: [...(updated[ti].subPoints || []), ""] };
-    setInTasks(updated);
+    const u = [...inTasks]; u[ti] = { ...u[ti], subPoints: [...(u[ti].subPoints || []), ""] }; setInTasks(u);
   };
-
   const removeSubPoint = (ti: number, pi: number) => {
-    const updated = [...inTasks];
-    const pts = [...(updated[ti].subPoints || [])];
-    pts.splice(pi, 1);
-    updated[ti] = { ...updated[ti], subPoints: pts };
-    setInTasks(updated);
+    const u = [...inTasks]; const pts = [...(u[ti].subPoints || [])]; pts.splice(pi, 1); u[ti] = { ...u[ti], subPoints: pts }; setInTasks(u);
   };
-
   const updateSubPoint = (ti: number, pi: number, value: string) => {
-    const updated = [...inTasks];
-    const pts = [...(updated[ti].subPoints || [])];
-    pts[pi] = value;
-    updated[ti] = { ...updated[ti], subPoints: pts };
-    setInTasks(updated);
+    const u = [...inTasks]; const pts = [...(u[ti].subPoints || [])]; pts[pi] = value; u[ti] = { ...u[ti], subPoints: pts }; setInTasks(u);
   };
 
+  // ── KEY FIX: preserve exact saved times when opening edit ──────────────────
   const handleEditIN = () => {
     if (!todayTask) return;
     setLocation(todayTask.location);
     setDependency(todayTask.dependency);
     setWorkMode(todayTask.workMode || "Office");
-    setInTasks(todayTask.tasks.map((t: any) => ({
-      title: t.title,
-      shortDesc: t.shortDesc || "",
-      estimatedHours: t.estimatedHours,
-      targetPercent: t.targetPercent,
-      plannedStart: t.plannedStart || "09:00",
-      plannedEnd: t.plannedEnd || "17:00",
-      subPoints: t.subPoints?.length ? t.subPoints : [""],
-    })));
+
+    // Map every saved task back to the form — use the SAVED plannedStart/End,
+    // NOT the emptyInTask() defaults.
+    setInTasks(
+      todayTask.tasks.map((t: any) => ({
+        title:          t.title          ?? "",
+        shortDesc:      t.shortDesc      ?? "",
+        estimatedHours: t.estimatedHours ?? 8,
+        targetPercent:  t.targetPercent  ?? 100,
+        // ✅ use the value from DB; only fall back if it was truly never stored
+        plannedStart:   t.plannedStart   ?? "",
+        plannedEnd:     t.plannedEnd     ?? "",
+        subPoints:      t.subPoints?.length ? [...t.subPoints] : [""],
+      }))
+    );
+
     setIsEditingIN(true);
     setMessage({ text: "", type: "" });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleCancelEditIN = () => {
-    setIsEditingIN(false);
-    setMessage({ text: "", type: "" });
-  };
+  const handleCancelEditIN = () => { setIsEditingIN(false); setMessage({ text: "", type: "" }); };
 
   const handleINSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -245,7 +221,7 @@ const EmployeeDashboard: React.FC = () => {
 
     try {
       if (isEditingIN && todayTask) {
-        const res = await fetch(`${BASE_URL}/tasks/in/${todayTask._id}`, {
+        const res    = await fetch(`${BASE_URL}/tasks/in/${todayTask._id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ location, dependency, workMode, tasks: cleanedTasks }),
@@ -256,21 +232,14 @@ const EmployeeDashboard: React.FC = () => {
           setIsEditingIN(false);
           fetchTodayTask(employee.id);
           fetchPastTasks(employee.id);
-        } else {
-          setMessage({ text: result.message || "Failed", type: "error" });
-        }
+        } else { setMessage({ text: result.message || "Failed", type: "error" }); }
       } else {
-        const res = await fetch(`${BASE_URL}/tasks/in`, {
+        const res    = await fetch(`${BASE_URL}/tasks/in`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            employeeId: employee.id,
-            employeeName: employee.firstName,
-            date: today,
-            location,
-            dependency,
-            workMode,
-            tasks: cleanedTasks,
+            employeeId: employee.id, employeeName: employee.firstName,
+            date: today, location, dependency, workMode, tasks: cleanedTasks,
           }),
         });
         const result = await res.json();
@@ -278,39 +247,36 @@ const EmployeeDashboard: React.FC = () => {
           setMessage({ text: "✅ IN update submitted!", type: "success" });
           fetchTodayTask(employee.id);
           fetchPastTasks(employee.id);
-        } else {
-          setMessage({ text: result.message || "Failed", type: "error" });
-        }
+        } else { setMessage({ text: result.message || "Failed", type: "error" }); }
       }
-    } catch {
-      setMessage({ text: "Server error", type: "error" });
-    } finally {
-      setLoading(false);
-    }
+    } catch { setMessage({ text: "Server error", type: "error" }); }
+    finally   { setLoading(false); }
   };
 
-  // ── OUT handlers ──────────────────────────────────────────────────────────
-
+  // ── OUT handlers ─────────────────────────────────────────────────────────────
   const updateOutTask = (i: number, field: string, value: any) => {
-    const updated = [...outTasks];
-    (updated[i] as any)[field] = value;
-    setOutTasks(updated);
+    const u = [...outTasks]; (u[i] as any)[field] = value; setOutTasks(u);
   };
 
   const handleEditOUT = () => { setIsEditingOUT(true); setMessage({ text: "", type: "" }); };
 
   const handleCancelEditOUT = () => {
     if (!todayTask) return;
-    setOutTasks(todayTask.tasks.map((t) => ({
-      ...t,
-      actualHours: t.actualHours || t.estimatedHours,
-      actualPercent: t.actualPercent || 0,
-      score: t.score || "N/A",
-      impact: t.impact || "",
-      status: t.status || "Todo",
-    })));
+    // ✅ also preserve actualStart/End when cancelling out-edit
+    setOutTasks(
+      todayTask.tasks.map((t: any) => ({
+        ...t,
+        actualHours:   t.actualHours   ?? t.estimatedHours,
+        actualPercent: t.actualPercent  ?? 0,
+        actualStart:   t.actualStart   ?? "",
+        actualEnd:     t.actualEnd     ?? "",
+        score:         t.score  || "N/A",
+        impact:        t.impact || "",
+        status:        t.status || "Todo",
+      }))
+    );
     setOverallHours(todayTask.overallHours || 0);
-    setOverallScore(todayTask.overallScore || "");
+    setOverallScore(todayTask.overallScore  || "");
     setIsEditingOUT(false);
     setMessage({ text: "", type: "" });
   };
@@ -322,7 +288,7 @@ const EmployeeDashboard: React.FC = () => {
     setMessage({ text: "", type: "" });
     const isEditing = todayTask.isOutSubmitted && isEditingOUT;
     try {
-      const res = await fetch(`${BASE_URL}/tasks/out/${todayTask._id}`, {
+      const res    = await fetch(`${BASE_URL}/tasks/out/${todayTask._id}`, {
         method: isEditing ? "PATCH" : "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ tasks: outTasks, overallHours, overallScore }),
@@ -333,30 +299,23 @@ const EmployeeDashboard: React.FC = () => {
         setIsEditingOUT(false);
         fetchTodayTask(employee!.id);
         fetchPastTasks(employee!.id);
-      } else {
-        setMessage({ text: result.message || "Failed", type: "error" });
-      }
-    } catch {
-      setMessage({ text: "Server error", type: "error" });
-    } finally {
-      setLoading(false);
-    }
+      } else { setMessage({ text: result.message || "Failed", type: "error" }); }
+    } catch { setMessage({ text: "Server error", type: "error" }); }
+    finally   { setLoading(false); }
   };
 
- 
-  // ── Leave handler ─────────────────────────────────────────────────────────
-
+  // ── Leave ────────────────────────────────────────────────────────────────────
   const handleLeaveSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!employee) return;
     setLeaveLoading(true);
     setLeaveMessage({ text: "", type: "" });
-    const from = new Date(fromDate);
-    const to = new Date(toDate);
+    const from      = new Date(fromDate);
+    const to        = new Date(toDate);
     const totalDays = Math.ceil((to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)) + 1;
     if (totalDays < 1) { setLeaveMessage({ text: "To date must be on or after From date", type: "error" }); setLeaveLoading(false); return; }
     try {
-      const res = await fetch(`${BASE_URL}/leaves/apply`, {
+      const res    = await fetch(`${BASE_URL}/leaves/apply`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ employeeId: employee.id, leaveType, fromDate, toDate, totalDays, reason: leaveReason }),
@@ -368,7 +327,7 @@ const EmployeeDashboard: React.FC = () => {
         fetchLeaves(employee.id);
       } else { setLeaveMessage({ text: result.message || "Failed", type: "error" }); }
     } catch { setLeaveMessage({ text: "Server error", type: "error" }); }
-    finally { setLeaveLoading(false); }
+    finally   { setLeaveLoading(false); }
   };
 
   const handleLogout = () => { localStorage.removeItem("employee"); navigate("/Employee"); };
@@ -378,19 +337,18 @@ const EmployeeDashboard: React.FC = () => {
   const pendingLeaves = leaves.filter((l) => l.status === "Pending").length;
 
   const wmStyle = (mode: string, active: string) => {
-    const isActive = active === mode;
-    if (!isActive) return {};
+    if (active !== mode) return {};
     if (mode === "Office") return { background: "#E6F1FB", color: "#0C447C", borderColor: "#85B7EB" };
     if (mode === "Remote") return { background: "#EAF3DE", color: "#27500A", borderColor: "#97C459" };
     return { background: "#EEEDFE", color: "#3C3489", borderColor: "#AFA9EC" };
   };
-
   const wmPillStyle = (mode: string) => {
     if (mode === "Office") return { background: "#E6F1FB", color: "#0C447C" };
     if (mode === "Remote") return { background: "#EAF3DE", color: "#27500A" };
     return { background: "#EEEDFE", color: "#3C3489" };
   };
 
+  // ── render ───────────────────────────────────────────────────────────────────
   return (
     <DashboardContainer>
       <div className="header">
@@ -404,12 +362,12 @@ const EmployeeDashboard: React.FC = () => {
           <div className="avatar">{employee.firstName?.charAt(0).toUpperCase()}</div>
           <div className="profile-details">
             {[
-              ["Name", employee.firstName],
-              ["Email", employee.email],
+              ["Name",        employee.firstName],
+              ["Email",       employee.email],
               ["Designation", employee.designation || "—"],
-              ["Department", employee.department || "—"],
+              ["Department",  employee.department  || "—"],
               ["Employee ID", `#${employee.employeeCode || "—"}`],
-              ["Today", today],
+              ["Today",       today],
             ].map(([label, value], i, arr) => (
               <React.Fragment key={label}>
                 <div className="profile-item">
@@ -425,10 +383,9 @@ const EmployeeDashboard: React.FC = () => {
         {/* TABS */}
         <div className="tabs">
           {[
-            
-            { key: "today", label: "📋 Today's Tasks" },
+            { key: "today",   label: "📋 Today's Tasks" },
             { key: "history", label: "📅 History" },
-            { key: "leave", label: "🏖️ Leave" },
+            { key: "leave",   label: "🏖️ Leave" },
           ].map(({ key, label }) => (
             <button
               key={key}
@@ -436,7 +393,9 @@ const EmployeeDashboard: React.FC = () => {
               onClick={() => setActiveTab(key as any)}
             >
               {label}
-              {key === "leave" && pendingLeaves > 0 && <span className="leave-pending-dot">{pendingLeaves}</span>}
+              {key === "leave" && pendingLeaves > 0 && (
+                <span className="leave-pending-dot">{pendingLeaves}</span>
+              )}
             </button>
           ))}
         </div>
@@ -445,13 +404,12 @@ const EmployeeDashboard: React.FC = () => {
           <p className={message.type === "success" ? "success-msg" : "error-msg"}>{message.text}</p>
         )}
 
-
-
-
-        {/* ── TODAY TAB ── */}
+        {/* ══════════════════════════════════════════════
+            TODAY TAB
+        ══════════════════════════════════════════════ */}
         {activeTab === "today" && (
           <>
-            {/* IN FORM — show when no task yet OR editing */}
+            {/* IN FORM */}
             {(!todayTask || isEditingIN) && (
               <div className="card">
                 <div className="card-header in">
@@ -465,14 +423,8 @@ const EmployeeDashboard: React.FC = () => {
                   <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
                     {["Office", "Remote", "Hybrid"].map((mode) => (
                       <button
-                        key={mode}
-                        type="button"
-                        onClick={() => setWorkMode(mode)}
-                        style={{
-                          flex: 1, padding: "8px 4px", fontSize: 13, fontWeight: 500,
-                          border: "0.5px solid #ddd", borderRadius: 8, cursor: "pointer",
-                          ...wmStyle(mode, workMode),
-                        }}
+                        key={mode} type="button" onClick={() => setWorkMode(mode)}
+                        style={{ flex: 1, padding: "8px 4px", fontSize: 13, fontWeight: 500, border: "0.5px solid #ddd", borderRadius: 8, cursor: "pointer", ...wmStyle(mode, workMode) }}
                       >
                         {mode === "Office" ? "🏢 " : mode === "Remote" ? "🏠 " : "🔀 "}{mode}
                       </button>
@@ -504,18 +456,16 @@ const EmployeeDashboard: React.FC = () => {
                           )}
                         </div>
 
-                        {/* Title */}
                         <div className="input-group" style={{ marginBottom: 10 }}>
                           <label>Task title</label>
                           <input
-                            placeholder="e.g. Employee Management System Development (Shinelogics)"
+                            placeholder="e.g. Employee Management System Development"
                             value={task.title}
                             onChange={(e) => updateInTask(i, "title", e.target.value)}
                             required
                           />
                         </div>
 
-                        {/* Description */}
                         <div className="input-group" style={{ marginBottom: 12 }}>
                           <label>Description / paragraph</label>
                           <textarea
@@ -527,15 +477,14 @@ const EmployeeDashboard: React.FC = () => {
                           />
                         </div>
 
-                        {/* Sub points */}
                         <div className="subpoints-section">
-                          <label className="subpoints-label">📌 Sub points (bullet details)</label>
+                          <label className="subpoints-label">📌 Sub points</label>
                           {(task.subPoints || [""]).map((point: string, pi: number) => (
                             <div className="subpoint-row" key={pi}>
                               <span className="bullet">•</span>
                               <input
                                 className="subpoint-input"
-                                placeholder="e.g. Developed login module with JWT auth..."
+                                placeholder="e.g. Developed login module..."
                                 value={point}
                                 onChange={(e) => updateSubPoint(i, pi, e.target.value)}
                               />
@@ -547,15 +496,23 @@ const EmployeeDashboard: React.FC = () => {
                           <button type="button" className="add-subpoint-btn" onClick={() => addSubPoint(i)}>+ Add sub point</button>
                         </div>
 
-                        {/* Time and hours */}
+                        {/* ✅ Time fields — show exact saved values */}
                         <div className="task-fields" style={{ marginTop: 12 }}>
                           <div className="input-group small">
                             <label>Planned start</label>
-                            <input type="time" value={task.plannedStart} onChange={(e) => updateInTask(i, "plannedStart", e.target.value)} />
+                            <input
+                              type="time"
+                              value={task.plannedStart}
+                              onChange={(e) => updateInTask(i, "plannedStart", e.target.value)}
+                            />
                           </div>
                           <div className="input-group small">
                             <label>Planned end</label>
-                            <input type="time" value={task.plannedEnd} onChange={(e) => updateInTask(i, "plannedEnd", e.target.value)} />
+                            <input
+                              type="time"
+                              value={task.plannedEnd}
+                              onChange={(e) => updateInTask(i, "plannedEnd", e.target.value)}
+                            />
                           </div>
                           <div className="input-group small">
                             <label>Est. hours</label>
@@ -574,7 +531,9 @@ const EmployeeDashboard: React.FC = () => {
 
                   <div className="form-actions">
                     <button type="button" className="add-task-btn" onClick={addInTask}>+ Add task</button>
-                    {isEditingIN && <button type="button" className="cancel-edit-btn" onClick={handleCancelEditIN}>Cancel</button>}
+                    {isEditingIN && (
+                      <button type="button" className="cancel-edit-btn" onClick={handleCancelEditIN}>Cancel</button>
+                    )}
                     <button type="submit" className="submit-btn in-btn" disabled={loading}>
                       {loading ? "Saving..." : isEditingIN ? "Save changes" : "Submit IN update"}
                     </button>
@@ -609,7 +568,10 @@ const EmployeeDashboard: React.FC = () => {
                           <span className="task-label">Task {t.taskNumber}:</span>
                           <span className="task-title">{t.title}</span>
                           <span className="task-meta">
-                            {t.plannedStart && `${t.plannedStart}–${t.plannedEnd} · `}
+                            {/* ✅ show the exact saved times */}
+                            {t.plannedStart && t.plannedEnd
+                              ? `${t.plannedStart}–${t.plannedEnd} · `
+                              : ""}
                             {t.estimatedHours}h · T-{t.targetPercent}%
                           </span>
                         </div>
@@ -618,7 +580,7 @@ const EmployeeDashboard: React.FC = () => {
                             {t.shortDesc}
                           </p>
                         )}
-                        {t.subPoints && t.subPoints.filter((p: string) => p.trim()).length > 0 && (
+                        {t.subPoints?.filter((p: string) => p.trim()).length > 0 && (
                           <div className="preview-subpoints">
                             {t.subPoints.filter((p: string) => p.trim()).map((point: string, pi: number) => (
                               <div className="preview-subpoint" key={pi}>
@@ -641,7 +603,9 @@ const EmployeeDashboard: React.FC = () => {
                       {todayTask.isOutSubmitted && (
                         <>
                           <span className="submitted-badge">✓ {todayTask.outTime}</span>
-                          {!isEditingOUT && <button className="edit-out-btn" onClick={handleEditOUT}>✏️ Edit OUT</button>}
+                          {!isEditingOUT && (
+                            <button className="edit-out-btn" onClick={handleEditOUT}>✏️ Edit OUT</button>
+                          )}
                         </>
                       )}
                     </div>
@@ -650,23 +614,20 @@ const EmployeeDashboard: React.FC = () => {
                   <form onSubmit={handleOUTSubmit}>
                     <div className="tasks-list">
                       {outTasks.map((task, i) => {
-                        const score = calcScore(task);
+                        const score  = calcScore(task);
                         const locked = todayTask.isOutSubmitted && !isEditingOUT;
                         return (
                           <div className="task-row out-task-row" key={i}>
                             <div className="task-num">Task {task.taskNumber}</div>
                             <div className="task-fields out-fields">
-                              {/* Task title */}
                               <div className="task-title-display">{task.title}</div>
 
-                              {/* Description if present */}
                               {(task as any).shortDesc && (
                                 <p style={{ fontSize: "0.83rem", color: "#666", fontStyle: "italic", marginBottom: 8 }}>
                                   {(task as any).shortDesc}
                                 </p>
                               )}
 
-                              {/* Sub points from morning */}
                               {(task as any).subPoints?.filter((p: string) => p.trim()).length > 0 && (
                                 <div className="out-subpoints" style={{ marginBottom: 10 }}>
                                   {(task as any).subPoints.filter((p: string) => p.trim()).map((point: string, pi: number) => (
@@ -675,6 +636,13 @@ const EmployeeDashboard: React.FC = () => {
                                       <span>{point}</span>
                                     </div>
                                   ))}
+                                </div>
+                              )}
+
+                              {/* ✅ show planned times (read-only) in OUT form */}
+                              {(task.plannedStart || task.plannedEnd) && (
+                                <div style={{ fontSize: "0.8rem", color: "#888", marginBottom: 10, fontStyle: "italic" }}>
+                                  📅 Planned: {task.plannedStart || "—"} → {task.plannedEnd || "—"}
                                 </div>
                               )}
 
@@ -687,11 +655,14 @@ const EmployeeDashboard: React.FC = () => {
                                 </div>
                                 <div className="input-group small">
                                   <label>Actual start</label>
-                                  <input type="time" value={(task as any).actualStart || ""} onChange={(e) => updateOutTask(i, "actualStart", e.target.value)} disabled={locked} />
+                                  {/* ✅ preserve saved actualStart */}
+                                  <input type="time" value={(task as any).actualStart || ""}
+                                    onChange={(e) => updateOutTask(i, "actualStart", e.target.value)} disabled={locked} />
                                 </div>
                                 <div className="input-group small">
                                   <label>Actual end</label>
-                                  <input type="time" value={(task as any).actualEnd || ""} onChange={(e) => updateOutTask(i, "actualEnd", e.target.value)} disabled={locked} />
+                                  <input type="time" value={(task as any).actualEnd || ""}
+                                    onChange={(e) => updateOutTask(i, "actualEnd", e.target.value)} disabled={locked} />
                                 </div>
                                 <div className="input-group small">
                                   <label>Act. hours</label>
@@ -710,13 +681,16 @@ const EmployeeDashboard: React.FC = () => {
                                 </div>
                               </div>
 
-                              {/* Live productivity score */}
                               <div className="history-overall-bar" style={{ marginTop: 10, alignItems: "center", gap: 12 }}>
                                 <span style={{ fontSize: "0.8rem", color: "#555" }}>Productivity score:</span>
                                 <div style={{ flex: 1, height: 6, background: "#eee", borderRadius: 3 }}>
-                                  <div style={{ height: 6, borderRadius: 3, background: score >= 70 ? "#639922" : score >= 40 ? "#EF9F27" : "#E24B4A", width: `${score}%`, transition: "width .3s" }} />
+                                  <div style={{ height: 6, borderRadius: 3, transition: "width .3s",
+                                    background: score >= 70 ? "#639922" : score >= 40 ? "#EF9F27" : "#E24B4A",
+                                    width: `${score}%` }} />
                                 </div>
-                                <strong style={{ fontSize: "0.85rem", color: score >= 70 ? "#27500A" : score >= 40 ? "#633806" : "#A32D2D" }}>{score}%</strong>
+                                <strong style={{ fontSize: "0.85rem", color: score >= 70 ? "#27500A" : score >= 40 ? "#633806" : "#A32D2D" }}>
+                                  {score}%
+                                </strong>
                               </div>
                             </div>
                           </div>
@@ -740,7 +714,9 @@ const EmployeeDashboard: React.FC = () => {
                     </div>
 
                     <div className="form-actions">
-                      {isEditingOUT && <button type="button" className="cancel-edit-btn" onClick={handleCancelEditOUT}>Cancel</button>}
+                      {isEditingOUT && (
+                        <button type="button" className="cancel-edit-btn" onClick={handleCancelEditOUT}>Cancel</button>
+                      )}
                       {(!todayTask.isOutSubmitted || isEditingOUT) && (
                         <button type="submit" className="submit-btn out-btn" disabled={loading}>
                           {loading ? "Saving..." : isEditingOUT ? "Save changes" : "Submit OUT update"}
@@ -754,7 +730,9 @@ const EmployeeDashboard: React.FC = () => {
           </>
         )}
 
-        {/* ── HISTORY TAB ── */}
+        {/* ══════════════════════════════════════════════
+            HISTORY TAB — full task details for IN + OUT
+        ══════════════════════════════════════════════ */}
         {activeTab === "history" && (
           <div className="history-list">
             {pastTasks.length === 0 ? (
@@ -762,6 +740,7 @@ const EmployeeDashboard: React.FC = () => {
             ) : (
               pastTasks.map((task) => (
                 <div className="history-card" key={task._id}>
+                  {/* ── date header ── */}
                   <div className="history-date-header">
                     <span className="history-date">📅 {task.date}</span>
                     <div className="history-badges">
@@ -778,26 +757,43 @@ const EmployeeDashboard: React.FC = () => {
                     </div>
                   </div>
 
+                  {/* ── IN section ── */}
                   <div className="history-section">
                     <div className="section-label in-label">🌅 IN — {task.inTime || "—"}</div>
+                    <p className="section-meta">
+                      <strong>{employee.firstName}</strong> IN – {task.location}
+                      {task.dependency && ` | Dep: ${task.dependency}`} – {task.date}
+                    </p>
+
                     {(task.tasks as any[]).map((t) => (
                       <div className="history-task-block" key={t.taskNumber}>
+                        {/* title row */}
                         <div className="history-task-row">
                           <span className="ht-num">Task {t.taskNumber}:</span>
                           <span className="ht-title">{t.title}</span>
                           <span className="ht-meta">
-                            {t.plannedStart && `${t.plannedStart}–${t.plannedEnd} · `}
-                            T-{t.targetPercent}% · {t.estimatedHours}h
+                            {/* ✅ exact saved planned times */}
+                            {t.plannedStart && t.plannedEnd
+                              ? `${t.plannedStart}–${t.plannedEnd} · `
+                              : ""}
+                            Est: {t.estimatedHours}h · Target: {t.targetPercent}%
                           </span>
                         </div>
+
+                        {/* description */}
                         {t.shortDesc && (
-                          <p style={{ fontSize: "0.78rem", color: "#666", fontStyle: "italic", paddingLeft: 52, marginTop: 2 }}>{t.shortDesc}</p>
+                          <p style={{ fontSize: "0.78rem", color: "#666", fontStyle: "italic", paddingLeft: 52, marginTop: 2, marginBottom: 4 }}>
+                            {t.shortDesc}
+                          </p>
                         )}
-                        {t.subPoints && t.subPoints.filter((p: string) => p.trim()).length > 0 && (
+
+                        {/* sub points */}
+                        {t.subPoints?.filter((p: string) => p.trim()).length > 0 && (
                           <div className="history-subpoints">
                             {t.subPoints.filter((p: string) => p.trim()).map((point: string, pi: number) => (
                               <div className="history-subpoint" key={pi}>
-                                <span className="preview-bullet">•</span><span>{point}</span>
+                                <span className="preview-bullet">•</span>
+                                <span>{point}</span>
                               </div>
                             ))}
                           </div>
@@ -806,22 +802,69 @@ const EmployeeDashboard: React.FC = () => {
                     ))}
                   </div>
 
+                  {/* ── OUT section ── */}
                   {task.isOutSubmitted ? (
                     <div className="history-section out-section">
                       <div className="section-label out-label">🌆 OUT — {task.outTime || "—"}</div>
+                      <p className="section-meta">
+                        <strong>{employee.firstName}</strong> OUT – {task.location}
+                        {task.dependency && ` | Dep: ${task.dependency}`} – {task.date}
+                      </p>
+
                       {(task.tasks as any[]).map((t) => (
                         <div className="history-task-block" key={t.taskNumber}>
+                          {/* title + status row */}
                           <div className="history-task-row out-row">
                             <span className="ht-num">Task {t.taskNumber}:</span>
                             <span className="ht-title">{t.title}</span>
-                            <span className={`status-pill ${t.status?.replace(/\s/g, "-").toLowerCase()}`}>{t.status}</span>
-                            <span className="ht-meta">
-                              {t.estimatedHours}h / {t.actualHours}h · {t.targetPercent}% / {t.actualPercent}% · Score: {t.score}
+                            <span className={`status-pill ${t.status?.replace(/\s/g, "-").toLowerCase()}`}>
+                              {t.status}
                             </span>
                           </div>
-                          {t.impact && <div className="ht-impact">[Impact: {t.impact}]</div>}
+
+                          {/* description */}
+                          {t.shortDesc && (
+                            <p style={{ fontSize: "0.78rem", color: "#666", fontStyle: "italic", paddingLeft: 52, marginTop: 2, marginBottom: 4 }}>
+                              {t.shortDesc}
+                            </p>
+                          )}
+
+                          {/* sub points */}
+                          {t.subPoints?.filter((p: string) => p.trim()).length > 0 && (
+                            <div className="history-subpoints">
+                              {t.subPoints.filter((p: string) => p.trim()).map((point: string, pi: number) => (
+                                <div className="history-subpoint" key={pi}>
+                                  <span className="preview-bullet">•</span>
+                                  <span>{point}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {/* ✅ full time + hours + score row */}
+                          <div style={{ paddingLeft: 52, marginTop: 6, display: "flex", flexWrap: "wrap", gap: 10 }}>
+                            {/* planned vs actual times */}
+                            {(t.plannedStart || t.actualStart) && (
+                              <span style={{ fontSize: "0.75rem", color: "#64748b" }}>
+                                🕐 Planned: {t.plannedStart || "—"}–{t.plannedEnd || "—"} &nbsp;|&nbsp;
+                                Actual: {t.actualStart || "—"}–{t.actualEnd || "—"}
+                              </span>
+                            )}
+                            <span className="ht-meta">
+                              Est: {t.estimatedHours}h / Act: {t.actualHours}h &nbsp;·&nbsp;
+                              Target: {t.targetPercent}% / Done: {t.actualPercent}% &nbsp;·&nbsp;
+                              {/* Score: <strong>{t.score}</strong> */}
+                            </span>
+                          </div>
+
+                          {/* impact */}
+                          {t.impact && (
+                            <div className="ht-impact">[Impact: {t.impact}]</div>
+                          )}
                         </div>
                       ))}
+
+                      {/* overall bar */}
                       <div className="history-overall-bar">
                         <span>⏱ Overall: <strong>{task.overallHours} hrs</strong></span>
                         <span>⭐ Score: <strong>{task.overallScore}</strong></span>
@@ -839,7 +882,9 @@ const EmployeeDashboard: React.FC = () => {
           </div>
         )}
 
-        {/* ── LEAVE TAB ── */}
+        {/* ══════════════════════════════════════════════
+            LEAVE TAB
+        ══════════════════════════════════════════════ */}
         {activeTab === "leave" && (
           <div>
             <div className="card">
@@ -849,7 +894,9 @@ const EmployeeDashboard: React.FC = () => {
                   <div className="input-group">
                     <label>Leave type</label>
                     <select value={leaveType} onChange={(e) => setLeaveType(e.target.value)}>
-                      {["Sick Leave","Casual Leave","Emergency Leave","Personal Leave","Other"].map(l => <option key={l}>{l}</option>)}
+                      {["Sick Leave","Casual Leave","Emergency Leave","Personal Leave","Other"].map((l) => (
+                        <option key={l}>{l}</option>
+                      ))}
                     </select>
                   </div>
                   <div className="input-group">
@@ -861,15 +908,19 @@ const EmployeeDashboard: React.FC = () => {
                     <input type="date" value={toDate} onChange={(e) => setToDate(e.target.value)} required />
                   </div>
                 </div>
+
                 {fromDate && toDate && new Date(toDate) >= new Date(fromDate) && (
                   <div className="days-preview">
                     📅 {Math.ceil((new Date(toDate).getTime() - new Date(fromDate).getTime()) / (1000 * 60 * 60 * 24)) + 1} day(s) selected
                   </div>
                 )}
+
                 <div className="input-group" style={{ marginBottom: 16 }}>
                   <label>Reason</label>
-                  <input placeholder="Enter reason for leave..." value={leaveReason} onChange={(e) => setLeaveReason(e.target.value)} required />
+                  <input placeholder="Enter reason for leave..." value={leaveReason}
+                    onChange={(e) => setLeaveReason(e.target.value)} required />
                 </div>
+
                 {leaveMessage.text && (
                   <p className={leaveMessage.type === "success" ? "success-msg" : "error-msg"}>{leaveMessage.text}</p>
                 )}
@@ -882,17 +933,26 @@ const EmployeeDashboard: React.FC = () => {
             </div>
 
             <div className="card">
-              <div className="card-header in"><span className="tag in-tag">📋 My leave requests ({leaves.length})</span></div>
-              {leaves.length === 0 ? <p className="empty-msg">No leave requests found.</p> : (
+              <div className="card-header in">
+                <span className="tag in-tag">📋 My leave requests ({leaves.length})</span>
+              </div>
+              {leaves.length === 0 ? (
+                <p className="empty-msg">No leave requests found.</p>
+              ) : (
                 <div className="leave-history-list">
                   {leaves.map((leave) => (
                     <div key={leave._id} className={`leave-history-item ${leave.status.toLowerCase()}`}>
                       <div className="lhi-top">
                         <div className="lhi-left">
                           <span className="lhi-type">{leave.leaveType}</span>
-                          <p className="lhi-dates">📅 {leave.fromDate} → {leave.toDate}<span className="lhi-days">({leave.totalDays} day{leave.totalDays > 1 ? "s" : ""})</span></p>
+                          <p className="lhi-dates">
+                            📅 {leave.fromDate} → {leave.toDate}
+                            <span className="lhi-days">({leave.totalDays} day{leave.totalDays > 1 ? "s" : ""})</span>
+                          </p>
                           <p className="lhi-reason">"{leave.reason}"</p>
-                          <span className="lhi-applied">Applied: {leave.appliedAt ? new Date(leave.appliedAt).toLocaleDateString("en-IN") : "—"}</span>
+                          <span className="lhi-applied">
+                            Applied: {leave.appliedAt ? new Date(leave.appliedAt).toLocaleDateString("en-IN") : "—"}
+                          </span>
                         </div>
                         <div className="lhi-right">
                           <span className={`lhi-status ${leave.status.toLowerCase()}`}>
