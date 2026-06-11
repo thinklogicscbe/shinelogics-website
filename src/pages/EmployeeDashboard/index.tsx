@@ -5,15 +5,7 @@ import { DashboardContainer } from "./style";
 const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 const today = new Date().toLocaleDateString("en-GB").split("/").join("-");
 
-// ── Score calculator ──────────────────────────────────────────────────────────
-const calcScore = (task: any) => {
-  const pct = Math.min((task.actualPercent || 0) / (task.targetPercent || 100), 1) * 60;
-  const hrs =
-    task.estimatedHours > 0
-      ? Math.min(task.estimatedHours / Math.max(task.actualHours || 0.1, 0.1), 1) * 40
-      : 40;
-  return Math.round(pct + hrs);
-};
+
 
 // ── Time helpers ──────────────────────────────────────────────────────────────
 const toMinutes = (t: string): number => {
@@ -367,7 +359,7 @@ const BreakTracker: React.FC<BreakTrackerProps> = ({ onBreakUpdate }) => {
   const [breakTotals, setBreakTotals] = useState<Record<string, number>>({
     morning: 0, lunch: 0, evening: 0,
   });
-  const [breakSessions, setBreakSessions] = useState<Record<string, BreakSession[]>>({
+  const [, setBreakSessions] = useState<Record<string, BreakSession[]>>({
     morning: [], lunch: [], evening: [],
   });
 
@@ -624,12 +616,6 @@ const EmployeeDashboard: React.FC = () => {
     const estHours = calcSegmentHours(segs, u[ti].breakMinutes || 0);
     u[ti] = { ...u[ti], timeSegments: segs, estimatedHours: estHours,
       plannedStart: segs[0]?.start ?? "", plannedEnd: segs[segs.length - 1]?.end ?? "" };
-    setInTasks(u);
-  };
-  const updateBreak = (ti: number, mins: number) => {
-    const u = [...inTasks];
-    u[ti] = { ...u[ti], breakMinutes: mins,
-      estimatedHours: calcSegmentHours(u[ti].timeSegments || [], mins) };
     setInTasks(u);
   };
 
@@ -1144,7 +1130,6 @@ const EmployeeDashboard: React.FC = () => {
                   <form onSubmit={handleOUTSubmit}>
                     <div className="tasks-list">
                       {outTasks.map((task, i) => {
-                        const score  = calcScore(task);
                         const locked = todayTask.isOutSubmitted && !isEditingOUT;
                         return (
                           <div className="task-row out-task-row" key={i}>
