@@ -5,15 +5,7 @@ import { DashboardContainer } from "./style";
 const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 const today = new Date().toLocaleDateString("en-GB").split("/").join("-");
 
-// ── Score calculator ──────────────────────────────────────────────────────────
-const calcScore = (task: any) => {
-  const pct = Math.min((task.actualPercent || 0) / (task.targetPercent || 100), 1) * 60;
-  const hrs =
-    task.estimatedHours > 0
-      ? Math.min(task.estimatedHours / Math.max(task.actualHours || 0.1, 0.1), 1) * 40
-      : 40;
-  return Math.round(pct + hrs);
-};
+
 
 // ── Time helpers ──────────────────────────────────────────────────────────────
 const toMinutes = (t: string): number => {
