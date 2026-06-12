@@ -36,11 +36,6 @@ const fmtClockTime = (d: Date): string =>
     hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true,
   });
 
-const getNowMinutes = (): number => {
-  const now = new Date();
-  return now.getHours() * 60 + now.getMinutes();
-};
-
 // ── localStorage helpers ──────────────────────────────────────────────────────
 // Key: "break_<slotId>_<DD-MM-YYYY>"  so data auto-expires each day
 const breakStorageKey = (slotId: string) => `break_${slotId}_${today}`;
@@ -124,46 +119,34 @@ const emptyInTask = () => ({
 });
 
 // ── Break Slot Definition ─────────────────────────────────────────────────────
+// No fixed windows — breaks can be taken any time during the day.
+// Allotted is the budget; the tracker just measures how much you actually took.
 interface BreakSlot {
-  id:           "morning" | "lunch" | "evening";
-  label:        string;
-  emoji:        string;
-  allotted:     number;
-  slotTime:     string;
-  windowStart:  number;
-  windowEnd:    number;
-  color:        { bg: string; border: string; text: string; badge: string };
+  id:       "morning" | "lunch" | "evening";
+  label:    string;
+  emoji:    string;
+  allotted: number; // budget in minutes
+  hint:     string; // display hint e.g. "Suggested: 11:00 AM"
+  color:    { bg: string; border: string; text: string; badge: string };
 }
 
 const BREAK_SLOTS: BreakSlot[] = [
   {
     id: "morning", label: "Morning break", emoji: "☕",
-    allotted: 30, slotTime: "11:00 – 11:30",
-    windowStart: 11 * 60, windowEnd: 11 * 60 + 30,
+    allotted: 30, hint: "30 min allotted",
     color: { bg: "#FEF9C3", border: "#FBBF24", text: "#92400E", badge: "#FDE68A" },
   },
   {
     id: "lunch", label: "Lunch break", emoji: "🍱",
-    allotted: 60, slotTime: "13:00 – 14:00",
-    windowStart: 13 * 60, windowEnd: 14 * 60,
+    allotted: 60, hint: "60 min allotted",
     color: { bg: "#DCFCE7", border: "#86EFAC", text: "#15803D", badge: "#BBF7D0" },
   },
   {
     id: "evening", label: "Evening break", emoji: "🌤",
-    allotted: 30, slotTime: "16:00 – 16:30",
-    windowStart: 16 * 60, windowEnd: 16 * 60 + 30,
+    allotted: 30, hint: "30 min allotted",
     color: { bg: "#E0F2FE", border: "#7DD3FC", text: "#0369A1", badge: "#BAE6FD" },
   },
 ];
-
-type SlotStatus = "upcoming" | "active" | "missed" | "used";
-
-const getSlotStatus = (slot: BreakSlot, everStarted: boolean): SlotStatus => {
-  const now = getNowMinutes();
-  if (now < slot.windowStart) return "upcoming";
-  if (now <= slot.windowEnd)  return "active";
-  return everStarted ? "used" : "missed";
-};
 
 // ── Exported break log entry shown in task details ────────────────────────────
 export interface BreakLogEntry {
@@ -184,21 +167,19 @@ const BreakTimer: React.FC<BreakTimerProps> = ({ slot, onUpdate }) => {
   const key = breakStorageKey(slot.id);
 
   // ── Initialise from localStorage ─────────────────────────────────────────
-  const initState = (): { elapsedMs: number; sessions: BreakSession[]; resumedMs: number } => {
+  const initState = (): { elapsedMs: number; sessions: BreakSession[] } => {
     try {
       const raw = localStorage.getItem(key);
-      if (!raw) return { elapsedMs: 0, sessions: [], resumedMs: 0 };
+      if (!raw) return { elapsedMs: 0, sessions: [] };
       const saved: SlotPersistedState = JSON.parse(raw);
       let elapsedMs = saved.elapsedMs ?? 0;
-      let resumedMs = 0;
-      // If the timer was running when the page closed, count that gap as elapsed
+      // If the timer was running when the page closed, count the gap as elapsed
       if (saved.runningStartIso) {
         const gap = Date.now() - new Date(saved.runningStartIso).getTime();
         elapsedMs += gap;
-        resumedMs = gap; // we'll show it as accumulated, not a new live session
       }
-      return { elapsedMs, sessions: saved.sessions ?? [], resumedMs };
-    } catch { return { elapsedMs: 0, sessions: [], resumedMs: 0 }; }
+      return { elapsedMs, sessions: saved.sessions ?? [] };
+    } catch { return { elapsedMs: 0, sessions: [] }; }
   };
 
   const init = initState();
@@ -208,11 +189,9 @@ const BreakTimer: React.FC<BreakTimerProps> = ({ slot, onUpdate }) => {
   const [sessionStart, setSessionStart]     = useState<Date | null>(null);
   const [sessionElapsed, setSessionElapsed] = useState(0);
   const [sessions, setSessions]             = useState<BreakSession[]>(init.sessions);
-  const [nowMinutes, setNowMinutes]         = useState(getNowMinutes());
-  const tickRef  = useRef<ReturnType<typeof setInterval> | null>(null);
-  const clockRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const tickRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // ── Persist to localStorage whenever state changes ────────────────────────
+  // ── Persist to localStorage ───────────────────────────────────────────────
   const persist = useCallback((
     elapsedMs: number,
     sess: BreakSession[],
@@ -238,25 +217,15 @@ const BreakTimer: React.FC<BreakTimerProps> = ({ slot, onUpdate }) => {
     return () => { if (tickRef.current) clearInterval(tickRef.current); };
   }, [running, sessionStart]);
 
-  // Clock for slot-status re-evaluation
-  useEffect(() => {
-    clockRef.current = setInterval(() => setNowMinutes(getNowMinutes()), 30_000);
-    return () => { if (clockRef.current) clearInterval(clockRef.current); };
-  }, []);
-
   // Notify parent on mount if we have restored data
   useEffect(() => {
     if (init.elapsedMs > 0) {
       onUpdate(slot.id, Math.round(init.elapsedMs / 60000), init.sessions);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // intentionally run once on mount
-
-  const everStarted = sessions.length > 0 || running;
-  const slotStatus  = getSlotStatus(slot, everStarted);
+  }, []);
 
   const handleStart = () => {
-    if (slotStatus === "upcoming" || slotStatus === "missed") return;
     const start = new Date();
     setSessionStart(start);
     setSessionElapsed(0);
@@ -283,7 +252,6 @@ const BreakTimer: React.FC<BreakTimerProps> = ({ slot, onUpdate }) => {
     setElapsed(newElapsed);
     setSessions(newSessions);
     persist(newElapsed, newSessions, null);
-
     onUpdate(slot.id, Math.round(newElapsed / 60000), newSessions);
   };
 
@@ -291,93 +259,36 @@ const BreakTimer: React.FC<BreakTimerProps> = ({ slot, onUpdate }) => {
   const totalTaken  = Math.round(displayMs / 60000);
   const extra       = totalTaken - slot.allotted;
   const withinLimit = extra <= 0;
+  const hasTaken    = sessions.length > 0 || running;
 
-  // ── Upcoming ─────────────────────────────────────────────────────────────
-  if (slotStatus === "upcoming") {
-    const minsUntil = slot.windowStart - nowMinutes;
-    const h = Math.floor(minsUntil / 60);
-    const m = minsUntil % 60;
-    return (
-      <div className="break-slot-card bsc-upcoming" style={{ borderColor: "#e5e7eb" }}>
-        <div className="bsc-header">
-          <div className="bsc-title-row">
-            <span className="bsc-emoji" style={{ opacity: 0.45 }}>{slot.emoji}</span>
-            <div>
-              <div className="bsc-name" style={{ color: "#9ca3af" }}>{slot.label}</div>
-              <div className="bsc-slot-time">{slot.slotTime} · {slot.allotted} min</div>
-            </div>
-          </div>
-          <span className="bsc-upcoming-badge">Upcoming</span>
-        </div>
-        <div className="bsc-upcoming-hint">
-          ⏳ Starts in <strong>{h > 0 ? `${h}h ${m}m` : `${m}m`}</strong>
-        </div>
-        <button type="button" className="bsc-start-btn bsc-disabled-btn" disabled>
-          ▶ Not available yet
-        </button>
-      </div>
-    );
-  }
-
-  // ── Missed ────────────────────────────────────────────────────────────────
-  if (slotStatus === "missed") {
-    return (
-      <div className="break-slot-card bsc-missed" style={{ borderColor: "#fca5a5" }}>
-        <div className="bsc-header">
-          <div className="bsc-title-row">
-            <span className="bsc-emoji" style={{ opacity: 0.5 }}>{slot.emoji}</span>
-            <div>
-              <div className="bsc-name" style={{ color: "#9ca3af" }}>{slot.label}</div>
-              <div className="bsc-slot-time">{slot.slotTime} · {slot.allotted} min</div>
-            </div>
-          </div>
-          <span className="bsc-missed-badge">⛔ Missed</span>
-        </div>
-        <div className="bsc-missed-hint">Break window passed without being taken.</div>
-        <div className="bsc-progress-wrap">
-          <div className="bsc-progress-bar">
-            <div className="bsc-progress-fill" style={{ width: "0%", background: "#d1d5db" }} />
-          </div>
-          <div className="bsc-progress-labels">
-            <span style={{ color: "#9ca3af" }}>0 min taken</span>
-            <span style={{ color: "#b91c1c", fontSize: "0.68rem", fontWeight: 700 }}>
-              −{slot.allotted} min not used
-            </span>
-          </div>
-        </div>
-        <button type="button" className="bsc-start-btn bsc-disabled-btn" disabled>
-          🔒 Break window closed
-        </button>
-      </div>
-    );
-  }
-
-  // ── Active / Used ─────────────────────────────────────────────────────────
   return (
     <div className="break-slot-card" style={{ borderColor: slot.color.border }}>
+      {/* Header */}
       <div className="bsc-header">
         <div className="bsc-title-row">
           <span className="bsc-emoji">{slot.emoji}</span>
           <div>
             <div className="bsc-name" style={{ color: slot.color.text }}>{slot.label}</div>
-            <div className="bsc-slot-time">Allotted: {slot.slotTime} ({slot.allotted} min)</div>
+            <div className="bsc-slot-time">{slot.hint}</div>
           </div>
         </div>
         {running ? (
           <span className="bsc-live-badge">
             <span className="break-pulse" style={{ background: slot.color.text }} /> Live
           </span>
-        ) : sessions.length > 0 ? (
+        ) : hasTaken ? (
           <span className="bsc-used-badge" style={{ background: slot.color.badge, color: slot.color.text }}>
             ✓ Taken
           </span>
         ) : null}
       </div>
 
+      {/* Timer */}
       <div className="bsc-timer" style={{ color: running ? slot.color.text : "#1a1a2e" }}>
         {fmtTimer(displayMs)}
       </div>
 
+      {/* Progress bar */}
       <div className="bsc-progress-wrap">
         <div className="bsc-progress-bar">
           <div
@@ -393,17 +304,18 @@ const BreakTimer: React.FC<BreakTimerProps> = ({ slot, onUpdate }) => {
           )}
         </div>
         <div className="bsc-progress-labels">
-          <span style={{ color: slot.color.text, fontWeight: 600 }}>{totalTaken} min taken</span>
+          <span style={{ color: slot.color.text, fontWeight: 600 }}>{totalTaken} / {slot.allotted} min</span>
           {!withinLimit ? (
             <span className="bsc-extra-label">+{extra} min extra ⚠️</span>
           ) : (
             <span className="bsc-ok-label" style={{ color: slot.color.text }}>
-              {slot.allotted - totalTaken} min remaining ✓
+              {slot.allotted - totalTaken} min left ✓
             </span>
           )}
         </div>
       </div>
 
+      {/* Controls */}
       <div className="bsc-controls">
         {!running ? (
           <button type="button" className="bsc-start-btn"
@@ -418,6 +330,7 @@ const BreakTimer: React.FC<BreakTimerProps> = ({ slot, onUpdate }) => {
         )}
       </div>
 
+      {/* Session log */}
       {sessions.length > 0 && (
         <div className="bsc-log">
           {sessions.map((s, i) => (
@@ -1290,7 +1203,7 @@ const EmployeeDashboard: React.FC = () => {
                                     onChange={(e) => updateOutTask(i, "impact", e.target.value)} disabled={locked} />
                                 </div>
                               </div>
-                              {/* <div className="history-overall-bar" style={{ marginTop: 10, alignItems: "center", gap: 12 }}>
+                              <div className="history-overall-bar" style={{ marginTop: 10, alignItems: "center", gap: 12 }}>
                                 <span style={{ fontSize: "0.8rem", color: "#555" }}>Productivity score:</span>
                                 <div style={{ flex: 1, height: 6, background: "#eee", borderRadius: 3 }}>
                                   <div style={{ height: 6, borderRadius: 3, transition: "width .3s",
@@ -1301,7 +1214,7 @@ const EmployeeDashboard: React.FC = () => {
                                   color: score >= 70 ? "#27500A" : score >= 40 ? "#633806" : "#A32D2D" }}>
                                   {score}%
                                 </strong>
-                              </div> */}
+                              </div>
                             </div>
                           </div>
                         );

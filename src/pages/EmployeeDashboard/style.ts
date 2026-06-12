@@ -1088,61 +1088,6 @@ export const DashboardContainer = styled.div`
     transition: opacity 0.2s;
   }
 
-  /* ── UPCOMING state ── */
-  .break-slot-card.bsc-upcoming {
-    background: #f9fafb;
-    opacity: 0.75;
-  }
-
-  .bsc-upcoming-badge {
-    font-size: 0.68rem;
-    font-weight: 700;
-    color: #6b7280;
-    background: #f3f4f6;
-    padding: 2px 8px;
-    border-radius: 20px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .bsc-upcoming-hint {
-    font-size: 0.78rem;
-    color: #9ca3af;
-    background: #f3f4f6;
-    padding: 8px 12px;
-    border-radius: 8px;
-    text-align: center;
-
-    strong { color: #6b7280; }
-  }
-
-  /* ── MISSED state ── */
-  .break-slot-card.bsc-missed {
-    background: #fff5f5;
-    opacity: 0.85;
-  }
-
-  .bsc-missed-badge {
-    font-size: 0.68rem;
-    font-weight: 700;
-    color: #b91c1c;
-    background: #fee2e2;
-    padding: 2px 8px;
-    border-radius: 20px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .bsc-missed-hint {
-    font-size: 0.75rem;
-    color: #b91c1c;
-    background: #fff1f1;
-    border: 1px solid #fecaca;
-    padding: 8px 12px;
-    border-radius: 8px;
-    text-align: center;
-  }
-
   /* ── USED (taken) badge ── */
   .bsc-used-badge {
     font-size: 0.68rem;
@@ -1151,21 +1096,6 @@ export const DashboardContainer = styled.div`
     border-radius: 20px;
     white-space: nowrap;
     flex-shrink: 0;
-  }
-
-  /* ── Disabled button variant ── */
-  .bsc-disabled-btn {
-    flex: 1;
-    padding: 7px 12px;
-    border-radius: 7px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    cursor: not-allowed;
-    background: #f3f4f6 !important;
-    color: #9ca3af !important;
-    border: 1.5px solid #e5e7eb !important;
-    text-align: center;
-    opacity: 0.85;
   }
 
   .bsc-header {
