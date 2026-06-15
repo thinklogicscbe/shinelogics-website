@@ -301,7 +301,7 @@ interface BreakTrackerProps {
 
 const BreakTracker: React.FC<BreakTrackerProps> = ({ onBreakUpdate }) => {
   const [breakTotals, setBreakTotals]     = useState<Record<string, number>>({ morning: 0, lunch: 0, evening: 0 });
-  const [breakSessions, setBreakSessions] = useState<Record<string, BreakSession[]>>({ morning: [], lunch: [], evening: [] });
+  const [, setBreakSessions] = useState<Record<string, BreakSession[]>>({ morning: [], lunch: [], evening: [] });
 
   const handleSlotUpdate = (id: string, takenMins: number, sessions: BreakSession[]) => {
     setBreakTotals((prevTotals) => {
@@ -1225,7 +1225,7 @@ const EmployeeDashboard: React.FC = () => {
                   <form onSubmit={handleOUTSubmit}>
                     <div className="tasks-list">
                       {outTasks.map((task, i) => {
-                        const score  = calcScore(task);
+                        const taskScore = calcScore(task);
                         const locked = (todayTask?.isOutSubmitted ?? false) && !isEditingOUT;
                         return (
                           <div className="task-row out-task-row" key={i}>
@@ -1303,12 +1303,12 @@ const EmployeeDashboard: React.FC = () => {
                                 <span style={{ fontSize: "0.8rem", color: "#555" }}>Productivity score:</span>
                                 <div style={{ flex: 1, height: 6, background: "#eee", borderRadius: 3 }}>
                                   <div style={{ height: 6, borderRadius: 3, transition: "width .3s",
-                                    background: score >= 70 ? "#639922" : score >= 40 ? "#EF9F27" : "#E24B4A",
-                                    width: `${score}%` }} />
+                                    background: taskScore >= 70 ? "#639922" : taskScore >= 40 ? "#EF9F27" : "#E24B4A",
+                                    width: `${taskScore}%` }} />
                                 </div>
                                 <strong style={{ fontSize: "0.85rem",
-                                  color: score >= 70 ? "#27500A" : score >= 40 ? "#633806" : "#A32D2D" }}>
-                                  {score}%
+                                  color: taskScore >= 70 ? "#27500A" : taskScore >= 40 ? "#633806" : "#A32D2D" }}>
+                                  {taskScore}%
                                 </strong>
                               </div>
                             </div>
