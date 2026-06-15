@@ -349,11 +349,11 @@ const TeamWall: React.FC = () => {
       socket.emit("join-wall", room);  // <-- send the full room name, not just the date
     });
 
-    socket.on("disconnect", (reason) => {
+    socket.on("disconnect", (reason: any) => {
       console.log("🔌 Socket disconnected:", reason);
     });
 
-    socket.on("connect_error", (err) => {
+    socket.on("connect_error", (err: any) => {
       console.error("❌ Socket connect error:", err.message);
     });
 
