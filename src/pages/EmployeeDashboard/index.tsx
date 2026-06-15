@@ -301,7 +301,7 @@ interface BreakTrackerProps {
 
 const BreakTracker: React.FC<BreakTrackerProps> = ({ onBreakUpdate }) => {
   const [breakTotals, setBreakTotals]     = useState<Record<string, number>>({ morning: 0, lunch: 0, evening: 0 });
-  const [breakSessions, setBreakSessions] = useState<Record<string, BreakSession[]>>({ morning: [], lunch: [], evening: [] });
+  const [, setBreakSessions] = useState<Record<string, BreakSession[]>>({ morning: [], lunch: [], evening: [] });
 
   const handleSlotUpdate = (id: string, takenMins: number, sessions: BreakSession[]) => {
     setBreakTotals((prevTotals) => {

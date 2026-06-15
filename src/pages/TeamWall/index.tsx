@@ -121,6 +121,27 @@ const fromInputDate = (d: string) => { const [yyyy, mm, dd] = d.split("-"); retu
  */
 const dateToRoom = (ddMmYyyy: string) => `wall-${ddMmYyyy}`;
 
+/** Format relative time from an ISO string */
+const getRelativeTime = (isoString: string): string => {
+  try {
+    const now = new Date();
+    const date = new Date(isoString);
+    const diffMs = now.getTime() - date.getTime();
+    const diffSecs = Math.floor(diffMs / 1000);
+    if (diffSecs < 10) return "just now";
+    if (diffSecs < 60) return `${diffSecs}s ago`;
+    const diffMins = Math.floor(diffSecs / 60);
+    if (diffMins < 60) return `${diffMins}m ago`;
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) return `${diffHours}h ago`;
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays}d ago`;
+  } catch (err) {
+    return "";
+  }
+};
+
+
 // ── Status config ─────────────────────────────────────────────────────────────
 const STATUS_CONFIG: Record<string, { color: string; bg: string }> = {
   "Todo":                 { color: "#6b7280", bg: "#f3f4f6" },
@@ -178,7 +199,17 @@ interface Comment {
   employeeName: string;
   text: string;
   createdAt: string;
+  reactions?: Reaction[];
 }
+
+interface WallNotification {
+  id: string;
+  type: "comment" | "reaction" | "comment-reaction" | "morning-update" | "evening-update";
+  actorName: string;
+  emoji?: string;
+  timestamp: string;
+}
+
 
 interface BreakEntry {
   slotId: string;
@@ -294,8 +325,12 @@ const TeamWall: React.FC = () => {
   const [editLoading, setEditLoading]           = useState(false);
 
   const [toast, setToast] = useState<string | null>(null);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [notifications, setNotifications] = useState<WallNotification[]>([]);
+  const [showNotificationPanel, setShowNotificationPanel] = useState(false);
 
   const emojiRef    = useRef<HTMLDivElement>(null);
+  const notificationRef = useRef<HTMLDivElement>(null);
   const socketRef   = useRef<Socket | null>(null);
   const tasksRef    = useRef<WallTask[]>([]);
   const profileRef  = useRef<EmployeeProfile | null>(null);
@@ -361,14 +396,27 @@ const TeamWall: React.FC = () => {
     socket.on("wall:comment", ({ taskId, comment }: { taskId: string; comment: Comment }) => {
       console.log("📨 wall:comment received", { taskId, comment });
 
-      setTasks(prev => prev.map(t =>
-        t._id === taskId
-          // Avoid duplicates — the sender's optimistic update already added it
-          ? { ...t, comments: t.comments.some(c => c._id === comment._id)
-              ? t.comments
-              : [...t.comments, comment] }
-          : t
-      ));
+      setTasks(prev => prev.map(t => {
+        if (t._id !== taskId) return t;
+
+        const exists = t.comments.some(c => c._id === comment._id);
+        if (exists) return t;
+
+        // Check if there is an optimistic temp comment by this user with the same text
+        const tempIndex = t.comments.findIndex(c => 
+          String(c._id).startsWith("temp-") && 
+          c.employeeId === comment.employeeId && 
+          c.text === comment.text
+        );
+
+        if (tempIndex !== -1) {
+          const updatedComments = [...t.comments];
+          updatedComments[tempIndex] = comment;
+          return { ...t, comments: updatedComments };
+        }
+
+        return { ...t, comments: [...t.comments, comment] };
+      }));
 
       // Always expand so the new comment is immediately visible
       setExpandedCard(taskId);
@@ -378,6 +426,16 @@ const TeamWall: React.FC = () => {
       if (me && comment.employeeId !== me.id) {
         const task = tasksRef.current.find(t => t._id === taskId);
         showToast(`💬 ${comment.employeeName} commented${task ? ` on ${task.employeeName}'s update` : ""}`);
+        setUnreadCount(prev => prev + 1);
+        setNotifications(prev => [
+          {
+            id: comment._id,
+            type: "comment",
+            actorName: comment.employeeName,
+            timestamp: new Date().toISOString(),
+          },
+          ...prev,
+        ]);
       }
     });
 
@@ -407,9 +465,98 @@ const TeamWall: React.FC = () => {
     socket.on("wall:reaction", ({ taskId, reactions }: { taskId: string; reactions: Reaction[] }) => {
       console.log("👍 wall:reaction received", { taskId, reactions });
 
-      setTasks(prev => prev.map(t =>
-        t._id === taskId ? { ...t, reactions } : t
-      ));
+      setTasks(prev => {
+        const currentTask = prev.find(t => t._id === taskId);
+        if (currentTask) {
+          const me = profileRef.current;
+          const newReaction = reactions.find(r =>
+            r.employeeId !== me?.id &&
+            !(currentTask.reactions || []).some(pr => pr.employeeId === r.employeeId && pr.emoji === r.emoji)
+          );
+          if (newReaction) {
+            setUnreadCount(c => c + 1);
+            setNotifications(n => [
+              {
+                id: `${taskId}-${newReaction.emoji}-${newReaction.employeeId}-${Date.now()}`,
+                type: "reaction",
+                actorName: newReaction.employeeName,
+                emoji: newReaction.emoji,
+                timestamp: new Date().toISOString(),
+              },
+              ...n,
+            ]);
+          }
+        }
+        return prev.map(t => t._id === taskId ? { ...t, reactions } : t);
+      });
+    });
+
+    // ── Comment Reaction updated ─────────────────────────────────────────────
+    socket.on("wall:comment-reaction", ({ taskId, commentId, reactions }: { taskId: string; commentId: string; reactions: Reaction[] }) => {
+      console.log("👍 wall:comment-reaction received", { taskId, commentId, reactions });
+
+      setTasks(prev => {
+        const currentTask = prev.find(t => t._id === taskId);
+        const currentComment = currentTask?.comments?.find(c => c._id === commentId);
+        if (currentComment) {
+          const me = profileRef.current;
+          const newReaction = reactions.find(r =>
+            r.employeeId !== me?.id &&
+            !(currentComment.reactions || []).some(pr => pr.employeeId === r.employeeId && pr.emoji === r.emoji)
+          );
+          if (newReaction) {
+            setUnreadCount(c => c + 1);
+            setNotifications(n => [
+              {
+                id: `${commentId}-${newReaction.emoji}-${newReaction.employeeId}-${Date.now()}`,
+                type: "comment-reaction",
+                actorName: newReaction.employeeName,
+                emoji: newReaction.emoji,
+                timestamp: new Date().toISOString(),
+              },
+              ...n,
+            ]);
+          }
+        }
+        return prev.map(t =>
+          t._id === taskId
+            ? { ...t, comments: t.comments.map(c => c._id === commentId ? { ...c, reactions } : c) }
+            : t
+        );
+      });
+    });
+
+    // ── Task submitted / updated ─────────────────────────────────────────────
+    socket.on("wall:task-submitted", ({ taskId, employeeId, employeeName, type, timestamp }: {
+      taskId: string;
+      employeeId: string;
+      employeeName: string;
+      type: "morning" | "evening";
+      timestamp: string;
+    }) => {
+      console.log("📨 wall:task-submitted received", { taskId, employeeId, employeeName, type });
+
+      const me = profileRef.current;
+      if (me && employeeId !== me.id) {
+        const notifType = type === "morning" ? "morning-update" : "evening-update";
+        const actionText = type === "morning" ? "posted their morning update" : "submitted their evening update";
+        const toastIcon = type === "morning" ? "☀️" : "🌙";
+
+        showToast(`${toastIcon} ${employeeName} ${actionText}`);
+        setUnreadCount(prev => prev + 1);
+        setNotifications(prev => [
+          {
+            id: `${taskId}-${type}-${timestamp}`,
+            type: notifType,
+            actorName: employeeName,
+            timestamp: timestamp || new Date().toISOString(),
+          },
+          ...prev,
+        ]);
+        
+        // Refresh feed so progress/tasks update automatically
+        fetchWall(date);
+      }
     });
 
     return () => {
@@ -417,13 +564,16 @@ const TeamWall: React.FC = () => {
       socketRef.current = null;
     };
   // Re-connect (and join new room) whenever the viewed date changes.
-  }, [date, showToast]);
+  }, [date, showToast, fetchWall]);
 
-  // ── Close emoji picker on outside click ────────────────────────────────────
+
+  // ── Close emoji picker & notification dropdown on outside click ────────────────────────
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (emojiRef.current && !emojiRef.current.contains(e.target as Node))
         setEmojiPickerOpen(null);
+      if (notificationRef.current && !notificationRef.current.contains(e.target as Node))
+        setShowNotificationPanel(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -444,6 +594,28 @@ const TeamWall: React.FC = () => {
         }),
       });
       // UI update arrives via "wall:reaction" socket event
+    } finally {
+      setReactionLoading(null);
+      setEmojiPickerOpen(null);
+    }
+  };
+
+  const handleCommentReact = async (taskId: string, commentId: string, emoji: string) => {
+    if (!profile?.id) return;
+    setReactionLoading(commentId + emoji);
+    try {
+      await fetch(`${BASE_URL}/public/comment/${commentId}/react`, {
+        method:  "POST",
+        headers: getWallHeaders(),
+        body: JSON.stringify({
+          employeeId:   profile.id,
+          employeeName: profile.firstName,
+          emoji,
+        }),
+      });
+      // UI update arrives via "wall:comment-reaction" socket event
+    } catch (err) {
+      console.error("Failed to react to comment:", err);
     } finally {
       setReactionLoading(null);
       setEmojiPickerOpen(null);
@@ -641,6 +813,74 @@ const TeamWall: React.FC = () => {
             </TopBarLeft>
 
             <TopBarRight>
+              <NotificationBellWrap ref={notificationRef}>
+                <NotificationBellBtn
+                  onClick={() => {
+                    setShowNotificationPanel(prev => !prev);
+                    setUnreadCount(0);
+                  }}
+                  title={`${unreadCount} unread updates`}
+                >
+                  🔔
+                  {unreadCount > 0 && <NotificationBadge>{unreadCount}</NotificationBadge>}
+                </NotificationBellBtn>
+                {showNotificationPanel && (
+                  <NotificationDropdown>
+                    <DropdownHeader>
+                      <span>Notifications</span>
+                      {notifications.length > 0 && (
+                        <ClearAllBtn onClick={(e) => {
+                          e.stopPropagation();
+                          setNotifications([]);
+                          setUnreadCount(0);
+                        }}>
+                          Clear All
+                        </ClearAllBtn>
+                      )}
+                    </DropdownHeader>
+                    <NotificationList>
+                      {notifications.length === 0 ? (
+                        <EmptyNotifications>No new notifications</EmptyNotifications>
+                      ) : (
+                        notifications.map(notif => {
+                          let message = "";
+                          let icon = "🔔";
+                          if (notif.type === "comment") {
+
+                            icon = "💬";
+                            message = `${notif.actorName} replied to today's task`;
+                          } else if (notif.type === "reaction") {
+                            icon = notif.emoji || "👍";
+                            message = `${notif.actorName} reacted to today's task`;
+                          } else if (notif.type === "comment-reaction") {
+                            icon = notif.emoji || "👍";
+                            message = `${notif.actorName} reacted to your comment`;
+                          } else if (notif.type === "morning-update") {
+                            icon = "☀️";
+                            message = `${notif.actorName} posted their morning update`;
+                          } else if (notif.type === "evening-update") {
+                            icon = "🌙";
+                            message = `${notif.actorName} submitted their evening update`;
+                          }
+
+
+                          return (
+                            <NotificationItem key={notif.id}>
+                              <div>
+                                <strong style={{ marginRight: 6 }}>{icon}</strong>
+                                {message}
+                              </div>
+                              <div className="time">{getRelativeTime(notif.timestamp)}</div>
+                            </NotificationItem>
+                          );
+                        })
+                      )}
+                    </NotificationList>
+                  </NotificationDropdown>
+                )}
+              </NotificationBellWrap>
+
+
               <WhoAmI>
                 <WhoAvatar color={avatarColor(profile.firstName)}>
                   {profile.firstName.charAt(0).toUpperCase()}
@@ -935,9 +1175,53 @@ const TeamWall: React.FC = () => {
                                         <EditCancelBtn onClick={cancelEdit}>Cancel</EditCancelBtn>
                                       </EditRow>
                                     ) : (
-                                      <CommentBubble isMe={isMe} isTemp={isTemp}>
-                                        {c.text}
-                                      </CommentBubble>
+                                      <>
+                                        <CommentBubble isMe={isMe} isTemp={isTemp}>
+                                          {c.text}
+                                        </CommentBubble>
+                                        {!isTemp && (
+                                          <CommentReactionsRow>
+                                            {Object.entries(groupReactions(c.reactions || [])).map(([emoji, { count, names }]) => {
+                                              const myCommentReactions = (c.reactions || [])
+                                                .filter(r => r.employeeId === profile.id)
+                                                .map(r => r.emoji);
+                                              return (
+                                                <CommentReactionBtn
+                                                  key={emoji}
+                                                  active={myCommentReactions.includes(emoji)}
+                                                  title={names.join(", ")}
+                                                  onClick={() => handleCommentReact(task._id, c._id, emoji)}
+                                                  disabled={reactionLoading === c._id + emoji}
+                                                >
+                                                  {emoji} {count}
+                                                </CommentReactionBtn>
+                                              );
+                                            })}
+                                            <AddReactWrap ref={emojiPickerOpen === c._id ? emojiRef : null}>
+                                              <CommentAddReactBtn onClick={() =>
+                                                setEmojiPickerOpen(prev => prev === c._id ? null : c._id)
+                                              }>
+                                                + react
+                                              </CommentAddReactBtn>
+                                              {emojiPickerOpen === c._id && (
+                                                <CommentEmojiPickerBox isMe={isMe}>
+                                                  {EMOJIS.map(e => {
+                                                    const myCommentReactions = (c.reactions || [])
+                                                      .filter(r => r.employeeId === profile.id)
+                                                      .map(r => r.emoji);
+                                                    return (
+                                                      <CommentEmojiOpt key={e} active={myCommentReactions.includes(e)}
+                                                        onClick={() => handleCommentReact(task._id, c._id, e)}>
+                                                        {e}
+                                                      </CommentEmojiOpt>
+                                                    );
+                                                  })}
+                                                </CommentEmojiPickerBox>
+                                              )}
+                                            </AddReactWrap>
+                                          </CommentReactionsRow>
+                                        )}
+                                      </>
                                     )}
                                   </CommentBubbleWrap>
 
@@ -1021,6 +1305,126 @@ const WallContainer = styled.div`
 const TopBar        = styled.div`display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:10;`;
 const TopBarLeft    = styled.div`display:flex;align-items:center;gap:8px;`;
 const TopBarRight   = styled.div`display:flex;align-items:center;gap:10px;`;
+const NotificationBellWrap = styled.div`
+  position: relative;
+  display: inline-block;
+`;
+const NotificationBellBtn = styled.button`
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 50%;
+  transition: background 0.15s;
+  outline: none;
+  &:hover {
+    background: #f1f5f9;
+  }
+`;
+const NotificationBadge = styled.span`
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  min-width: 14px;
+  height: 14px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  border: 1.5px solid #fff;
+  line-height: 1;
+`;
+const NotificationDropdown = styled.div`
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 280px;
+  max-height: 360px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Sora', sans-serif;
+  animation: ${slideIn} 0.2s ease both;
+`;
+const DropdownHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f3f4f6;
+  background: #f9fafb;
+  span {
+    font-size: 13px;
+    font-weight: 600;
+    color: #111827;
+  }
+`;
+const ClearAllBtn = styled.button`
+  background: none;
+  border: none;
+  font-size: 11px;
+  font-weight: 600;
+  color: #2563eb;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  &:hover {
+    background: #eff6ff;
+  }
+`;
+const NotificationList = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+`;
+const NotificationItem = styled.div`
+  padding: 10px 14px;
+  border-bottom: 1px solid #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 11px;
+  color: #374151;
+  line-height: 1.4;
+  cursor: pointer;
+  transition: background 0.1s;
+  &:hover {
+    background: #f9fafb;
+  }
+  &:last-of-type {
+    border-bottom: none;
+  }
+  strong {
+    color: #111827;
+    font-weight: 600;
+  }
+  .time {
+    font-size: 9px;
+    color: #9ca3af;
+  }
+`;
+const EmptyNotifications = styled.div`
+  padding: 40px 20px;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 12px;
+  font-style: italic;
+`;
 const HashSymbol    = styled.span`font-size:1.2rem;font-weight:700;color:#374151;`;
 const ChannelName   = styled.span`font-size:15px;font-weight:600;color:#111827;`;
 const MemberCount   = styled.span`font-size:12px;color:#6b7280;background:#f3f4f6;padding:2px 8px;border-radius:20px;`;
@@ -1081,6 +1485,35 @@ const CommentAvatar = styled.div<{ color: string }>`width:24px;height:24px;min-w
 const CommentBubbleWrap = styled.div<{ isMe: boolean }>`display:flex;flex-direction:column;gap:2px;max-width:75%;align-items:${p => p.isMe ? "flex-end" : "flex-start"};`;
 const CommentMeta   = styled.div<{ isMe: boolean }>`display:flex;align-items:center;gap:5px;flex-direction:${p => p.isMe ? "row-reverse" : "row"};strong{font-size:11px;font-weight:600;color:#374151;}.ctime{font-size:10px;color:#9ca3af;}`;
 const CommentBubble = styled.div<{ isMe: boolean; isTemp?: boolean }>`background:${p => p.isMe ? "#dbeafe" : "#f3f4f6"};color:${p => p.isMe ? "#1e40af" : "#374151"};border-radius:${p => p.isMe ? "12px 12px 2px 12px" : "12px 12px 12px 2px"};padding:6px 10px;font-size:12px;line-height:1.45;word-break:break-word;opacity:${p => p.isTemp ? 0.6 : 1};`;
+const CommentReactionsRow = styled.div`
+  display: flex;
+  gap: 3px;
+  margin-top: 3px;
+  flex-wrap: wrap;
+  position: relative;
+`;
+const CommentReactionBtn = styled(ReactionBtn)`
+  font-size: 9px;
+  padding: 1px 6px;
+  border-radius: 10px;
+`;
+const CommentAddReactBtn = styled(AddReactBtn)`
+  font-size: 9px;
+  padding: 1px 6px;
+  border-radius: 10px;
+`;
+const CommentEmojiPickerBox = styled(EmojiPickerBox)<{ isMe: boolean }>`
+  bottom: calc(100% + 4px);
+  width: 140px;
+  padding: 4px;
+  gap: 3px;
+  ${p => p.isMe ? "right: 0; left: auto;" : "left: 0; right: auto;"}
+`;
+const CommentEmojiOpt = styled(EmojiOpt)`
+  width: 26px;
+  height: 26px;
+  font-size: 0.85rem;
+`;
 const EditRow       = styled.div`display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:2px;`;
 const EditInput     = styled.textarea`flex:1;min-width:140px;padding:5px 9px;border:1px solid #3b82f6;border-radius:8px;font-size:12px;font-family:'Sora',sans-serif;outline:none;resize:none;height:32px;line-height:1.4;color:#1e293b;`;
 const EditSaveBtn   = styled.button`padding:0 12px;height:32px;background:#2563eb;color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Sora',sans-serif;&:disabled{opacity:0.5;cursor:not-allowed;}`;
