@@ -140,6 +140,20 @@ export const DashboardContainer = styled.div`
     }
   }
 
+  .team-wall-tab {
+    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+    border-color: #7c3aed !important;
+    color: #fff !important;
+    font-weight: 600;
+
+    &:hover {
+      background: linear-gradient(135deg, #6d28d9, #5b21b6) !important;
+      border-color: #6d28d9 !important;
+      color: #fff !important;
+      opacity: 0.95;
+    }
+  }
+
   /* ── MESSAGES ── */
   .success-msg {
     background: #e8f5e9;
@@ -260,6 +274,21 @@ export const DashboardContainer = styled.div`
     border-radius: 20px;
     display: inline-block;
     margin-bottom: 10px;
+  }
+
+  /* ── TASK FORM HINT ── */
+  .task-form-hint {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 20px;
+    font-size: 0.85rem;
+    color: #92400e;
+    line-height: 1.5;
   }
 
   /* ── TASK ROW ── */
@@ -692,6 +721,416 @@ export const DashboardContainer = styled.div`
     gap: 3px;
   }
 
+  /* ── CLOCK IN CARD (pre-clock-in) ── */
+  .clock-in-card {
+    border: 2px dashed #cbd5e1;
+    background: #f8fafc;
+  }
+
+  .clock-in-inner {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .clock-in-icon {
+    font-size: 2.2rem;
+    flex-shrink: 0;
+  }
+
+  .clock-in-text {
+    flex: 1;
+    min-width: 180px;
+
+    h3 {
+      margin: 0 0 4px 0;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1a1a2e;
+    }
+    p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #64748b;
+      line-height: 1.5;
+    }
+  }
+
+  .clock-in-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .live-time {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .clock-in-btn {
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(34,197,94,0.3);
+
+    &:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(34,197,94,0.4);
+    }
+    &:disabled { opacity: 0.6; cursor: not-allowed; }
+  }
+
+  .clock-in-date {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-weight: 500;
+  }
+
+  /* ── CLOCK STATUS CARD (post-clock-in) ── */
+  .clock-status-card {
+    background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%);
+    border-radius: 12px;
+    padding: 20px 28px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    box-shadow: 0 4px 24px rgba(15,52,96,0.28);
+    flex-wrap: wrap;
+    gap: 0;
+    position: relative;
+    overflow: hidden;
+
+    /* Animated shimmer bar at top */
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2.5px;
+      background: linear-gradient(90deg, transparent, #60a5fa, #22c55e, #60a5fa, transparent);
+      background-size: 300% 100%;
+      animation: cscShimmer 3s linear infinite;
+    }
+  }
+
+  @keyframes cscShimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Left column */
+  .csc-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1.6;
+    min-width: 200px;
+    padding-right: 28px;
+  }
+
+  /* Pulsing green dot */
+  .csc-indicator {
+    position: relative;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+
+  .csc-dot {
+    position: absolute;
+    inset: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 8px rgba(34,197,94,0.7);
+  }
+
+  .csc-pulse-ring {
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid rgba(34,197,94,0.45);
+    animation: cscPulse 2s ease-out infinite;
+  }
+
+  @keyframes cscPulse {
+    0%   { transform: scale(0.6); opacity: 1; }
+    100% { transform: scale(1.7); opacity: 0; }
+  }
+
+  .csc-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .csc-title {
+    font-size: 0.65rem;
+    font-weight: 800;
+    color: #22c55e;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .csc-time-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+  }
+
+  .csc-in-label {
+    font-size: 0.78rem;
+    color: #94a3b8;
+  }
+
+  .csc-in-time {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #f1f5f9;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.3px;
+  }
+
+  .csc-sep {
+    color: #334155;
+    font-size: 1rem;
+  }
+
+  .csc-date {
+    font-size: 0.75rem;
+    color: #475569;
+    font-weight: 500;
+  }
+
+  .csc-workmode-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-top: 2px;
+    width: fit-content;
+  }
+
+  /* Center column: elapsed */
+  .csc-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    padding: 12px 28px;
+    border-left: 1px solid rgba(255,255,255,0.07);
+    border-right: 1px solid rgba(255,255,255,0.07);
+    min-width: 150px;
+  }
+
+  .csc-elapsed-label {
+    font-size: 0.63rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 700;
+  }
+
+  .csc-elapsed-value {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #60a5fa;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+
+  .csc-elapsed-sub {
+    font-size: 0.63rem;
+    color: #475569;
+    font-weight: 500;
+    margin-top: 1px;
+  }
+
+  /* Right column: live clock + actions */
+  .csc-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    padding-left: 28px;
+    min-width: 150px;
+  }
+
+  .csc-now-label {
+    font-size: 0.63rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 700;
+  }
+
+  .csc-now-value {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.5px;
+  }
+
+  /* Action buttons inside the status card */
+  .csc-edit-btn {
+    margin-top: 6px;
+    padding: 6px 16px;
+    background: rgba(255,255,255,0.08);
+    color: #93c5fd;
+    border: 1px solid rgba(147,197,253,0.3);
+    border-radius: 7px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+
+    &:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: #60a5fa;
+      color: #fff;
+    }
+  }
+
+  .csc-add-tasks-btn {
+    margin-top: 6px;
+    padding: 6px 16px;
+    background: rgba(34,197,94,0.15);
+    color: #86efac;
+    border: 1px solid rgba(34,197,94,0.35);
+    border-radius: 7px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+
+    &:hover {
+      background: rgba(34,197,94,0.25);
+      border-color: #22c55e;
+      color: #fff;
+    }
+  }
+
+  /* Responsive: stack columns on mobile */
+  @media (max-width: 640px) {
+    .clock-status-card {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0;
+      padding: 18px 20px;
+    }
+
+    .csc-left {
+      padding-right: 0;
+      padding-bottom: 16px;
+      width: 100%;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .csc-center {
+      border-left: none;
+      border-right: none;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      align-items: flex-start;
+      padding: 14px 0;
+      width: 100%;
+    }
+
+    .csc-right {
+      align-items: flex-start;
+      padding-left: 0;
+      padding-top: 14px;
+      width: 100%;
+    }
+
+    .csc-edit-btn,
+    .csc-add-tasks-btn {
+      align-self: flex-start;
+    }
+  }
+
+  /* ── TASKS PENDING CARD ── */
+  .tasks-pending-card {
+    border: 1.5px solid #fde68a;
+    background: #fffbeb;
+  }
+
+  .tpc-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .tpc-icon {
+    font-size: 1.8rem;
+    flex-shrink: 0;
+  }
+
+  .tpc-text {
+    flex: 1;
+    min-width: 160px;
+
+    h3 {
+      margin: 0 0 4px 0;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #92400e;
+    }
+    p {
+      margin: 0;
+      font-size: 0.83rem;
+      color: #b45309;
+      line-height: 1.5;
+    }
+  }
+
+  .add-tasks-now-btn {
+    padding: 9px 22px;
+    background: #f59e0b;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(245,158,11,0.3);
+
+    &:hover {
+      background: #d97706;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(245,158,11,0.4);
+    }
+  }
+
   /* ── HISTORY ── */
   .history-list {
     display: flex;
@@ -1066,7 +1505,6 @@ export const DashboardContainer = styled.div`
     &.saved { background: #DCFCE7; color: #15803D; }
   }
 
-  /* 3-column grid for slots */
   .btp-slots {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -1076,7 +1514,6 @@ export const DashboardContainer = styled.div`
     }
   }
 
-  /* Individual break slot card */
   .break-slot-card {
     background: #FAFAFA;
     border: 1.5px solid;
@@ -1088,7 +1525,6 @@ export const DashboardContainer = styled.div`
     transition: opacity 0.2s;
   }
 
-  /* ── USED (taken) badge ── */
   .bsc-used-badge {
     font-size: 0.68rem;
     font-weight: 700;
@@ -1173,17 +1609,6 @@ export const DashboardContainer = styled.div`
     z-index: 1;
   }
 
-  .bsc-progress-extra {
-    position: absolute;
-    top: 0;
-    right: -2px;
-    height: 100%;
-    background: #E24B4A;
-    border-radius: 0 3px 3px 0;
-    opacity: 0.4;
-    z-index: 0;
-  }
-
   .bsc-progress-labels {
     display: flex;
     justify-content: space-between;
@@ -1253,9 +1678,7 @@ export const DashboardContainer = styled.div`
     font-size: 0.68rem;
   }
 
-  .bsc-log-time {
-    color: #6b7280;
-  }
+  .bsc-log-time { color: #6b7280; }
 
   .bsc-log-mins {
     font-weight: 600;
@@ -1275,6 +1698,72 @@ export const DashboardContainer = styled.div`
   @keyframes breakPulse {
     0%, 100% { opacity: 1; }
     50%       { opacity: 0.25; }
+  }
+
+  /* ── BREAK LOG PANEL ── */
+  .break-log-panel {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed #e5e7eb;
+  }
+
+  .blp-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    margin-bottom: 10px;
+  }
+
+  .blp-slots {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .blp-slot {
+    border: 1px solid;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .blp-slot-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .blp-total {
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .blp-sessions {
+    padding: 6px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .blp-session-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.72rem;
+  }
+
+  .blp-session-time { color: #6b7280; }
+
+  .blp-session-mins {
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 20px;
+    font-size: 0.7rem;
   }
 
   /* ── DAY TIMELINE ── */
