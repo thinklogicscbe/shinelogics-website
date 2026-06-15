@@ -64,8 +64,7 @@ export const Sidebar = styled.aside<{ open: boolean }>`
     left: 0;
     width: 260px;
     height: calc(100vh - 64px);
-    transform: ${({ open }) =>
-      open ? "translateX(0)" : "translateX(-100%)"};
+    transform: ${({ open }) => (open ? "translateX(0)" : "translateX(-100%)")};
     transition: transform 0.35s ease;
     z-index: 1100;
   }
@@ -96,45 +95,66 @@ export const CloseButton = styled.button`
 /* ===== NAV LIST (SCROLLABLE) ===== */
 export const NavList = styled.ul`
   list-style: none;
-  padding: 12px 0;
+  padding: 8px 0 16px;
   margin: 0;
-
   flex: 1;
   overflow-y: auto;
 
-  /* custom scrollbar */
   &::-webkit-scrollbar {
     width: 6px;
   }
-
   &::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 10px;
   }
-
   &::-webkit-scrollbar-track {
     background: transparent;
   }
 `;
 
+/* ===== SECTION LABEL — the two group headings ===== */
+export const NavSectionLabel = styled.li`
+  padding: 18px 20px 7px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: rgba(99, 102, 241, 0.9);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 4px;
+  list-style: none;
+  pointer-events: none;
+  user-select: none;
+
+  /* First label — no top border */
+  &:first-child {
+    border-top: none;
+    margin-top: 0;
+    padding-top: 12px;
+  }
+`;
+
+/* ===== NAV ITEM ===== */
 export const NavItem = styled.li<{ active?: boolean }>`
-  padding: 14px 24px;
+  padding: 12px 20px 12px 28px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 600;
-  color: ${({ active }) => (active ? "#ffffff" : "#c7d2fe")};
+  color: ${({ active }) => (active ? "#ffffff" : "#94a3b8")};
 
   background: ${({ active }) =>
-    active ? "rgba(99,102,241,0.15)" : "transparent"};
+    active ? "rgba(99, 102, 241, 0.18)" : "transparent"};
 
-  border-left: 4px solid
+  border-left: 3px solid
     ${({ active }) => (active ? "#6366f1" : "transparent")};
 
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
+  list-style: none;
 
   &:hover {
-    background: rgba(99, 102, 241, 0.15);
-    color: #ffffff;
+    background: rgba(99, 102, 241, 0.12);
+    color: #e2e8f0;
+    border-left-color: rgba(99, 102, 241, 0.5);
   }
 `;
 
@@ -174,20 +194,16 @@ export const SidebarToggle = styled.button`
     position: fixed;
     top: 74px;
     left: 16px;
-
     width: 46px;
     height: 46px;
     border-radius: 12px;
-
     background: linear-gradient(135deg, #4f46e5, #6366f1);
     color: white;
     border: none;
     font-size: 22px;
-
     align-items: center;
     justify-content: center;
     cursor: pointer;
-
     z-index: 1201;
     box-shadow: 0 10px 30px rgba(79, 70, 229, 0.5);
   }

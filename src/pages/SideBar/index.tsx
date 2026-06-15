@@ -11,6 +11,7 @@ import {
   CloseButton,
   NavList,
   NavItem,
+  NavSectionLabel,
   Content,
   Backdrop,
   SidebarToggle,
@@ -20,7 +21,6 @@ import {
 import ViewProfile from "../ViewProfile";
 import PostJob from "../PostJob";
 import ViewJobs from "../ViewJobs";
-import Dashboard from "../Dashboard";
 import EngagementModelAdmin from "../EngagementModelAdmin";
 import ResourceAdmin from "../ResourceAdmin";
 import ExpertAdmin from "../ExpertAdmin";
@@ -32,19 +32,20 @@ import AdminServicePage from "../AdminServicePage";
 import ContactLeadsAdmin from "../ContactLeadsAdmin";
 import HomeSectionAdmin from "../HomeSectionAdmin";
 import PartnerAdmin from "../PartnerAdmin";
-import CreateEmployee from "../CreateEmployee"; // ✅ NEW
+import CreateEmployee from "../CreateEmployee";
 import PerformanceDashboard from "../PerformanceDashboard";
 import PayslipAdmin from "../PayslipAdmin";
 import LeaveAdmin from "../LeaveAdmin";
 import ProductivityAdmin from "../ProductivityAdmin";
 import CompanySetup from "../Companysetup";
+import TeamManagement from "../TeamManagement";
+import TeamWall from "../TeamWall"; // ✅ NEW
+
 // 🔹 Assets
 import logo1 from "../../assets/shinelogics-logo.png";
-import TeamManagement from "../TeamManagement";
 
-// 🔹 Allowed component keys (STRICT typing)
+// 🔹 Allowed component keys
 type AdminComponent =
-  | "Dashboard"
   | "AdminBanner"
   | "PostJob"
   | "ViewJobs"
@@ -65,100 +66,53 @@ type AdminComponent =
   | "PayslipAdmin"
   | "LeaveAdmin"
   | "CompanySetup"
-  | "TeamManagement";// ✅ NEW
+  | "TeamManagement"
+  | "TeamWall"; // ✅ NEW
 
 const SideBar: React.FC = () => {
   const navigate = useNavigate();
-
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-
   const [selectedComponent, setSelectedComponent] = useState<AdminComponent>(
     (localStorage.getItem("selectedComponent") as AdminComponent) ||
-    "Dashboard",
+      "PerformanceDashboard"
   );
 
-  // 🔹 Navigation handler
   const handleNavigation = (component: AdminComponent): void => {
     setSelectedComponent(component);
     localStorage.setItem("selectedComponent", component);
     setSidebarOpen(false);
   };
 
-  // 🔹 Logout
   const handleLogout = (): void => {
     localStorage.clear();
     navigate("/login");
   };
 
-  // 🔹 Render Selected Component
   const renderComponent = () => {
     switch (selectedComponent) {
-      case "CreateEmployee": // ✅ NEW
-        return <CreateEmployee />;
-
-      case "TeamManagement": // ✅ NEW
-        return <TeamManagement />;
-
-      case "AdminServices":
-        return <AdminServicePage />;
-
-      case "PayslipAdmin":
-        return <PayslipAdmin />;
-
-      case "CompanySetup":
-        return <CompanySetup />;
-
-      case "HomeSectionAdmin":
-        return <HomeSectionAdmin />;
-
-      case "LeaveAdmin":
-        return <LeaveAdmin />;
-
-      case "PartnerAdmin":
-        return <PartnerAdmin />;
-
-      case "ContactLeads":
-        return <ContactLeadsAdmin />;
-
-      case "PostJob":
-        return <PostJob />;
-
-      case "ViewJobs":
-        return <ViewJobs />;
-
-      case "ViewResumes":
-        return <ViewProfile />;
-
-      case "EngagementModels":
-        return <EngagementModelAdmin />;
-
-      case "ResourceAdmin":
-        return <ResourceAdmin />;
-
-      case "ExpertsAdmin":
-        return <ExpertAdmin />;
-
-      case "PerformanceDashboard":
-        return <PerformanceDashboard />;
-
-      case "ProductivityAdmin":
-        return <ProductivityAdmin />;
-
-      case "AdminBanner":
-        return <AdminBanner />;
-
-      case "AdminProducts":
-        return <AdminProducts />;
-
-      case "QuickMvpAdmin":
-        return <AdminQuickMvp />;
-
-      case "CustomPlanOptions":
-        return <AdminCustomPlanOptions />;
-
-      case "Dashboard":
-      default:
-        return <Dashboard />;
+      case "PerformanceDashboard":  return <PerformanceDashboard />;
+      case "CreateEmployee":        return <CreateEmployee />;
+      case "TeamManagement":        return <TeamManagement />;
+      case "TeamWall":              return <TeamWall />;        // ✅ NEW
+      case "PayslipAdmin":          return <PayslipAdmin />;
+      case "LeaveAdmin":            return <LeaveAdmin />;
+      case "ProductivityAdmin":     return <ProductivityAdmin />;
+      case "CompanySetup":          return <CompanySetup />;
+      case "AdminServices":         return <AdminServicePage />;
+      case "HomeSectionAdmin":      return <HomeSectionAdmin />;
+      case "PartnerAdmin":          return <PartnerAdmin />;
+      case "ContactLeads":          return <ContactLeadsAdmin />;
+      case "QuickMvpAdmin":         return <AdminQuickMvp />;
+      case "CustomPlanOptions":     return <AdminCustomPlanOptions />;
+      case "AdminBanner":           return <AdminBanner />;
+      case "AdminProducts":         return <AdminProducts />;
+      case "PostJob":               return <PostJob />;
+      case "ViewJobs":              return <ViewJobs />;
+      case "ViewResumes":           return <ViewProfile />;
+      case "EngagementModels":      return <EngagementModelAdmin />;
+      case "ResourceAdmin":         return <ResourceAdmin />;
+      case "ExpertsAdmin":          return <ExpertAdmin />;
+      default:                      return <PerformanceDashboard />;
     }
   };
 
@@ -181,12 +135,9 @@ const SideBar: React.FC = () => {
           </SidebarHeader>
 
           <NavList>
-            <NavItem
-              active={selectedComponent === "Dashboard"}
-              onClick={() => handleNavigation("Dashboard")}
-            >
-              Dashboard
-            </NavItem>
+
+            {/* ── EMPLOYEE MANAGEMENT SYSTEM ── */}
+            <NavSectionLabel>👥 Employee Management System</NavSectionLabel>
 
             <NavItem
               active={selectedComponent === "PerformanceDashboard"}
@@ -195,34 +146,19 @@ const SideBar: React.FC = () => {
               🤖 AI Employee Performance
             </NavItem>
 
-            {/* ✅ NEW */}
-            {/* <NavItem
-              active={selectedComponent === "ProductivityAdmin"}
-              onClick={() => handleNavigation("ProductivityAdmin")}
-            >
-              Productivity Management
-            </NavItem> */}
-
-            {/* <NavItem
-              active={selectedComponent === "CompanySetup"}
-              onClick={() => handleNavigation("CompanySetup")}
-            >
-              Company Setup
-            </NavItem> */}
-
             <NavItem
               active={selectedComponent === "CreateEmployee"}
               onClick={() => handleNavigation("CreateEmployee")}
             >
-              Organization Management
+              🏢 Organization Management
             </NavItem>
 
-            {/* <NavItem
-              active={selectedComponent === "TeamManagement"}
-              onClick={() => handleNavigation("TeamManagement")}
+            <NavItem
+              active={selectedComponent === "TeamWall"}
+              onClick={() => handleNavigation("TeamWall")}
             >
-              Team Management
-            </NavItem> */}
+              🧱 Team Wall
+            </NavItem>
 
             <NavItem
               active={selectedComponent === "PayslipAdmin"}
@@ -238,103 +174,107 @@ const SideBar: React.FC = () => {
               🏖️ Leave Management
             </NavItem>
 
+            {/* ── WEBSITE DETAILS ── */}
+            <NavSectionLabel>🌐 Website Details</NavSectionLabel>
+
             <NavItem
               active={selectedComponent === "HomeSectionAdmin"}
               onClick={() => handleNavigation("HomeSectionAdmin")}
             >
-              Home Sections
+              🏠 Home Sections
             </NavItem>
 
             <NavItem
               active={selectedComponent === "PartnerAdmin"}
               onClick={() => handleNavigation("PartnerAdmin")}
             >
-              Partners
+              🤝 Partners
             </NavItem>
 
             <NavItem
               active={selectedComponent === "AdminServices"}
               onClick={() => handleNavigation("AdminServices")}
             >
-              Services
+              ⚙️ Services
             </NavItem>
 
             <NavItem
               active={selectedComponent === "ContactLeads"}
               onClick={() => handleNavigation("ContactLeads")}
             >
-              Contact Leads
+              📋 Contact Leads
             </NavItem>
 
             <NavItem
               active={selectedComponent === "QuickMvpAdmin"}
               onClick={() => handleNavigation("QuickMvpAdmin")}
             >
-              Quick MVP Plans
+              🚀 Quick MVP Plans
             </NavItem>
 
             <NavItem
               active={selectedComponent === "CustomPlanOptions"}
               onClick={() => handleNavigation("CustomPlanOptions")}
             >
-              Custom Plan Options
+              📐 Custom Plan Options
             </NavItem>
 
             <NavItem
               active={selectedComponent === "AdminBanner"}
               onClick={() => handleNavigation("AdminBanner")}
             >
-              Home Page Banner
+              🖼️ Home Page Banner
             </NavItem>
 
             <NavItem
               active={selectedComponent === "AdminProducts"}
               onClick={() => handleNavigation("AdminProducts")}
             >
-              Products
+              📦 Products
             </NavItem>
 
             <NavItem
               active={selectedComponent === "PostJob"}
               onClick={() => handleNavigation("PostJob")}
             >
-              Post Job
+              📝 Post Job
             </NavItem>
 
             <NavItem
               active={selectedComponent === "ViewJobs"}
               onClick={() => handleNavigation("ViewJobs")}
             >
-              View Jobs
+              💼 View Jobs
             </NavItem>
 
             <NavItem
               active={selectedComponent === "ViewResumes"}
               onClick={() => handleNavigation("ViewResumes")}
             >
-              View Resumes
+              📄 View Resumes
             </NavItem>
 
             <NavItem
               active={selectedComponent === "EngagementModels"}
               onClick={() => handleNavigation("EngagementModels")}
             >
-              Engagement Models
+              🔗 Engagement Models
             </NavItem>
 
             <NavItem
               active={selectedComponent === "ResourceAdmin"}
               onClick={() => handleNavigation("ResourceAdmin")}
             >
-              Blog & Resources
+              📰 Blog & Resources
             </NavItem>
 
             <NavItem
               active={selectedComponent === "ExpertsAdmin"}
               onClick={() => handleNavigation("ExpertsAdmin")}
             >
-              Experts
+              🧑‍💼 Experts
             </NavItem>
+
           </NavList>
         </Sidebar>
 
