@@ -1295,16 +1295,46 @@ const Toast = styled.div`
   max-width:320px;line-height:1.4;
 `;
 const PageWrap = styled.div`
-  min-height:100vh;background:#f0f2f5;font-family:'Sora',sans-serif;padding:24px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+  font-family: 'Sora', sans-serif;
+  padding: 32px 24px;
   @media(max-width:700px){padding:0;}
 `;
 const WallContainer = styled.div`
-  max-width:860px;margin:0 auto;background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;
+  max-width: 880px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+  overflow: hidden;
   @media(max-width:700px){border-radius:0;border-left:none;border-right:none;}
 `;
-const TopBar        = styled.div`display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #e5e7eb;background:#fff;position:sticky;top:0;z-index:10;`;
-const TopBarLeft    = styled.div`display:flex;align-items:center;gap:8px;`;
-const TopBarRight   = styled.div`display:flex;align-items:center;gap:10px;`;
+const TopBar        = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 1px solid #f1f5f9;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+`;
+const TopBarLeft    = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+const TopBarRight   = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+`;
+
 const NotificationBellWrap = styled.div`
   position: relative;
   display: inline-block;
@@ -1428,10 +1458,80 @@ const EmptyNotifications = styled.div`
 const HashSymbol    = styled.span`font-size:1.2rem;font-weight:700;color:#374151;`;
 const ChannelName   = styled.span`font-size:15px;font-weight:600;color:#111827;`;
 const MemberCount   = styled.span`font-size:12px;color:#6b7280;background:#f3f4f6;padding:2px 8px;border-radius:20px;`;
-const WhoAmI        = styled.div`display:flex;align-items:center;gap:7px;background:#f8faff;border:1px solid #e0e7ff;border-radius:20px;padding:4px 12px 4px 5px;`;
-const WhoAvatar     = styled.div<{ color: string }>`width:22px;height:22px;border-radius:50%;background:${p => p.color};color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;`;
-const WhoInfo       = styled.div`display:flex;flex-direction:column;line-height:1.2;.who-name{font-size:12px;font-weight:600;color:#111827;}.who-role{font-size:10px;color:#6b7280;&.admin{color:#7c3aed;font-weight:600;}}`;
-const DatePickerWrap = styled.div`display:flex;align-items:center;gap:6px;label{font-size:14px;}input{font-size:12px;padding:5px 10px;border:1px solid #e5e7eb;border-radius:6px;background:#f9fafb;color:#111827;cursor:pointer;font-family:'Sora',sans-serif;outline:none;&:focus{border-color:#3b82f6;}&::-webkit-calendar-picker-indicator{cursor:pointer;}}`;
+const WhoAmI        = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 4px 14px 4px 6px;
+  transition: background 0.15s;
+  &:hover {
+    background: #e2e8f0;
+  }
+`;
+const WhoAvatar     = styled.div<{ color: string }>`
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: ${p => p.color};
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+`;
+const WhoInfo       = styled.div`
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  .who-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1e293b;
+  }
+  .who-role {
+    font-size: 10px;
+    color: #64748b;
+    &.admin {
+      color: #7c3aed;
+      font-weight: 600;
+    }
+  }
+`;
+const DatePickerWrap = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  label {
+    font-size: 14px;
+  }
+  input {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #fff;
+    color: #1e293b;
+    cursor: pointer;
+    font-family: 'Sora', sans-serif;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    &:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    &::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+    }
+  }
+`;
+
 const StatsBar      = styled.div`display:flex;border-bottom:1px solid #e5e7eb;background:#f9fafb;overflow-x:auto;`;
 const StatItem      = styled.div`padding:8px 18px;font-size:12px;color:#6b7280;border-right:1px solid #e5e7eb;white-space:nowrap;flex-shrink:0;strong{color:#111827;font-weight:600;}`;
 const Feed          = styled.div`padding:8px 0 16px;`;
@@ -1439,16 +1539,74 @@ const DateDivider   = styled.div`display:flex;align-items:center;gap:10px;paddin
 const LoadingWrap   = styled.div`display:flex;flex-direction:column;align-items:center;gap:14px;padding:80px 20px;p{color:#9ca3af;font-size:14px;margin:0;}`;
 const Spinner       = styled.div`width:28px;height:28px;border:2px solid #e5e7eb;border-top-color:#374151;border-radius:50%;animation:${spin} 0.8s linear infinite;`;
 const EmptyState    = styled.div`text-align:center;padding:80px 20px;span{font-size:3rem;display:block;margin-bottom:14px;}h3{font-size:1.1rem;font-weight:600;color:#374151;margin:0 0 6px;}p{color:#9ca3af;font-size:13px;margin:0;}`;
-const Message       = styled.div`display:flex;gap:12px;padding:8px 16px;animation:${fadeIn} 0.3s ease both;transition:background 0.1s;&:hover{background:#f9fafb;}`;
-const MsgAvatar     = styled.div<{ color: string }>`width:36px;height:36px;min-width:36px;border-radius:8px;background:${p => p.color};color:#fff;font-size:14px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;`;
+const Message       = styled.div`
+  display: flex;
+  gap: 16px;
+  padding: 24px;
+  margin: 16px 24px;
+  background: #fff;
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+  animation: ${fadeIn} 0.3s ease both;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+    border-color: #e2e8f0;
+  }
+  @media(max-width: 600px) {
+    margin: 12px 12px;
+    padding: 16px;
+  }
+`;
+const MsgAvatar     = styled.div<{ color: string }>`
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  background: ${p => p.color};
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin-top: 2px;
+`;
 const MsgBody       = styled.div`flex:1;min-width:0;`;
 const MsgHeader     = styled.div`display:flex;align-items:baseline;gap:8px;margin-bottom:3px;flex-wrap:wrap;`;
 const MsgName       = styled.span`font-size:14px;font-weight:600;color:#111827;`;
 const MsgTime       = styled.span`font-size:11px;color:#9ca3af;`;
 const StatusBadge   = styled.span<{ done?: boolean }>`font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:${p => p.done ? "#dcfce7" : "#fef9c3"};color:${p => p.done ? "#15803d" : "#854d0e"};`;
 const MsgMeta       = styled.div`font-size:13px;color:#6b7280;margin-bottom:8px;strong{color:#374151;font-weight:600;}`;
-const TasksBlock    = styled.div`display:flex;flex-direction:column;margin-bottom:8px;border:1px solid #f3f4f6;border-radius:8px;overflow:hidden;`;
-const TaskLine      = styled.div`display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#111827;padding:6px 10px;border-bottom:1px solid #f3f4f6;&:last-of-type{border-bottom:none;}&:nth-child(odd){background:#fafafa;}`;
+const TasksBlock    = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+  border: 1px solid #f1f5f9;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #f8fafc;
+`;
+const TaskLine      = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 13px;
+  color: #1e293b;
+  padding: 10px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  &:last-of-type {
+    border-bottom: none;
+  }
+  &:nth-child(odd) {
+    background: #fff;
+  }
+`;
+
 const TaskNum       = styled.span`font-size:11px;font-weight:600;color:#6b7280;min-width:48px;padding-top:2px;flex-shrink:0;`;
 const TaskTitleText = styled.span`flex:1;line-height:1.45;`;
 const TaskRight     = styled.div`display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;`;
@@ -1471,8 +1629,43 @@ const BreakSessionLine = styled.div`font-size:10px;color:#6b7280;`;
 const FooterRow     = styled.div`display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;`;
 const TimeChip      = styled.span<{ chipType: "in" | "out" }>`font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:${p => p.chipType === "in" ? "#e3f2fd" : "#fff3e0"};color:${p => p.chipType === "in" ? "#1565c0" : "#e65100"};`;
 const ScoreChip     = styled.span`font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:#dcfce7;color:#15803d;`;
-const ReactionsRow  = styled.div`display:flex;gap:4px;margin-bottom:6px;flex-wrap:wrap;position:relative;`;
-const ReactionBtn   = styled.button<{ active: boolean }>`font-size:12px;padding:2px 8px;border:1px solid ${p => p.active ? "#3b82f6" : "#e5e7eb"};border-radius:20px;background:${p => p.active ? "#eff6ff" : "#f9fafb"};cursor:pointer;color:#374151;font-family:'Sora',sans-serif;transition:all 0.12s;&:hover:not(:disabled){border-color:#3b82f6;background:#eff6ff;}&:disabled{cursor:wait;opacity:0.6;}`;
+const ReactionsRow  = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin-top: 14px;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 12px;
+  position: relative;
+`;
+const ReactionBtn   = styled.button<{ active: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: ${p => p.active ? '#eff6ff' : '#f1f5f9'};
+  color: ${p => p.active ? '#2563eb' : '#475569'};
+  border: 1px solid ${p => p.active ? '#bfdbfe' : 'transparent'};
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: 'Sora', sans-serif;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
+  &:hover:not(:disabled) {
+    background: ${p => p.active ? '#dbeafe' : '#e2e8f0'};
+    border-color: ${p => p.active ? '#3b82f6' : '#cbd5e1'};
+    transform: scale(1.05);
+  }
+  &:active {
+    transform: scale(0.95);
+  }
+  &:disabled {
+    cursor: wait;
+    opacity: 0.6;
+  }
+`;
+
 const AddReactWrap  = styled.div`position:relative;`;
 const AddReactBtn   = styled.button`font-size:12px;padding:2px 8px;border:1px dashed #d1d5db;border-radius:20px;background:transparent;cursor:pointer;color:#6b7280;font-family:'Sora',sans-serif;transition:all 0.12s;&:hover{border-color:#3b82f6;color:#3b82f6;}`;
 const EmojiPickerBox = styled.div`position:absolute;bottom:calc(100% + 6px);left:0;background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:6px;display:flex;gap:4px;flex-wrap:wrap;width:192px;box-shadow:0 4px 16px rgba(0,0,0,0.1);z-index:50;`;
