@@ -355,7 +355,6 @@ const TeamWall: React.FC = () => {
   const [editText, setEditText]                 = useState("");
   const [editLoading, setEditLoading]           = useState(false);
 
-  const [toast, setToast] = useState<string | null>(null);
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState<WallNotification[]>([]);
   const [showNotificationPanel, setShowNotificationPanel] = useState(false);
