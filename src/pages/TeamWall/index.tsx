@@ -6,18 +6,44 @@ const BASE_URL = process.env.REACT_APP_BACKEND_URL;
 const EMOJIS = ["🔥", "👏", "💪", "🎯", "✅", "🚀", "😎", "❤️"];
 
 // ── Notification sound ────────────────────────────────────────────────────────
+// Manual audio file approach — no package needed.
+// Put your sound file in the `public` folder, e.g. public/notification.mp3
+// then reference it here as "/notification.mp3".
+const NOTIFICATION_SOUND_URL = "/universfield-new-notification-059-494262.mp3";
+
+// Reused across calls + unlocked on first user interaction (browsers block
+// autoplay audio until the user has interacted with the page at least once).
+const notificationAudio = new Audio(NOTIFICATION_SOUND_URL);
+notificationAudio.volume = 0.5;
+
+let audioUnlocked = false;
+const unlockAudio = () => {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  // Play+pause muted once to satisfy the browser's "user gesture" requirement.
+  notificationAudio.muted = true;
+  notificationAudio.play()
+    .then(() => {
+      notificationAudio.pause();
+      notificationAudio.currentTime = 0;
+      notificationAudio.muted = false;
+    })
+    .catch(() => { notificationAudio.muted = false; });
+};
+if (typeof window !== "undefined") {
+  ["click", "keydown", "touchstart"].forEach(evt =>
+    window.addEventListener(evt, unlockAudio, { once: true })
+  );
+}
+
 const playNotificationSound = () => {
   try {
-    const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain); gain.connect(ctx.destination);
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(880, ctx.currentTime);
-    osc.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + 0.1);
-    gain.gain.setValueAtTime(0.3, ctx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
-    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.4);
+    // Clone so overlapping notifications don't cut each other off.
+    const sound = notificationAudio.cloneNode(true) as HTMLAudioElement;
+    sound.volume = 0.5;
+    sound.play().catch(err => {
+      console.warn("Notification sound blocked or failed:", err);
+    });
   } catch { }
 };
 
@@ -237,6 +263,11 @@ interface WallTask {
   breakLog?: BreakEntry[];
 }
 
+interface ToastItem {
+  id: number;
+  message: string;
+}
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 const groupReactions = (reactions: Reaction[]) => {
   const map: Record<string, { count: number; names: string[] }> = {};
@@ -328,6 +359,9 @@ const TeamWall: React.FC = () => {
   const [unreadCount, setUnreadCount] = useState(0);
   const [notifications, setNotifications] = useState<WallNotification[]>([]);
   const [showNotificationPanel, setShowNotificationPanel] = useState(false);
+  // Stacked toasts (bottom-right) — supports multiple notifications at once
+  const [toasts, setToasts] = useState<ToastItem[]>([]);
+  const toastIdRef = useRef(0);
 
   const emojiRef    = useRef<HTMLDivElement>(null);
   const notificationRef = useRef<HTMLDivElement>(null);
@@ -339,11 +373,16 @@ const TeamWall: React.FC = () => {
   useEffect(() => { tasksRef.current  = tasks;   }, [tasks]);
   useEffect(() => { profileRef.current = profile; }, [profile]);
 
-  const showToast = useCallback((msg: string) => {
-    setToast(msg);
-    playNotificationSound();
-    setTimeout(() => setToast(null), 4000);
+  const dismissToast = useCallback((id: number) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
   }, []);
+
+  const showToast = useCallback((msg: string) => {
+    const id = ++toastIdRef.current;
+    setToasts(prev => [...prev, { id, message: msg }]);
+    playNotificationSound();
+    setTimeout(() => dismissToast(id), 8000);
+  }, [dismissToast]);
 
   // ── Fetch wall ──────────────────────────────────────────────────────────────
   const fetchWall = useCallback(async (d: string) => {
@@ -418,12 +457,12 @@ const TeamWall: React.FC = () => {
         return { ...t, comments: [...t.comments, comment] };
       }));
 
-      // Always expand so the new comment is immediately visible
-      setExpandedCard(taskId);
-
-      // Only toast if someone else commented
+      // Only toast + auto-expand if someone else commented.
+      // (We deliberately don't auto-expand on our own comment echo —
+      // it's already expanded from the optimistic update.)
       const me = profileRef.current;
       if (me && comment.employeeId !== me.id) {
+        setExpandedCard(taskId);
         const task = tasksRef.current.find(t => t._id === taskId);
         showToast(`💬 ${comment.employeeName} commented${task ? ` on ${task.employeeName}'s update` : ""}`);
         setUnreadCount(prev => prev + 1);
@@ -797,7 +836,16 @@ const TeamWall: React.FC = () => {
   return (
     <>
       <GlobalFont />
-      {toast && <Toast>{toast}</Toast>}
+
+      {toasts.length > 0 && (
+        <ToastStack>
+          {toasts.map(t => (
+            <Toast key={t.id} onClick={() => dismissToast(t.id)}>
+              {t.message}
+            </Toast>
+          ))}
+        </ToastStack>
+      )}
 
       <PageWrap>
         <WallContainer>
@@ -1282,17 +1330,24 @@ export default TeamWall;
 // ── Animations ────────────────────────────────────────────────────────────────
 const spin    = keyframes`to { transform: rotate(360deg); }`;
 const fadeIn  = keyframes`from { opacity:0; transform:translateY(8px); }  to { opacity:1; transform:translateY(0); }`;
-const slideIn = keyframes`from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); }`;
-
+const slideUp = keyframes`from { opacity:0; transform:translateY(16px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); }`;
+const slideIn = keyframes`from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); }`;
 const GlobalFont = createGlobalStyle`
   @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap');
 `;
 
+// Stacked container, bottom-right, newest toast at the bottom
+const ToastStack = styled.div`
+  position:fixed;bottom:18px;right:18px;z-index:9999;
+  display:flex;flex-direction:column;gap:10px;align-items:flex-end;
+`;
 const Toast = styled.div`
-  position:fixed;top:18px;right:18px;z-index:9999;background:#1e293b;color:#fff;
-  font-family:'Sora',sans-serif;font-size:13px;font-weight:500;padding:12px 18px;
-  border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.18);animation:${slideIn} 0.25s ease both;
-  max-width:320px;line-height:1.4;
+  width:180px;height:180px;background:#1e293b;color:#fff;cursor:pointer;
+  font-family:'Sora',sans-serif;font-size:13px;font-weight:500;
+  border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,0.22);animation:${slideUp} 0.25s ease both;
+  line-height:1.45;display:flex;align-items:center;justify-content:center;text-align:center;
+  padding:18px;overflow:hidden;
+  @media(max-width:480px){width:140px;height:140px;font-size:12px;}
 `;
 const PageWrap = styled.div`
   min-height: 100vh;

@@ -44,6 +44,21 @@ const fmtClockTime = (d: Date): string =>
     hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true,
   });
 
+// ── Parse "HH:MM AM/PM" → Date (today) ───────────────────────────────────────
+const parseInTime = (inTime: string): Date | null => {
+  try {
+    const now   = new Date();
+    const parts = inTime.trim().split(" ");
+    const mer   = parts[parts.length - 1];
+    const [hStr, mStr] = parts[0].split(":");
+    let h = parseInt(hStr);
+    const m = parseInt(mStr);
+    if (mer?.toUpperCase() === "PM" && h !== 12) h += 12;
+    if (mer?.toUpperCase() === "AM" && h === 12) h = 0;
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
+  } catch { return null; }
+};
+
 // ── localStorage helpers ──────────────────────────────────────────────────────
 const breakStorageKey = (slotId: string) => `break_${slotId}_${today}`;
 
@@ -158,45 +173,82 @@ export interface BreakLogEntry {
 
 // ── Break Timer ───────────────────────────────────────────────────────────────
 interface BreakTimerProps {
-  slot:     BreakSlot;
-  onUpdate: (id: string, takenMins: number, sessions: BreakSession[]) => void;
+  slot:      BreakSlot;
+  onUpdate:  (id: string, takenMins: number, sessions: BreakSession[]) => void;
+  disabled?: boolean; // locked after OUT submitted
 }
 
-const BreakTimer: React.FC<BreakTimerProps> = ({ slot, onUpdate }) => {
+const BreakTimer: React.FC<BreakTimerProps> = ({ slot, onUpdate, disabled }) => {
   const key = breakStorageKey(slot.id);
 
   const initState = () => {
     try {
       const raw = localStorage.getItem(key);
-      if (!raw) return { elapsedMs: 0, sessions: [] };
+      if (!raw) return { elapsedMs: 0, sessions: [] as BreakSession[], running: false, sessionStart: null as Date | null };
       const saved: SlotPersistedState = JSON.parse(raw);
       let elapsedMs = saved.elapsedMs ?? 0;
+      let running = false;
+      let sessionStart: Date | null = null;
       if (saved.runningStartIso) {
-        elapsedMs += Date.now() - new Date(saved.runningStartIso).getTime();
+        sessionStart = new Date(saved.runningStartIso);
+        running = true;
       }
-      return { elapsedMs, sessions: saved.sessions ?? [] };
-    } catch { return { elapsedMs: 0, sessions: [] }; }
+      return { elapsedMs, sessions: saved.sessions ?? [], running, sessionStart };
+    } catch {
+      return { elapsedMs: 0, sessions: [] as BreakSession[], running: false, sessionStart: null as Date | null };
+    }
   };
 
   const init = initState();
-  const [running, setRunning]               = useState(false);
+
+  const [running, setRunning]               = useState(init.running);
   const [elapsed, setElapsed]               = useState(init.elapsedMs);
-  const [sessionStart, setSessionStart]     = useState<Date | null>(null);
-  const [sessionElapsed, setSessionElapsed] = useState(0);
-  const [sessions, setSessions]             = useState<BreakSession[]>(init.sessions);
+  const [sessionStart, setSessionStart]     = useState<Date | null>(init.sessionStart);
+  const [sessionElapsed, setSessionElapsed] = useState(
+    init.sessionStart ? Date.now() - init.sessionStart.getTime() : 0
+  );
+  const [sessions, setSessions] = useState<BreakSession[]>(init.sessions);
   const tickRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const persist = useCallback((elapsedMs: number, sess: BreakSession[], runningStart: Date | null) => {
     const data: SlotPersistedState = {
-      elapsedMs, sessions: sess,
+      elapsedMs,
+      sessions: sess,
       runningStartIso: runningStart ? runningStart.toISOString() : null,
     };
     localStorage.setItem(key, JSON.stringify(data));
   }, [key]);
 
+  // Stop live timer if disabled (OUT submitted)
+  useEffect(() => {
+    if (disabled && running && sessionStart) {
+      const endTime    = new Date();
+      const durMs      = endTime.getTime() - sessionStart.getTime();
+      const mins       = Math.max(1, Math.round(durMs / 60000));
+      const newElapsed = elapsed + durMs;
+      const newSession: BreakSession = {
+        startIso: sessionStart.toISOString(),
+        endIso:   endTime.toISOString(),
+        mins,
+      };
+      const newSessions = [...sessions, newSession];
+      setRunning(false);
+      setSessionStart(null);
+      setSessionElapsed(0);
+      setElapsed(newElapsed);
+      setSessions(newSessions);
+      persist(newElapsed, newSessions, null);
+      onUpdate(slot.id, Math.round(newElapsed / 60000), newSessions);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [disabled]);
+
   useEffect(() => {
     if (running && sessionStart) {
-      tickRef.current = setInterval(() => setSessionElapsed(Date.now() - sessionStart.getTime()), 500);
+      tickRef.current = setInterval(
+        () => setSessionElapsed(Date.now() - sessionStart.getTime()),
+        500
+      );
     } else {
       if (tickRef.current) clearInterval(tickRef.current);
     }
@@ -204,13 +256,20 @@ const BreakTimer: React.FC<BreakTimerProps> = ({ slot, onUpdate }) => {
   }, [running, sessionStart]);
 
   useEffect(() => {
-    if (init.elapsedMs > 0) onUpdate(slot.id, Math.round(init.elapsedMs / 60000), init.sessions);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    const liveGap = init.sessionStart ? Date.now() - init.sessionStart.getTime() : 0;
+    const totalMs = init.elapsedMs + liveGap;
+    if (totalMs > 0) {
+      onUpdate(slot.id, Math.round(totalMs / 60000), init.sessions);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleStart = () => {
+    if (disabled) return;
     const start = new Date();
-    setSessionStart(start); setSessionElapsed(0); setRunning(true);
+    setSessionStart(start);
+    setSessionElapsed(0);
+    setRunning(true);
     persist(elapsed, sessions, start);
   };
 
@@ -220,22 +279,29 @@ const BreakTimer: React.FC<BreakTimerProps> = ({ slot, onUpdate }) => {
     const durMs      = endTime.getTime() - sessionStart.getTime();
     const mins       = Math.max(1, Math.round(durMs / 60000));
     const newElapsed = elapsed + durMs;
-    const newSession: BreakSession = { startIso: sessionStart.toISOString(), endIso: endTime.toISOString(), mins };
+    const newSession: BreakSession = {
+      startIso: sessionStart.toISOString(),
+      endIso:   endTime.toISOString(),
+      mins,
+    };
     const newSessions = [...sessions, newSession];
-    setRunning(false); setSessionStart(null); setSessionElapsed(0);
-    setElapsed(newElapsed); setSessions(newSessions);
+    setRunning(false);
+    setSessionStart(null);
+    setSessionElapsed(0);
+    setElapsed(newElapsed);
+    setSessions(newSessions);
     persist(newElapsed, newSessions, null);
     onUpdate(slot.id, Math.round(newElapsed / 60000), newSessions);
   };
 
-  const displayMs  = running ? elapsed + sessionElapsed : elapsed;
-  const totalTaken = Math.round(displayMs / 60000);
-  const extra      = totalTaken - slot.allotted;
+  const displayMs   = running ? elapsed + sessionElapsed : elapsed;
+  const totalTaken  = Math.round(displayMs / 60000);
+  const extra       = totalTaken - slot.allotted;
   const withinLimit = extra <= 0;
-  const hasTaken   = sessions.length > 0 || running;
+  const hasTaken    = sessions.length > 0 || running;
 
   return (
-    <div className="break-slot-card" style={{ borderColor: slot.color.border }}>
+    <div className="break-slot-card" style={{ borderColor: slot.color.border, opacity: disabled ? 0.75 : 1 }}>
       <div className="bsc-header">
         <div className="bsc-title-row">
           <span className="bsc-emoji">{slot.emoji}</span>
@@ -244,38 +310,68 @@ const BreakTimer: React.FC<BreakTimerProps> = ({ slot, onUpdate }) => {
             <div className="bsc-slot-time">{slot.hint}</div>
           </div>
         </div>
-        {running ? (
+        {disabled ? (
+          <span className="bsc-used-badge" style={{ background: "#f3f4f6", color: "#6b7280" }}>
+            🔒 Day ended
+          </span>
+        ) : running ? (
           <span className="bsc-live-badge">
             <span className="break-pulse" style={{ background: slot.color.text }} /> Live
           </span>
         ) : hasTaken ? (
-          <span className="bsc-used-badge" style={{ background: slot.color.badge, color: slot.color.text }}>✓ Taken</span>
+          <span className="bsc-used-badge" style={{ background: slot.color.badge, color: slot.color.text }}>
+            ✓ Taken
+          </span>
         ) : null}
       </div>
+
       <div className="bsc-timer" style={{ color: running ? slot.color.text : "#1a1a2e" }}>
         {fmtTimer(displayMs)}
       </div>
+
       <div className="bsc-progress-wrap">
         <div className="bsc-progress-bar">
           <div className="bsc-progress-fill" style={{
-            width: `${Math.min((totalTaken / slot.allotted) * 100, 100)}%`,
+            width:      `${Math.min((totalTaken / slot.allotted) * 100, 100)}%`,
             background: withinLimit ? slot.color.text : "#E24B4A",
           }} />
         </div>
         <div className="bsc-progress-labels">
-          <span style={{ color: slot.color.text, fontWeight: 600 }}>{totalTaken} / {slot.allotted} min</span>
+          <span style={{ color: slot.color.text, fontWeight: 600 }}>
+            {totalTaken} / {slot.allotted} min
+          </span>
           {!withinLimit
             ? <span className="bsc-extra-label">+{extra} min extra ⚠️</span>
-            : <span className="bsc-ok-label" style={{ color: slot.color.text }}>{slot.allotted - totalTaken} min left ✓</span>}
+            : <span className="bsc-ok-label" style={{ color: slot.color.text }}>
+                {slot.allotted - totalTaken} min left ✓
+              </span>}
         </div>
       </div>
+
       <div className="bsc-controls">
         {!running
-          ? <button type="button" className="bsc-start-btn"
-              style={{ background: slot.color.bg, borderColor: slot.color.border, color: slot.color.text }}
-              onClick={handleStart}>▶ Start {slot.label.toLowerCase()}</button>
-          : <button type="button" className="bsc-stop-btn" onClick={handleStop}>■ Stop break</button>}
+          ? <button
+              type="button"
+              className="bsc-start-btn"
+              style={{
+                background: slot.color.bg, borderColor: slot.color.border, color: slot.color.text,
+                opacity: disabled ? 0.5 : 1, cursor: disabled ? "not-allowed" : "pointer",
+              }}
+              onClick={handleStart}
+              disabled={!!disabled}
+            >
+              ▶ Start {slot.label.toLowerCase()}
+            </button>
+          : <button
+              type="button"
+              className="bsc-stop-btn"
+              onClick={handleStop}
+              disabled={!!disabled}
+            >
+              ■ Stop break
+            </button>}
       </div>
+
       {sessions.length > 0 && (
         <div className="bsc-log">
           {sessions.map((s, i) => (
@@ -297,11 +393,22 @@ const BreakTimer: React.FC<BreakTimerProps> = ({ slot, onUpdate }) => {
 // ── Break Tracker Panel ───────────────────────────────────────────────────────
 interface BreakTrackerProps {
   onBreakUpdate: (breakTotals: Record<string, number>, breakLog: BreakLogEntry[]) => void;
+  disabled?:     boolean;
 }
 
-const BreakTracker: React.FC<BreakTrackerProps> = ({ onBreakUpdate }) => {
-  const [breakTotals, setBreakTotals]     = useState<Record<string, number>>({ morning: 0, lunch: 0, evening: 0 });
-  const [, setBreakSessions] = useState<Record<string, BreakSession[]>>({ morning: [], lunch: [], evening: [] });
+const BreakTracker: React.FC<BreakTrackerProps> = ({ onBreakUpdate, disabled }) => {
+  const [breakTotals, setBreakTotals]   = useState<Record<string, number>>({ morning: 0, lunch: 0, evening: 0 });
+  const [, setBreakSessions]            = useState<Record<string, BreakSession[]>>({ morning: [], lunch: [], evening: [] });
+
+  // Purge previous day's break keys
+  useEffect(() => {
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k?.startsWith("break_") && !k.includes(today)) keysToRemove.push(k);
+    }
+    keysToRemove.forEach((k) => localStorage.removeItem(k));
+  }, []);
 
   const handleSlotUpdate = (id: string, takenMins: number, sessions: BreakSession[]) => {
     setBreakTotals((prevTotals) => {
@@ -309,8 +416,10 @@ const BreakTracker: React.FC<BreakTrackerProps> = ({ onBreakUpdate }) => {
       setBreakSessions((prevSess) => {
         const updatedSess = { ...prevSess, [id]: sessions };
         const log: BreakLogEntry[] = BREAK_SLOTS.map((slot) => ({
-          slotId: slot.id, slotLabel: slot.label, emoji: slot.emoji,
-          sessions: updatedSess[slot.id] ?? [],
+          slotId:    slot.id,
+          slotLabel: slot.label,
+          emoji:     slot.emoji,
+          sessions:  updatedSess[slot.id] ?? [],
           totalMins: updatedTotals[slot.id] ?? 0,
         })).filter((e) => e.totalMins > 0);
         onBreakUpdate(updatedTotals, log);
@@ -328,7 +437,7 @@ const BreakTracker: React.FC<BreakTrackerProps> = ({ onBreakUpdate }) => {
   return (
     <div className="break-tracker-panel">
       <div className="btp-header">
-        <span className="btp-title">⏱ Break tracker</span>
+        <span className="btp-title">⏱ Break tracker {disabled && <span style={{ fontSize: 11, color: "#9ca3af", fontWeight: 400 }}>· locked (day ended)</span>}</span>
         <div className="btp-summary">
           <span className="btp-stat total">Today: <strong>{totalTaken} / {totalAllotted} min</strong></span>
           {totalExtra > 0 && <span className="btp-stat extra">+{totalExtra} min over ⚠️</span>}
@@ -337,7 +446,7 @@ const BreakTracker: React.FC<BreakTrackerProps> = ({ onBreakUpdate }) => {
       </div>
       <div className="btp-slots">
         {BREAK_SLOTS.map((slot) => (
-          <BreakTimer key={slot.id} slot={slot} onUpdate={handleSlotUpdate} />
+          <BreakTimer key={slot.id} slot={slot} onUpdate={handleSlotUpdate} disabled={disabled} />
         ))}
       </div>
     </div>
@@ -402,26 +511,17 @@ const LiveElapsed: React.FC<{ inTime: string }> = ({ inTime }) => {
   useEffect(() => {
     const calc = () => {
       if (!inTime) return;
-      const now = new Date();
-      // inTime format: "09:32 AM" or "09:32:00 AM"
-      const parts = inTime.trim().split(" ");
-      const meridiem = parts[parts.length - 1]; // AM / PM
-      const timePart = parts[0];
-      const timeSections = timePart.split(":");
-      let h = parseInt(timeSections[0]);
-      const m = parseInt(timeSections[1]);
-      if (meridiem?.toUpperCase() === "PM" && h !== 12) h += 12;
-      if (meridiem?.toUpperCase() === "AM" && h === 12) h = 0;
-      const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), h, m, 0);
-      const diffMs = now.getTime() - start.getTime();
+      const start = parseInTime(inTime);
+      if (!start) return;
+      const diffMs = new Date().getTime() - start.getTime();
       if (diffMs < 0) { setElapsed("0h 0m"); return; }
       const totalMins = Math.floor(diffMs / 60000);
-      const hrs = Math.floor(totalMins / 60);
+      const hrs  = Math.floor(totalMins / 60);
       const mins = totalMins % 60;
       setElapsed(`${hrs}h ${String(mins).padStart(2, "0")}m`);
     };
     calc();
-    const id = setInterval(calc, 30000); // update every 30s
+    const id = setInterval(calc, 30000);
     return () => clearInterval(id);
   }, [inTime]);
 
@@ -437,13 +537,13 @@ const EmployeeDashboard: React.FC = () => {
   const [pastTasks,  setPastTasks]  = useState<TaskDoc[]>([]);
   const [activeTab,  setActiveTab]  = useState<"today" | "history" | "leave">("today");
 
-  const [clockingIn,   setClockingIn]   = useState(false);
+  const [clockingIn, setClockingIn] = useState(false);
 
-  const [location,     setLocation]     = useState("O-CBE");
-  const [dependency,   setDependency]   = useState("");
-  const [workMode,     setWorkMode]     = useState("Office");
-  const [inTasks,      setInTasks]      = useState<any[]>([emptyInTask()]);
-  const [isEditingIN,  setIsEditingIN]  = useState(false);
+  const [location,    setLocation]    = useState("O-CBE");
+  const [dependency,  setDependency]  = useState("");
+  const [workMode,    setWorkMode]    = useState("Office");
+  const [inTasks,     setInTasks]     = useState<any[]>([emptyInTask()]);
+  const [isEditingIN, setIsEditingIN] = useState(false);
   const [showTaskForm, setShowTaskForm] = useState(false);
 
   const [outTasks,     setOutTasks]     = useState<TaskItem[]>([]);
@@ -451,10 +551,14 @@ const EmployeeDashboard: React.FC = () => {
   const [overallScore, setOverallScore] = useState("");
   const [isEditingOUT, setIsEditingOUT] = useState(false);
 
-  const [loading,  setLoading]  = useState(false);
-  const [message,  setMessage]  = useState({ text: "", type: "" });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState({ text: "", type: "" });
 
-  const [breakLog, setBreakLog] = useState<BreakLogEntry[]>([]);
+  const [breakLog,   setBreakLog]   = useState<BreakLogEntry[]>([]);
+  // ── NEW: track whether OUT has been submitted today ──────────────────────
+  const [isOutDone,  setIsOutDone]  = useState(false);
+  // Captured clock-out time displayed after submission
+  const [clockOutTime, setClockOutTime] = useState<string>("");
 
   const [leaves,       setLeaves]       = useState<any[]>([]);
   const [leaveType,    setLeaveType]    = useState("Sick Leave");
@@ -463,6 +567,10 @@ const EmployeeDashboard: React.FC = () => {
   const [leaveReason,  setLeaveReason]  = useState("");
   const [leaveLoading, setLeaveLoading] = useState(false);
   const [leaveMessage, setLeaveMessage] = useState({ text: "", type: "" });
+
+  // Keep latest breakLog accessible inside handleOUTSubmit without stale closure
+  const breakLogRef = useRef<BreakLogEntry[]>([]);
+  useEffect(() => { breakLogRef.current = breakLog; }, [breakLog]);
 
   // ── Break tracker callback ──────────────────────────────────────────────────
   const handleBreakUpdate = useCallback(
@@ -490,7 +598,8 @@ const EmployeeDashboard: React.FC = () => {
           return { ...t, breakMinutes: taskBreak, estimatedHours: estHours };
         });
       });
-    }, []
+    },
+    []
   );
 
   // ── Fetchers ────────────────────────────────────────────────────────────────
@@ -501,9 +610,12 @@ const EmployeeDashboard: React.FC = () => {
       if (result.success && result.result?.tasks?.length > 0) {
         const task = result.result.tasks[0];
         setTodayTask(task);
-        if (task.isClockOnly) {
-          setShowTaskForm(true);
+        // Seed isOutDone from DB so freeze persists on reload
+        setIsOutDone(task.isOutSubmitted ?? false);
+        if (task.isOutSubmitted && task.outTime) {
+          setClockOutTime(task.outTime);
         }
+        if (task.isClockOnly) setShowTaskForm(true);
         setOutTasks(
           (task.tasks || []).map((t: TaskItem) => ({
             ...t,
@@ -614,8 +726,10 @@ const EmployeeDashboard: React.FC = () => {
     if (segs.length <= 1) return;
     segs.splice(si, 1);
     const estHours = calcSegmentHours(segs, u[ti].breakMinutes || 0);
-    u[ti] = { ...u[ti], timeSegments: segs, estimatedHours: estHours,
-      plannedStart: segs[0]?.start ?? "", plannedEnd: segs[segs.length - 1]?.end ?? "" };
+    u[ti] = {
+      ...u[ti], timeSegments: segs, estimatedHours: estHours,
+      plannedStart: segs[0]?.start ?? "", plannedEnd: segs[segs.length - 1]?.end ?? "",
+    };
     setInTasks(u);
   };
   const updateSegment = (ti: number, si: number, field: "start" | "end", value: string) => {
@@ -623,14 +737,18 @@ const EmployeeDashboard: React.FC = () => {
     const segs = [...(u[ti].timeSegments || [])];
     segs[si] = { ...segs[si], [field]: value };
     const estHours = calcSegmentHours(segs, u[ti].breakMinutes || 0);
-    u[ti] = { ...u[ti], timeSegments: segs, estimatedHours: estHours,
-      plannedStart: segs[0]?.start ?? "", plannedEnd: segs[segs.length - 1]?.end ?? "" };
+    u[ti] = {
+      ...u[ti], timeSegments: segs, estimatedHours: estHours,
+      plannedStart: segs[0]?.start ?? "", plannedEnd: segs[segs.length - 1]?.end ?? "",
+    };
     setInTasks(u);
   };
   const updateBreak = (ti: number, mins: number) => {
     const u = [...inTasks];
-    u[ti] = { ...u[ti], breakMinutes: mins,
-      estimatedHours: calcSegmentHours(u[ti].timeSegments || [], mins) };
+    u[ti] = {
+      ...u[ti], breakMinutes: mins,
+      estimatedHours: calcSegmentHours(u[ti].timeSegments || [], mins),
+    };
     setInTasks(u);
   };
 
@@ -651,10 +769,15 @@ const EmployeeDashboard: React.FC = () => {
             ? [{ start: t.plannedStart ?? "", end: t.plannedEnd ?? "" }]
             : [emptySegment()];
         return {
-          title: t.title ?? "", shortDesc: t.shortDesc ?? "", dependency: t.dependency ?? "",
-          estimatedHours: t.estimatedHours ?? 0, targetPercent: t.targetPercent ?? 100,
-          plannedStart: t.plannedStart ?? "", plannedEnd: t.plannedEnd ?? "",
-          timeSegments, breakMinutes: t.breakMinutes ?? 0,
+          title:          t.title          ?? "",
+          shortDesc:      t.shortDesc      ?? "",
+          dependency:     t.dependency     ?? "",
+          estimatedHours: t.estimatedHours ?? 0,
+          targetPercent:  t.targetPercent  ?? 100,
+          plannedStart:   t.plannedStart   ?? "",
+          plannedEnd:     t.plannedEnd     ?? "",
+          timeSegments,
+          breakMinutes: t.breakMinutes ?? 0,
           subPoints: t.subPoints?.length ? [...t.subPoints] : [""],
         };
       })
@@ -664,16 +787,22 @@ const EmployeeDashboard: React.FC = () => {
     setMessage({ text: "", type: "" });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-  const handleCancelEditIN = () => { setIsEditingIN(false); setShowTaskForm(false); setMessage({ text: "", type: "" }); };
 
-  // ── Step 2: Submit tasks ─────────────────────────────────────────────────────
+  const handleCancelEditIN = () => {
+    setIsEditingIN(false);
+    setShowTaskForm(false);
+    setMessage({ text: "", type: "" });
+  };
+
+  // ── Step 2: Submit IN tasks ──────────────────────────────────────────────────
   const handleINSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!employee || !todayTask) return;
     setLoading(true);
     setMessage({ text: "", type: "" });
     const cleanedTasks = inTasks.map((t, i) => ({
-      ...t, taskNumber: i + 1,
+      ...t,
+      taskNumber: i + 1,
       subPoints: (t.subPoints || []).filter((p: string) => p.trim() !== ""),
     }));
     try {
@@ -703,14 +832,18 @@ const EmployeeDashboard: React.FC = () => {
   const updateOutTask = (i: number, field: string, value: any) => {
     const u = [...outTasks]; (u[i] as any)[field] = value; setOutTasks(u);
   };
-  const handleEditOUT    = () => { setIsEditingOUT(true); setMessage({ text: "", type: "" }); };
+  const handleEditOUT = () => { setIsEditingOUT(true); setMessage({ text: "", type: "" }); };
   const handleCancelEditOUT = () => {
     if (!todayTask) return;
     setOutTasks(todayTask.tasks.map((t: any) => ({
       ...t,
-      actualHours: t.actualHours ?? t.estimatedHours, actualPercent: t.actualPercent ?? 0,
-      actualStart: t.actualStart ?? "", actualEnd: t.actualEnd ?? "",
-      score: t.score || "N/A", impact: t.impact || "", status: t.status || "Todo",
+      actualHours:   t.actualHours   ?? t.estimatedHours,
+      actualPercent: t.actualPercent  ?? 0,
+      actualStart:   t.actualStart    ?? "",
+      actualEnd:     t.actualEnd      ?? "",
+      score:         t.score  || "N/A",
+      impact:        t.impact || "",
+      status:        t.status || "Todo",
     })));
     setOverallHours(todayTask.overallHours || 0);
     setOverallScore(todayTask.overallScore  || "");
@@ -718,29 +851,72 @@ const EmployeeDashboard: React.FC = () => {
     setMessage({ text: "", type: "" });
   };
 
+  // ── Step 3: Submit OUT (with clock-out + auto overall hours) ────────────────
   const handleOUTSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!todayTask) return;
     setLoading(true);
     setMessage({ text: "", type: "" });
+
     const isEditing = todayTask.isOutSubmitted && isEditingOUT;
+
+    // ── AUTO CALC: overallHours = (now − inTime) − totalBreakMins ────────────
+    // Only auto-calc on first submission, not on edit (preserve manual edits)
+    let computedOverallHours = overallHours;
+    if (!isEditing && todayTask.inTime) {
+      try {
+        const clockIn   = parseInTime(todayTask.inTime);
+        if (clockIn) {
+          const now        = new Date();
+          const totalMins  = Math.max((now.getTime() - clockIn.getTime()) / 60000, 0);
+          const breakMins  = breakLogRef.current.reduce((s, e) => s + e.totalMins, 0);
+          const netHours   = Math.round(Math.max(totalMins - breakMins, 0) / 60 * 4) / 4;
+          computedOverallHours = netHours;
+          setOverallHours(netHours);
+        }
+      } catch { /* keep existing value */ }
+    }
+
+    // ── Record clock-out time ─────────────────────────────────────────────────
+    const nowFormatted = new Date().toLocaleTimeString("en-IN", {
+      hour: "2-digit", minute: "2-digit", hour12: true,
+    });
+
     try {
       const res = await fetch(`${BASE_URL}/tasks/out/${todayTask._id}`, {
         method:  isEditing ? "PATCH" : "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tasks: outTasks, overallHours, overallScore, breakLog }),
+        body: JSON.stringify({
+          tasks:        outTasks,
+          overallHours: computedOverallHours,
+          overallScore,
+          breakLog:     breakLogRef.current,
+        }),
       });
       const result = await res.json();
       if (result.success) {
-        setMessage({ text: isEditing ? "✅ OUT edited!" : "✅ OUT submitted!", type: "success" });
+        // ── Freeze break timers ──────────────────────────────────────────────
+        if (!isEditing) {
+          setIsOutDone(true);
+          setClockOutTime(nowFormatted);
+        }
+        setMessage({
+          text: isEditing
+            ? "✅ OUT edited!"
+            : `✅ Clocked out at ${nowFormatted} · ${computedOverallHours}h recorded`,
+          type: "success",
+        });
         setIsEditingOUT(false);
         await fetchTodayTask(employee!.id);
         await fetchPastTasks(employee!.id);
       } else {
         setMessage({ text: result.message || "Failed", type: "error" });
       }
-    } catch { setMessage({ text: "Server error", type: "error" }); }
-    finally  { setLoading(false); }
+    } catch {
+      setMessage({ text: "Server error", type: "error" });
+    } finally {
+      setLoading(false);
+    }
   };
 
   // ── Leave ────────────────────────────────────────────────────────────────────
@@ -749,11 +925,13 @@ const EmployeeDashboard: React.FC = () => {
     if (!employee) return;
     setLeaveLoading(true);
     setLeaveMessage({ text: "", type: "" });
-    const from = new Date(fromDate), to = new Date(toDate);
+    const from      = new Date(fromDate);
+    const to        = new Date(toDate);
     const totalDays = Math.ceil((to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)) + 1;
     if (totalDays < 1) {
       setLeaveMessage({ text: "To date must be on or after From date", type: "error" });
-      setLeaveLoading(false); return;
+      setLeaveLoading(false);
+      return;
     }
     try {
       const res = await fetch(`${BASE_URL}/leaves/apply`, {
@@ -766,7 +944,9 @@ const EmployeeDashboard: React.FC = () => {
         setLeaveMessage({ text: "✅ Leave submitted!", type: "success" });
         setFromDate(""); setToDate(""); setLeaveReason(""); setLeaveType("Sick Leave");
         fetchLeaves(employee.id);
-      } else { setLeaveMessage({ text: result.message || "Failed", type: "error" }); }
+      } else {
+        setLeaveMessage({ text: result.message || "Failed", type: "error" });
+      }
     } catch { setLeaveMessage({ text: "Server error", type: "error" }); }
     finally  { setLeaveLoading(false); }
   };
@@ -775,11 +955,9 @@ const EmployeeDashboard: React.FC = () => {
 
   if (!employee) return null;
 
-  const pendingLeaves = leaves.filter((l) => l.status === "Pending").length;
-
-  // ── Derived state ──────────────────────────────────────────────────────────
-  const hasClockedIn   = !!todayTask;
-  const hasTasksFilled = hasClockedIn && !todayTask?.isClockOnly;
+  const pendingLeaves   = leaves.filter((l) => l.status === "Pending").length;
+  const hasClockedIn    = !!todayTask;
+  const hasTasksFilled  = hasClockedIn && !todayTask?.isClockOnly;
   const taskFormVisible = showTaskForm || isEditingIN;
 
   const wmStyle = (mode: string, active: string) => {
@@ -808,9 +986,12 @@ const EmployeeDashboard: React.FC = () => {
           <div className="avatar">{employee.firstName?.charAt(0).toUpperCase()}</div>
           <div className="profile-details">
             {[
-              ["Name", employee.firstName], ["Email", employee.email],
-              ["Designation", employee.designation || "—"], ["Department", employee.department || "—"],
-              ["Employee ID", `#${employee.employeeCode || "—"}`], ["Today", today],
+              ["Name",        employee.firstName],
+              ["Email",       employee.email],
+              ["Designation", employee.designation || "—"],
+              ["Department",  employee.department  || "—"],
+              ["Employee ID", `#${employee.employeeCode || "—"}`],
+              ["Today",       today],
             ].map(([label, value], i, arr) => (
               <React.Fragment key={label}>
                 <div className="profile-item">
@@ -830,8 +1011,11 @@ const EmployeeDashboard: React.FC = () => {
             { key: "history", label: "📅 History" },
             { key: "leave",   label: "🏖️ Leave" },
           ].map(({ key, label }) => (
-            <button key={key} className={`tab ${activeTab === key ? "active" : ""}`}
-              onClick={() => setActiveTab(key as any)}>
+            <button
+              key={key}
+              className={`tab ${activeTab === key ? "active" : ""}`}
+              onClick={() => setActiveTab(key as any)}
+            >
               {label}
               {key === "leave" && pendingLeaves > 0 && (
                 <span className="leave-pending-dot">{pendingLeaves}</span>
@@ -847,12 +1031,13 @@ const EmployeeDashboard: React.FC = () => {
           <p className={message.type === "success" ? "success-msg" : "error-msg"}>{message.text}</p>
         )}
 
-        {/* TODAY TAB */}
+        {/* ── TODAY TAB ── */}
         {activeTab === "today" && (
           <>
-            <BreakTracker onBreakUpdate={handleBreakUpdate} />
+            {/* Break tracker — locked once OUT is submitted */}
+            <BreakTracker onBreakUpdate={handleBreakUpdate} disabled={isOutDone} />
 
-            {/* ── STEP 1: CLOCK IN ─────────────────────────────────────────── */}
+            {/* STEP 1: CLOCK IN */}
             {!hasClockedIn && (
               <div className="card clock-in-card">
                 <div className="clock-in-inner">
@@ -863,11 +1048,7 @@ const EmployeeDashboard: React.FC = () => {
                   </div>
                   <div className="clock-in-right">
                     <div className="live-time"><LiveClock /></div>
-                    <button
-                      className="clock-in-btn"
-                      onClick={handleClockIn}
-                      disabled={clockingIn}
-                    >
+                    <button className="clock-in-btn" onClick={handleClockIn} disabled={clockingIn}>
                       {clockingIn ? "Clocking in…" : "🟢 Clock In"}
                     </button>
                     <div className="clock-in-date">{today}</div>
@@ -876,20 +1057,34 @@ const EmployeeDashboard: React.FC = () => {
               </div>
             )}
 
-            {/* ── CLOCKED IN — STATUS CARD ──────────────────────────────────── */}
+            {/* CLOCKED IN — STATUS CARD */}
             {hasClockedIn && (
               <div className="clock-status-card">
-                {/* Left: session info */}
                 <div className="csc-left">
                   <div className="csc-indicator">
-                    <span className="csc-pulse-ring" />
-                    <span className="csc-dot" />
+                    {isOutDone ? (
+                      <span style={{ fontSize: 22 }}>🔴</span>
+                    ) : (
+                      <>
+                        <span className="csc-pulse-ring" />
+                        <span className="csc-dot" />
+                      </>
+                    )}
                   </div>
                   <div className="csc-info">
-                    <div className="csc-title">Active session</div>
+                    <div className="csc-title">
+                      {isOutDone ? "Day ended" : "Active session"}
+                    </div>
                     <div className="csc-time-row">
-                      <span className="csc-in-label">Clocked in at</span>
+                      <span className="csc-in-label">🌅 IN</span>
                       <span className="csc-in-time">{todayTask?.inTime}</span>
+                      {isOutDone && clockOutTime && (
+                        <>
+                          <span className="csc-sep">·</span>
+                          <span className="csc-in-label">🌆 OUT</span>
+                          <span className="csc-in-time" style={{ color: "#e65100" }}>{clockOutTime}</span>
+                        </>
+                      )}
                       <span className="csc-sep">·</span>
                       <span className="csc-date">{today}</span>
                     </div>
@@ -901,42 +1096,63 @@ const EmployeeDashboard: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Center: elapsed */}
                 <div className="csc-center">
-                  <div className="csc-elapsed-label">Time elapsed</div>
-                  <div className="csc-elapsed-value">
-                    {todayTask?.inTime ? <LiveElapsed inTime={todayTask.inTime} /> : "—"}
-                  </div>
-                  <div className="csc-elapsed-sub">since clock-in</div>
+                  {isOutDone ? (
+                    <>
+                      <div className="csc-elapsed-label">Total worked</div>
+                      <div className="csc-elapsed-value" style={{ color: "#15803d" }}>
+                        {overallHours > 0 ? `${overallHours}h` : "—"}
+                      </div>
+                      <div className="csc-elapsed-sub">net productive hours</div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="csc-elapsed-label">Time elapsed</div>
+                      <div className="csc-elapsed-value">
+                        {todayTask?.inTime ? <LiveElapsed inTime={todayTask.inTime} /> : "—"}
+                      </div>
+                      <div className="csc-elapsed-sub">since clock-in</div>
+                    </>
+                  )}
                 </div>
 
-                {/* Right: live clock + actions */}
                 <div className="csc-right">
-                  <div className="csc-now-label">Current time</div>
-                  <div className="csc-now-value"><LiveClock /></div>
-                  {hasTasksFilled && !taskFormVisible && (
-                    <button className="csc-edit-btn" onClick={handleEditIN}>
-                      ✏️ Edit tasks
-                    </button>
-                  )}
-                  {!hasTasksFilled && !taskFormVisible && (
-                    <button
-                      className="csc-add-tasks-btn"
-                      onClick={() => {
-                        setShowTaskForm(true);
-                        setTimeout(() => {
-                          document.getElementById("task-form-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
-                        }, 100);
-                      }}
-                    >
-                      + Add tasks
-                    </button>
+                  {isOutDone ? (
+                    <div style={{
+                      background: "#dcfce7", color: "#15803d", border: "1px solid #86efac",
+                      borderRadius: 10, padding: "8px 16px", fontSize: 13, fontWeight: 600,
+                      textAlign: "center",
+                    }}>
+                      ✅ Clocked out<br />
+                      <span style={{ fontSize: 11, fontWeight: 400, color: "#166534" }}>{clockOutTime}</span>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="csc-now-label">Current time</div>
+                      <div className="csc-now-value"><LiveClock /></div>
+                      {hasTasksFilled && !taskFormVisible && (
+                        <button className="csc-edit-btn" onClick={handleEditIN}>✏️ Edit tasks</button>
+                      )}
+                      {!hasTasksFilled && !taskFormVisible && (
+                        <button
+                          className="csc-add-tasks-btn"
+                          onClick={() => {
+                            setShowTaskForm(true);
+                            setTimeout(() => {
+                              document.getElementById("task-form-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                            }, 100);
+                          }}
+                        >
+                          + Add tasks
+                        </button>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
             )}
 
-            {/* ── STEP 2: TASK FORM ─────────────────────────────────────────── */}
+            {/* STEP 2: TASK FORM */}
             {hasClockedIn && taskFormVisible && (
               <div className="card" id="task-form-section">
                 <div className="card-header in">
@@ -957,10 +1173,14 @@ const EmployeeDashboard: React.FC = () => {
                   <p className="section-label" style={{ marginBottom: 8 }}>Work mode</p>
                   <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
                     {["Office", "Remote", "Hybrid"].map((mode) => (
-                      <button key={mode} type="button" onClick={() => setWorkMode(mode)}
-                        style={{ flex: 1, padding: "8px 4px", fontSize: 13, fontWeight: 500,
+                      <button
+                        key={mode} type="button" onClick={() => setWorkMode(mode)}
+                        style={{
+                          flex: 1, padding: "8px 4px", fontSize: 13, fontWeight: 500,
                           border: "0.5px solid #ddd", borderRadius: 8, cursor: "pointer",
-                          ...wmStyle(mode, workMode) }}>
+                          ...wmStyle(mode, workMode),
+                        }}
+                      >
                         {mode === "Office" ? "🏢 " : mode === "Remote" ? "🏠 " : "🔀 "}{mode}
                       </button>
                     ))}
@@ -991,24 +1211,36 @@ const EmployeeDashboard: React.FC = () => {
 
                         <div className="input-group" style={{ marginBottom: 10 }}>
                           <label>Task title</label>
-                          <input placeholder="e.g. Employee Management System Development"
-                            value={task.title} onChange={(e) => updateInTask(i, "title", e.target.value)} required />
+                          <input
+                            placeholder="e.g. Employee Management System Development"
+                            value={task.title}
+                            onChange={(e) => updateInTask(i, "title", e.target.value)}
+                            required
+                          />
                         </div>
 
                         <div className="input-group" style={{ marginBottom: 10 }}>
                           <label>Task dependency (person / team)</label>
-                          <input placeholder="e.g. Jawahar, Design team..."
-                            value={task.dependency ?? ""} onChange={(e) => updateInTask(i, "dependency", e.target.value)} />
+                          <input
+                            placeholder="e.g. Jawahar, Design team..."
+                            value={task.dependency ?? ""}
+                            onChange={(e) => updateInTask(i, "dependency", e.target.value)}
+                          />
                         </div>
 
                         <div className="input-group" style={{ marginBottom: 12 }}>
                           <label>Description / paragraph</label>
-                          <textarea className="subpoint-input"
-                            style={{ width: "100%", minHeight: 64, padding: "8px 10px",
+                          <textarea
+                            className="subpoint-input"
+                            style={{
+                              width: "100%", minHeight: 64, padding: "8px 10px",
                               border: "1px solid #e0e0e0", borderRadius: 6,
-                              fontSize: "0.9rem", fontFamily: "inherit", resize: "vertical" }}
+                              fontSize: "0.9rem", fontFamily: "inherit", resize: "vertical",
+                            }}
                             placeholder="Write what you plan to do today on this task..."
-                            value={task.shortDesc} onChange={(e) => updateInTask(i, "shortDesc", e.target.value)} />
+                            value={task.shortDesc}
+                            onChange={(e) => updateInTask(i, "shortDesc", e.target.value)}
+                          />
                         </div>
 
                         <div className="subpoints-section">
@@ -1016,11 +1248,14 @@ const EmployeeDashboard: React.FC = () => {
                           {(task.subPoints || [""]).map((point: string, pi: number) => (
                             <div className="subpoint-row" key={pi}>
                               <span className="bullet">•</span>
-                              <input className="subpoint-input" placeholder="e.g. Developed login module..."
-                                value={point} onChange={(e) => updateSubPoint(i, pi, e.target.value)} />
+                              <input
+                                className="subpoint-input"
+                                placeholder="e.g. Developed login module..."
+                                value={point}
+                                onChange={(e) => updateSubPoint(i, pi, e.target.value)}
+                              />
                               {(task.subPoints || [""]).length > 1 && (
-                                <button type="button" className="remove-subpoint"
-                                  onClick={() => removeSubPoint(i, pi)}>✕</button>
+                                <button type="button" className="remove-subpoint" onClick={() => removeSubPoint(i, pi)}>✕</button>
                               )}
                             </div>
                           ))}
@@ -1050,9 +1285,11 @@ const EmployeeDashboard: React.FC = () => {
                                 </span>
                               )}
                               {(task.timeSegments || []).length > 1 && (
-                                <button type="button" className="remove-subpoint"
+                                <button
+                                  type="button" className="remove-subpoint"
                                   style={{ alignSelf: "flex-end", marginBottom: 4 }}
-                                  onClick={() => removeSegment(i, si)}>✕</button>
+                                  onClick={() => removeSegment(i, si)}
+                                >✕</button>
                               )}
                             </div>
                           ))}
@@ -1062,12 +1299,14 @@ const EmployeeDashboard: React.FC = () => {
                             </button>
                             <div className="input-group small" style={{ minWidth: 160 }}>
                               <label>Break (mins) — manual override</label>
-                              <input type="number" min="0" step="1"
+                              <input
+                                type="number" min="0" step="1"
                                 value={task.breakMinutes ?? 0}
                                 onChange={(e) => updateBreak(i, parseInt(e.target.value) || 0)}
                                 style={task.breakMinutes > 0 ? {
                                   background: "#FEF9C3", color: "#92400E", fontWeight: 600, borderColor: "#FBBF24",
-                                } : {}} />
+                                } : {}}
+                              />
                             </div>
                             {task.estimatedHours > 0 && (
                               <div className="time-calc-badge">
@@ -1084,14 +1323,18 @@ const EmployeeDashboard: React.FC = () => {
                                 if (dur <= 0) return null;
                                 return (
                                   <React.Fragment key={si}>
-                                    <div className="timeline-block" style={{ flex: dur }}
-                                      title={`Block ${si + 1}: ${seg.start}–${seg.end} (${Math.round(dur)}m)`}>
+                                    <div
+                                      className="timeline-block" style={{ flex: dur }}
+                                      title={`Block ${si + 1}: ${seg.start}–${seg.end} (${Math.round(dur)}m)`}
+                                    >
                                       <span>{seg.start}</span><span>{seg.end}</span>
                                     </div>
                                     {si < (task.timeSegments || []).length - 1 && (
-                                      <div className="timeline-break"
+                                      <div
+                                        className="timeline-break"
                                         style={{ flex: Math.max(task.breakMinutes || 15, 10) }}
-                                        title={`Break: ${task.breakMinutes || "?"}m`}>
+                                        title={`Break: ${task.breakMinutes || "?"}m`}
+                                      >
                                         ☕ {task.breakMinutes > 0 ? `${task.breakMinutes}m` : "break"}
                                       </div>
                                     )}
@@ -1105,13 +1348,17 @@ const EmployeeDashboard: React.FC = () => {
                         <div className="task-fields" style={{ marginTop: 12 }}>
                           <div className="input-group small">
                             <label>Est. hours (auto)</label>
-                            <input type="number" min="0" step="0.25" value={task.estimatedHours} readOnly
-                              style={{ background: "#f0f7ff", color: "#1565c0", fontWeight: 600, cursor: "not-allowed" }} />
+                            <input
+                              type="number" min="0" step="0.25" value={task.estimatedHours} readOnly
+                              style={{ background: "#f0f7ff", color: "#1565c0", fontWeight: 600, cursor: "not-allowed" }}
+                            />
                           </div>
                           <div className="input-group small">
                             <label>Target %</label>
-                            <input type="number" min="0" max="100" value={task.targetPercent}
-                              onChange={(e) => updateInTask(i, "targetPercent", parseInt(e.target.value))} />
+                            <input
+                              type="number" min="0" max="100" value={task.targetPercent}
+                              onChange={(e) => updateInTask(i, "targetPercent", parseInt(e.target.value))}
+                            />
                           </div>
                         </div>
                       </div>
@@ -1121,9 +1368,7 @@ const EmployeeDashboard: React.FC = () => {
                   <div className="form-actions">
                     <button type="button" className="add-task-btn" onClick={addInTask}>+ Add task</button>
                     {(isEditingIN || todayTask?.isClockOnly) && (
-                      <button type="button" className="cancel-edit-btn" onClick={handleCancelEditIN}>
-                        Cancel
-                      </button>
+                      <button type="button" className="cancel-edit-btn" onClick={handleCancelEditIN}>Cancel</button>
                     )}
                     <button type="submit" className="submit-btn in-btn" disabled={loading}>
                       {loading ? "Saving…" : isEditingIN ? "Save changes" : "Save tasks"}
@@ -1133,7 +1378,7 @@ const EmployeeDashboard: React.FC = () => {
               </div>
             )}
 
-            {/* ── TASKS SUBMITTED VIEW ──────────────────────────────────────── */}
+            {/* TASKS SUBMITTED VIEW */}
             {hasClockedIn && hasTasksFilled && !taskFormVisible && (
               <>
                 <div className="card">
@@ -1141,12 +1386,16 @@ const EmployeeDashboard: React.FC = () => {
                     <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
                       <span className="tag in-tag">🌅 IN update — submitted</span>
                       <span className="submitted-badge">✓ {todayTask?.inTime}</span>
-                      <span style={{ fontSize: 12, fontWeight: 500, padding: "3px 10px",
-                        borderRadius: 10, ...wmPillStyle(todayTask?.workMode || "Office") }}>
+                      <span style={{
+                        fontSize: 12, fontWeight: 500, padding: "3px 10px",
+                        borderRadius: 10, ...wmPillStyle(todayTask?.workMode || "Office"),
+                      }}>
                         {todayTask?.workMode || "Office"}
                       </span>
                     </div>
-                    <button className="edit-in-btn" onClick={handleEditIN}>✏️ Edit tasks</button>
+                    {!isOutDone && (
+                      <button className="edit-in-btn" onClick={handleEditIN}>✏️ Edit tasks</button>
+                    )}
                   </div>
 
                   <div className="update-preview">
@@ -1206,12 +1455,12 @@ const EmployeeDashboard: React.FC = () => {
                 <div className="card">
                   <div className="card-header out">
                     <span className="tag out-tag">
-                      🌆 {isEditingOUT ? "Edit OUT update" : "OUT update — evening"}
+                      🌆 {isEditingOUT ? "Edit OUT update" : isOutDone ? "OUT update — submitted" : "OUT update — evening"}
                     </span>
                     <div className="header-right">
                       {todayTask?.isOutSubmitted && (
                         <>
-                          <span className="submitted-badge">✓ {todayTask.outTime}</span>
+                          <span className="submitted-badge">✓ {todayTask.outTime || clockOutTime}</span>
                           {!isEditingOUT && (
                             <button className="edit-out-btn" onClick={handleEditOUT}>✏️ Edit OUT</button>
                           )}
@@ -1219,6 +1468,26 @@ const EmployeeDashboard: React.FC = () => {
                       )}
                     </div>
                   </div>
+
+                  {/* Clock-out summary banner — shown after submission */}
+                  {isOutDone && !isEditingOUT && (
+                    <div style={{
+                      display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap",
+                      background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10,
+                      padding: "12px 18px", margin: "12px 0", fontSize: 13,
+                    }}>
+                      <span style={{ fontSize: 22 }}>✅</span>
+                      <div>
+                        <div style={{ fontWeight: 700, color: "#15803d", fontSize: 14 }}>
+                          Day complete — clocked out at {todayTask?.outTime || clockOutTime}
+                        </div>
+                        <div style={{ color: "#166534", marginTop: 2 }}>
+                          🌅 IN {todayTask?.inTime} &nbsp;·&nbsp; 🌆 OUT {todayTask?.outTime || clockOutTime}
+                          &nbsp;·&nbsp; ⏱ {overallHours}h productive
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   <BreakLogPanel log={breakLog} />
 
@@ -1268,8 +1537,7 @@ const EmployeeDashboard: React.FC = () => {
                               <div className="out-grid">
                                 <div className="input-group small">
                                   <label>Status</label>
-                                  <select value={task.status}
-                                    onChange={(e) => updateOutTask(i, "status", e.target.value)} disabled={locked}>
+                                  <select value={task.status} onChange={(e) => updateOutTask(i, "status", e.target.value)} disabled={locked}>
                                     {STATUS_OPTIONS.map((s) => <option key={s}>{s}</option>)}
                                   </select>
                                 </div>
@@ -1302,12 +1570,16 @@ const EmployeeDashboard: React.FC = () => {
                               <div className="history-overall-bar" style={{ marginTop: 10, alignItems: "center", gap: 12 }}>
                                 <span style={{ fontSize: "0.8rem", color: "#555" }}>Productivity score:</span>
                                 <div style={{ flex: 1, height: 6, background: "#eee", borderRadius: 3 }}>
-                                  <div style={{ height: 6, borderRadius: 3, transition: "width .3s",
+                                  <div style={{
+                                    height: 6, borderRadius: 3, transition: "width .3s",
                                     background: taskScore >= 70 ? "#639922" : taskScore >= 40 ? "#EF9F27" : "#E24B4A",
-                                    width: `${taskScore}%` }} />
+                                    width: `${taskScore}%`,
+                                  }} />
                                 </div>
-                                <strong style={{ fontSize: "0.85rem",
-                                  color: taskScore >= 70 ? "#27500A" : taskScore >= 40 ? "#633806" : "#A32D2D" }}>
+                                <strong style={{
+                                  fontSize: "0.85rem",
+                                  color: taskScore >= 70 ? "#27500A" : taskScore >= 40 ? "#633806" : "#A32D2D",
+                                }}>
                                   {taskScore}%
                                 </strong>
                               </div>
@@ -1319,16 +1591,21 @@ const EmployeeDashboard: React.FC = () => {
 
                     <div className="overall-row">
                       <div className="input-group small">
-                        <label>Overall hours</label>
-                        <input type="number" min="0" step="0.5" value={overallHours}
+                        <label>Overall hours {!isOutDone && <span style={{ fontSize: 10, color: "#9ca3af" }}>(auto on submit)</span>}</label>
+                        <input
+                          type="number" min="0" step="0.25" value={overallHours}
                           onChange={(e) => setOverallHours(parseFloat(e.target.value))}
-                          disabled={(todayTask?.isOutSubmitted ?? false) && !isEditingOUT} />
+                          disabled={(todayTask?.isOutSubmitted ?? false) && !isEditingOUT}
+                          style={overallHours > 0 ? { background: "#f0fdf4", color: "#15803d", fontWeight: 600 } : {}}
+                        />
                       </div>
                       <div className="input-group small">
                         <label>Overall score</label>
-                        <input placeholder="e.g. 8/10" value={overallScore}
+                        <input
+                          placeholder="e.g. 8/10" value={overallScore}
                           onChange={(e) => setOverallScore(e.target.value)}
-                          disabled={(todayTask?.isOutSubmitted ?? false) && !isEditingOUT} />
+                          disabled={(todayTask?.isOutSubmitted ?? false) && !isEditingOUT}
+                        />
                       </div>
                     </div>
 
@@ -1338,7 +1615,11 @@ const EmployeeDashboard: React.FC = () => {
                       )}
                       {(!(todayTask?.isOutSubmitted) || isEditingOUT) && (
                         <button type="submit" className="submit-btn out-btn" disabled={loading}>
-                          {loading ? "Saving…" : isEditingOUT ? "Save changes" : "Submit OUT update"}
+                          {loading
+                            ? "Saving…"
+                            : isEditingOUT
+                              ? "Save changes"
+                              : "🔴 Clock Out & Submit"}
                         </button>
                       )}
                     </div>
@@ -1347,7 +1628,7 @@ const EmployeeDashboard: React.FC = () => {
               </>
             )}
 
-            {/* ── CLOCK-IN PENDING — waiting for tasks ─────────────────────── */}
+            {/* CLOCK-IN PENDING — waiting for tasks */}
             {hasClockedIn && !hasTasksFilled && !taskFormVisible && (
               <div className="card tasks-pending-card">
                 <div className="tpc-inner">
@@ -1373,7 +1654,7 @@ const EmployeeDashboard: React.FC = () => {
           </>
         )}
 
-        {/* HISTORY TAB */}
+        {/* ── HISTORY TAB ── */}
         {activeTab === "history" && (
           <div className="history-list">
             {pastTasks.length === 0 ? (
@@ -1519,7 +1800,7 @@ const EmployeeDashboard: React.FC = () => {
           </div>
         )}
 
-        {/* LEAVE TAB */}
+        {/* ── LEAVE TAB ── */}
         {activeTab === "leave" && (
           <div>
             <div className="card">
@@ -1552,8 +1833,10 @@ const EmployeeDashboard: React.FC = () => {
                 )}
                 <div className="input-group" style={{ marginBottom: 16 }}>
                   <label>Reason</label>
-                  <input placeholder="Enter reason for leave..." value={leaveReason}
-                    onChange={(e) => setLeaveReason(e.target.value)} required />
+                  <input
+                    placeholder="Enter reason for leave..." value={leaveReason}
+                    onChange={(e) => setLeaveReason(e.target.value)} required
+                  />
                 </div>
                 {leaveMessage.text && (
                   <p className={leaveMessage.type === "success" ? "success-msg" : "error-msg"}>{leaveMessage.text}</p>
