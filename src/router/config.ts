@@ -66,6 +66,8 @@ const routes = [
   { path: "/Staff-Agumentation", exact: true, component: "Staff-Agumentation" },
 
   { path: "/Team-Wall", exact: true, component: "TeamWall" },
+
+  { path: "/chat", exact: true, component: "PrivateChat" },          // ← NEW
 ];
 
 export default routes;
