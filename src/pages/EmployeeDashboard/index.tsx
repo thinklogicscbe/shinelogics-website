@@ -1025,6 +1025,9 @@ const EmployeeDashboard: React.FC = () => {
           <button className="tab team-wall-tab" onClick={() => navigate("/Team-Wall")}>
             🏆 Team Wall
           </button>
+          <button className="tab private-chat-tab" onClick={() => navigate("/chat")}>
+            💬 Private Chat
+          </button>
         </div>
 
         {message.text && (

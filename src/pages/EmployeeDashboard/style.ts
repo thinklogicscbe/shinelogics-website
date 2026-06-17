@@ -115,6 +115,7 @@ export const DashboardContainer = styled.div`
     display: flex;
     gap: 8px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
   }
 
   .tab {
@@ -149,6 +150,20 @@ export const DashboardContainer = styled.div`
     &:hover {
       background: linear-gradient(135deg, #6d28d9, #5b21b6) !important;
       border-color: #6d28d9 !important;
+      color: #fff !important;
+      opacity: 0.95;
+    }
+  }
+
+  .private-chat-tab {
+    background: linear-gradient(135deg, #0ea5e9, #0284c7);
+    border-color: #0ea5e9 !important;
+    color: #fff !important;
+    font-weight: 600;
+
+    &:hover {
+      background: linear-gradient(135deg, #0284c7, #0369a1) !important;
+      border-color: #0284c7 !important;
       color: #fff !important;
       opacity: 0.95;
     }
