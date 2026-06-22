@@ -240,13 +240,21 @@ const PrivateChat: React.FC = () => {
   const [emojiCategory,setEmojiCategory]= useState(0);
   const [mobileChatOpen,setMobileChatOpen]=useState(false);
 
+  // Tracks whether the *next* messages render should auto-scroll.
+  // We only want this true right after opening a chat or sending/receiving
+  // a message while already scrolled near the bottom — never as a side
+  // effect of typing in the textarea or clicking a contact in a way that
+  // yanks the whole page.
+  const shouldAutoScrollRef = useRef(false);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef       = useRef<HTMLTextAreaElement>(null);
-  const typingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const emojiPickerRef = useRef<HTMLDivElement>(null);
-  const socketRef      = useRef<Socket | null>(null);
-  const meRef          = useRef<Me | null>(null);
-  const activeChatRef  = useRef<Employee | null>(null);
+  const msgAreaRef      = useRef<HTMLDivElement>(null);
+  const inputRef        = useRef<HTMLTextAreaElement>(null);
+  const typingTimerRef  = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const emojiPickerRef  = useRef<HTMLDivElement>(null);
+  const socketRef       = useRef<Socket | null>(null);
+  const meRef           = useRef<Me | null>(null);
+  const activeChatRef   = useRef<Employee | null>(null);
 
   useEffect(() => { meRef.current = me; },              [me]);
   useEffect(() => { activeChatRef.current = activeChat; }, [activeChat]);
@@ -276,6 +284,35 @@ const PrivateChat: React.FC = () => {
     if (!emp.companyId) { alert("No company assigned."); navigate("/Employee"); return; }
     setMe(emp);
   }, [navigate]);
+
+  // ── Scroll helpers ───────────────────────────────────────────────────────
+  // Scrolls ONLY the message list container — never the page, never an
+  // ancestor. Using element.scrollTo keeps the scroll fully contained,
+  // unlike scrollIntoView which can bubble up to outer scroll containers.
+  const scrollMsgAreaToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
+    const el = msgAreaRef.current;
+    if (!el) return;
+    el.scrollTo({ top: el.scrollHeight, behavior });
+  }, []);
+
+  // Returns true if the user is already near the bottom of the message list
+  // (within ~120px) — used to decide whether a new incoming message should
+  // auto-scroll, so we don't yank the view if someone is reading older chat.
+  const isNearBottom = useCallback(() => {
+    const el = msgAreaRef.current;
+    if (!el) return true;
+    return el.scrollHeight - el.scrollTop - el.clientHeight < 120;
+  }, []);
+
+  // Fires whenever `messages` changes. Scrolls smoothly, but only the chat
+  // pane itself, and only when appropriate (see shouldAutoScrollRef / isNearBottom).
+  useEffect(() => {
+    if (messages.length === 0) return;
+    if (shouldAutoScrollRef.current || isNearBottom()) {
+      scrollMsgAreaToBottom("smooth");
+    }
+    shouldAutoScrollRef.current = false;
+  }, [messages, isNearBottom, scrollMsgAreaToBottom]);
 
   // ── Socket ────────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -308,6 +345,15 @@ const PrivateChat: React.FC = () => {
     const onMessage = (msg: Message) => {
       const currentMe         = meRef.current;
       const currentActiveChat = activeChatRef.current;
+
+      // If this message belongs to the open conversation, allow auto-scroll
+      // (the effect above will only actually scroll if we're near bottom,
+      // or if it's our own outgoing message).
+      const belongsToOpenChat =
+        currentActiveChat &&
+        (msg.sender._id === currentActiveChat._id || (currentMe && msg.sender._id === currentMe.id));
+
+      if (belongsToOpenChat) shouldAutoScrollRef.current = true;
 
       setMessages((prev) => {
         if (prev.find((m) => m._id === msg._id)) return prev;
@@ -379,12 +425,6 @@ const PrivateChat: React.FC = () => {
       .then((r) => r.json()).then((d) => { if (d.success) setUnreadCounts(d.result.counts); });
   }, [me]);
 
-  // ── Scroll ────────────────────────────────────────────────────────────────
-  const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
-    setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior }), 60);
-  }, []);
-//   useEffect(() => { scrollToBottom(); }, [messages, scrollToBottom]);
-
   // ── Open chat ─────────────────────────────────────────────────────────────
   const openChat = useCallback(async (emp: Employee) => {
     if (!me) return;
@@ -398,10 +438,14 @@ const PrivateChat: React.FC = () => {
     try {
       const r = await fetch(`${BASE_URL}/chat/messages?senderId=${me.id}&receiverId=${emp._id}&companyId=${me.companyId}`);
       const d = await r.json();
-      if (d.success) { setMessages(d.result.messages); scrollToBottom("auto"); }
+      if (d.success) {
+        setMessages(d.result.messages);
+        // Jump straight to bottom (no smooth animation) once history loads,
+        // scoped to the chat pane only.
+        requestAnimationFrame(() => scrollMsgAreaToBottom("auto"));
+      }
     } catch (err) { console.error(err); }
-    // setTimeout(() => inputRef.current?.focus(), 100);
-  }, [me, scrollToBottom]);
+  }, [me, scrollMsgAreaToBottom]);
 
   // ── Send ──────────────────────────────────────────────────────────────────
   const handleSend = useCallback(() => {
@@ -409,10 +453,11 @@ const PrivateChat: React.FC = () => {
     if (!text.trim() || !me || !activeChat || sending || !socket) return;
     setSending(true);
     playSound("send"); // ✅ play send sound
+    shouldAutoScrollRef.current = true;
     socket.emit("chat:send", { senderId: me.id, receiverId: activeChat._id, companyId: me.companyId, text: text.trim() });
     socket.emit("chat:typing", { senderId: me.id, receiverId: activeChat._id, isTyping: false });
-    setText(""); setSending(false); setShowEmoji(false); scrollToBottom();
-  }, [text, me, activeChat, sending, scrollToBottom]);
+    setText(""); setSending(false); setShowEmoji(false);
+  }, [text, me, activeChat, sending]);
 
   // ── Typing ────────────────────────────────────────────────────────────────
   const handleTyping = (val: string) => {
@@ -577,7 +622,7 @@ const PrivateChat: React.FC = () => {
                 </div>
               </PanelHeader>
 
-              <MsgArea>
+              <MsgArea ref={msgAreaRef}>
                 {grouped.length === 0 && (
                   <NoMessages>
                     <div className="no-msg-avatar"><AvatarEl name={activeChat.firstName} photo={activeChat.profilePhoto} size={64} /></div>
@@ -679,10 +724,12 @@ const PrivateChat: React.FC = () => {
 export default PrivateChat;
 
 // ── Global ────────────────────────────────────────────────────────────────────
-const GlobalStyles = createGlobalStyle`*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }`;
+const GlobalStyles = createGlobalStyle`
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+`;
 
 // ── Animations ────────────────────────────────────────────────────────────────
-const bounce = keyframes`
+const bounce = keyframes`   
   0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
   40%            { transform: translateY(-5px); opacity: 1; }
 `;
@@ -697,7 +744,9 @@ const slideIn = keyframes`
 
 // ── Layout ────────────────────────────────────────────────────────────────────
 const Wrapper = styled.div`
-  display: flex; height: 100vh; max-height: 100vh;
+  display: flex;
+  height: calc(100vh - 64px);   /* ← was: height: 100% */
+  max-height: calc(100vh - 64px);
   background: #f0f2f5;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow: hidden;
@@ -761,7 +810,13 @@ const ContactRow = styled.div<{ $active: boolean }>`
 `;
 
 const Panel = styled.div<{ $mobileOpen?: boolean }>`
-  flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #f0f2f5;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f0f2f5;
+  min-height: 0;     /* ← ADD THIS */
+  min-width: 0;
   @media (max-width: 768px) {
     position: absolute; inset: 0; z-index: 10;
     display: ${(p) => (p.$mobileOpen ? "flex" : "none")};
@@ -802,6 +857,7 @@ const HeaderTag = styled.span`
 const MsgArea = styled.div`
   flex: 1; overflow-y: auto; padding: 16px 16px 8px;
   display: flex; flex-direction: column; gap: 1px; background: #f0f2f5;
+  overscroll-behavior: contain;
   &::-webkit-scrollbar { width: 4px; }
   &::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
 `;

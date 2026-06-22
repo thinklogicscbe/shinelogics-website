@@ -59,9 +59,6 @@ const parseInTime = (inTime: string): Date | null => {
   } catch { return null; }
 };
 
-// ── localStorage helpers ──────────────────────────────────────────────────────
-const breakStorageKey = (slotId: string) => `break_${slotId}_${today}`;
-
 // ── Interfaces ────────────────────────────────────────────────────────────────
 interface TimeSegment { start: string; end: string; }
 
@@ -99,6 +96,7 @@ interface TaskDoc {
   isClockOnly:    boolean;
   inTime:         string;
   outTime:        string;
+  breakState?:    Record<string, ServerBreakSlotState>;
 }
 
 interface EmployeeUser {
@@ -117,10 +115,11 @@ interface BreakSession {
   mins:     number;
 }
 
-interface SlotPersistedState {
+// ── Server-authoritative break slot state (from Task.breakState) ─────────────
+interface ServerBreakSlotState {
+  runningStartIso: string | null;
   elapsedMs:       number;
   sessions:        BreakSession[];
-  runningStartIso: string | null;
 }
 
 const STATUS_OPTIONS = [
@@ -171,134 +170,40 @@ export interface BreakLogEntry {
   totalMins: number;
 }
 
-// ── Break Timer ───────────────────────────────────────────────────────────────
+const emptySlotState = (): ServerBreakSlotState => ({
+  runningStartIso: null, elapsedMs: 0, sessions: [],
+});
+
+// ── Break Timer (server-authoritative) ────────────────────────────────────────
 interface BreakTimerProps {
-  slot:      BreakSlot;
-  onUpdate:  (id: string, takenMins: number, sessions: BreakSession[]) => void;
-  disabled?: boolean; // locked after OUT submitted
+  slot:       BreakSlot;
+  state:      ServerBreakSlotState;
+  onStart:    (slotId: string) => void;
+  onStop:     (slotId: string) => void;
+  disabled?:  boolean; // locked after OUT submitted
+  busy?:      boolean; // request in flight
 }
 
-const BreakTimer: React.FC<BreakTimerProps> = ({ slot, onUpdate, disabled }) => {
-  const key = breakStorageKey(slot.id);
+const BreakTimer: React.FC<BreakTimerProps> = ({ slot, state, onStart, onStop, disabled, busy }) => {
+  const running      = !!state.runningStartIso;
+  const sessionStart = state.runningStartIso ? new Date(state.runningStartIso) : null;
 
-  const initState = () => {
-    try {
-      const raw = localStorage.getItem(key);
-      if (!raw) return { elapsedMs: 0, sessions: [] as BreakSession[], running: false, sessionStart: null as Date | null };
-      const saved: SlotPersistedState = JSON.parse(raw);
-      let elapsedMs = saved.elapsedMs ?? 0;
-      let running = false;
-      let sessionStart: Date | null = null;
-      if (saved.runningStartIso) {
-        sessionStart = new Date(saved.runningStartIso);
-        running = true;
-      }
-      return { elapsedMs, sessions: saved.sessions ?? [], running, sessionStart };
-    } catch {
-      return { elapsedMs: 0, sessions: [] as BreakSession[], running: false, sessionStart: null as Date | null };
-    }
-  };
-
-  const init = initState();
-
-  const [running, setRunning]               = useState(init.running);
-  const [elapsed, setElapsed]               = useState(init.elapsedMs);
-  const [sessionStart, setSessionStart]     = useState<Date | null>(init.sessionStart);
-  const [sessionElapsed, setSessionElapsed] = useState(
-    init.sessionStart ? Date.now() - init.sessionStart.getTime() : 0
-  );
-  const [sessions, setSessions] = useState<BreakSession[]>(init.sessions);
-  const tickRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const persist = useCallback((elapsedMs: number, sess: BreakSession[], runningStart: Date | null) => {
-    const data: SlotPersistedState = {
-      elapsedMs,
-      sessions: sess,
-      runningStartIso: runningStart ? runningStart.toISOString() : null,
-    };
-    localStorage.setItem(key, JSON.stringify(data));
-  }, [key]);
-
-  // Stop live timer if disabled (OUT submitted)
+  const [tick, setTick] = useState(0);
   useEffect(() => {
-    if (disabled && running && sessionStart) {
-      const endTime    = new Date();
-      const durMs      = endTime.getTime() - sessionStart.getTime();
-      const mins       = Math.max(1, Math.round(durMs / 60000));
-      const newElapsed = elapsed + durMs;
-      const newSession: BreakSession = {
-        startIso: sessionStart.toISOString(),
-        endIso:   endTime.toISOString(),
-        mins,
-      };
-      const newSessions = [...sessions, newSession];
-      setRunning(false);
-      setSessionStart(null);
-      setSessionElapsed(0);
-      setElapsed(newElapsed);
-      setSessions(newSessions);
-      persist(newElapsed, newSessions, null);
-      onUpdate(slot.id, Math.round(newElapsed / 60000), newSessions);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [disabled]);
+    if (!running) return;
+    const id = setInterval(() => setTick((t) => t + 1), 500);
+    return () => clearInterval(id);
+  }, [running]);
 
-  useEffect(() => {
-    if (running && sessionStart) {
-      tickRef.current = setInterval(
-        () => setSessionElapsed(Date.now() - sessionStart.getTime()),
-        500
-      );
-    } else {
-      if (tickRef.current) clearInterval(tickRef.current);
-    }
-    return () => { if (tickRef.current) clearInterval(tickRef.current); };
-  }, [running, sessionStart]);
-
-  useEffect(() => {
-    const liveGap = init.sessionStart ? Date.now() - init.sessionStart.getTime() : 0;
-    const totalMs = init.elapsedMs + liveGap;
-    if (totalMs > 0) {
-      onUpdate(slot.id, Math.round(totalMs / 60000), init.sessions);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const handleStart = () => {
-    if (disabled) return;
-    const start = new Date();
-    setSessionStart(start);
-    setSessionElapsed(0);
-    setRunning(true);
-    persist(elapsed, sessions, start);
-  };
-
-  const handleStop = () => {
-    if (!sessionStart) return;
-    const endTime    = new Date();
-    const durMs      = endTime.getTime() - sessionStart.getTime();
-    const mins       = Math.max(1, Math.round(durMs / 60000));
-    const newElapsed = elapsed + durMs;
-    const newSession: BreakSession = {
-      startIso: sessionStart.toISOString(),
-      endIso:   endTime.toISOString(),
-      mins,
-    };
-    const newSessions = [...sessions, newSession];
-    setRunning(false);
-    setSessionStart(null);
-    setSessionElapsed(0);
-    setElapsed(newElapsed);
-    setSessions(newSessions);
-    persist(newElapsed, newSessions, null);
-    onUpdate(slot.id, Math.round(newElapsed / 60000), newSessions);
-  };
-
-  const displayMs   = running ? elapsed + sessionElapsed : elapsed;
-  const totalTaken  = Math.round(displayMs / 60000);
+  const liveGap = running && sessionStart ? Date.now() - sessionStart.getTime() : 0;
+  const displayMs  = state.elapsedMs + liveGap;
+  const totalTaken = Math.round(displayMs / 60000);
   const extra       = totalTaken - slot.allotted;
   const withinLimit = extra <= 0;
-  const hasTaken    = sessions.length > 0 || running;
+  const hasTaken    = state.sessions.length > 0 || running;
+
+  // tick is read so the effect re-renders this component each 500ms while running
+  void tick;
 
   return (
     <div className="break-slot-card" style={{ borderColor: slot.color.border, opacity: disabled ? 0.75 : 1 }}>
@@ -355,26 +260,26 @@ const BreakTimer: React.FC<BreakTimerProps> = ({ slot, onUpdate, disabled }) => 
               className="bsc-start-btn"
               style={{
                 background: slot.color.bg, borderColor: slot.color.border, color: slot.color.text,
-                opacity: disabled ? 0.5 : 1, cursor: disabled ? "not-allowed" : "pointer",
+                opacity: (disabled || busy) ? 0.5 : 1, cursor: (disabled || busy) ? "not-allowed" : "pointer",
               }}
-              onClick={handleStart}
-              disabled={!!disabled}
+              onClick={() => onStart(slot.id)}
+              disabled={!!disabled || !!busy}
             >
               ▶ Start {slot.label.toLowerCase()}
             </button>
           : <button
               type="button"
               className="bsc-stop-btn"
-              onClick={handleStop}
-              disabled={!!disabled}
+              onClick={() => onStop(slot.id)}
+              disabled={!!disabled || !!busy}
             >
               ■ Stop break
             </button>}
       </div>
 
-      {sessions.length > 0 && (
+      {state.sessions.length > 0 && (
         <div className="bsc-log">
-          {sessions.map((s, i) => (
+          {state.sessions.map((s, i) => (
             <div className="bsc-log-item" key={i}>
               <span className="bsc-log-time">
                 {fmtClockTime(new Date(s.startIso))} – {fmtClockTime(new Date(s.endIso))}
@@ -390,47 +295,86 @@ const BreakTimer: React.FC<BreakTimerProps> = ({ slot, onUpdate, disabled }) => 
   );
 };
 
-// ── Break Tracker Panel ───────────────────────────────────────────────────────
+// ── Break Tracker Panel (server-authoritative) ────────────────────────────────
 interface BreakTrackerProps {
+  employeeId:    string;
+  breakState:    Record<string, ServerBreakSlotState>;
   onBreakUpdate: (breakTotals: Record<string, number>, breakLog: BreakLogEntry[]) => void;
+  onRefresh:     () => Promise<void>;
   disabled?:     boolean;
 }
 
-const BreakTracker: React.FC<BreakTrackerProps> = ({ onBreakUpdate, disabled }) => {
-  const [breakTotals, setBreakTotals]   = useState<Record<string, number>>({ morning: 0, lunch: 0, evening: 0 });
-  const [, setBreakSessions]            = useState<Record<string, BreakSession[]>>({ morning: [], lunch: [], evening: [] });
+const BreakTracker: React.FC<BreakTrackerProps> = ({ employeeId, breakState, onBreakUpdate, onRefresh, disabled }) => {
+  const [busySlot, setBusySlot] = useState<string | null>(null);
 
-  // Purge previous day's break keys
+  // Push totals/log up to parent whenever breakState changes (for IN-task break-split + OUT submit)
   useEffect(() => {
-    const keysToRemove: string[] = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const k = localStorage.key(i);
-      if (k?.startsWith("break_") && !k.includes(today)) keysToRemove.push(k);
-    }
-    keysToRemove.forEach((k) => localStorage.removeItem(k));
-  }, []);
-
-  const handleSlotUpdate = (id: string, takenMins: number, sessions: BreakSession[]) => {
-    setBreakTotals((prevTotals) => {
-      const updatedTotals = { ...prevTotals, [id]: takenMins };
-      setBreakSessions((prevSess) => {
-        const updatedSess = { ...prevSess, [id]: sessions };
-        const log: BreakLogEntry[] = BREAK_SLOTS.map((slot) => ({
-          slotId:    slot.id,
-          slotLabel: slot.label,
-          emoji:     slot.emoji,
-          sessions:  updatedSess[slot.id] ?? [],
-          totalMins: updatedTotals[slot.id] ?? 0,
-        })).filter((e) => e.totalMins > 0);
-        onBreakUpdate(updatedTotals, log);
-        return updatedSess;
-      });
-      return updatedTotals;
+    const totals: Record<string, number> = {};
+    const log: BreakLogEntry[] = [];
+    BREAK_SLOTS.forEach((slot) => {
+      const s = breakState[slot.id] || emptySlotState();
+      const liveGap = s.runningStartIso ? Date.now() - new Date(s.runningStartIso).getTime() : 0;
+      const totalMs = s.elapsedMs + liveGap;
+      const mins = Math.round(totalMs / 60000);
+      totals[slot.id] = mins;
+      if (mins > 0) {
+        log.push({
+          slotId: slot.id, slotLabel: slot.label, emoji: slot.emoji,
+          sessions: s.sessions, totalMins: mins,
+        });
+      }
     });
+    onBreakUpdate(totals, log);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [breakState]);
+
+  const handleStart = async (slotId: string) => {
+    if (!employeeId || busySlot) return;
+    setBusySlot(slotId);
+    try {
+      const res = await fetch(`${BASE_URL}/tasks/break/start`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ employeeId, date: today, slotId }),
+      });
+      const result = await res.json();
+      if (result.success) await onRefresh();
+      else alert(result.message || "Could not start break");
+    } catch {
+      alert("Server error starting break");
+    } finally {
+      setBusySlot(null);
+    }
   };
 
+  const handleStop = async (slotId: string) => {
+    if (!employeeId || busySlot) return;
+    setBusySlot(slotId);
+    try {
+      const res = await fetch(`${BASE_URL}/tasks/break/stop`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ employeeId, date: today, slotId }),
+      });
+      const result = await res.json();
+      if (result.success) await onRefresh();
+      else alert(result.message || "Could not stop break");
+    } catch {
+      alert("Server error stopping break");
+    } finally {
+      setBusySlot(null);
+    }
+  };
+
+  const totals = BREAK_SLOTS.reduce((acc, slot) => {
+    const s = breakState[slot.id] || emptySlotState();
+    const liveGap = s.runningStartIso ? Date.now() - new Date(s.runningStartIso).getTime() : 0;
+    acc[slot.id] = Math.round((s.elapsedMs + liveGap) / 60000);
+    return acc;
+  }, {} as Record<string, number>);
+
   const totalAllotted = BREAK_SLOTS.reduce((s, b) => s + b.allotted, 0);
-  const totalTaken    = Object.values(breakTotals).reduce((s, v) => s + v, 0);
+  const totalTaken    = Object.values(totals).reduce((s, v) => s + v, 0);
   const totalExtra    = Math.max(totalTaken - totalAllotted, 0);
   const totalSaved    = Math.max(totalAllotted - totalTaken, 0);
 
@@ -446,7 +390,15 @@ const BreakTracker: React.FC<BreakTrackerProps> = ({ onBreakUpdate, disabled }) 
       </div>
       <div className="btp-slots">
         {BREAK_SLOTS.map((slot) => (
-          <BreakTimer key={slot.id} slot={slot} onUpdate={handleSlotUpdate} disabled={disabled} />
+          <BreakTimer
+            key={slot.id}
+            slot={slot}
+            state={breakState[slot.id] || emptySlotState()}
+            onStart={handleStart}
+            onStop={handleStop}
+            disabled={disabled}
+            busy={busySlot === slot.id}
+          />
         ))}
       </div>
     </div>
@@ -555,6 +507,11 @@ const EmployeeDashboard: React.FC = () => {
   const [message, setMessage] = useState({ text: "", type: "" });
 
   const [breakLog,   setBreakLog]   = useState<BreakLogEntry[]>([]);
+  // ── Server-authoritative break state for today, keyed by slotId ───────────
+  const [breakState, setBreakState] = useState<Record<string, ServerBreakSlotState>>({
+    morning: emptySlotState(), lunch: emptySlotState(), evening: emptySlotState(),
+  });
+
   // ── NEW: track whether OUT has been submitted today ──────────────────────
   const [isOutDone,  setIsOutDone]  = useState(false);
   // Captured clock-out time displayed after submission
@@ -567,12 +524,13 @@ const EmployeeDashboard: React.FC = () => {
   const [leaveReason,  setLeaveReason]  = useState("");
   const [leaveLoading, setLeaveLoading] = useState(false);
   const [leaveMessage, setLeaveMessage] = useState({ text: "", type: "" });
+  
 
   // Keep latest breakLog accessible inside handleOUTSubmit without stale closure
   const breakLogRef = useRef<BreakLogEntry[]>([]);
   useEffect(() => { breakLogRef.current = breakLog; }, [breakLog]);
 
-  // ── Break tracker callback ──────────────────────────────────────────────────
+  // ── Break tracker callback: also auto-split break minutes across IN tasks ─
   const handleBreakUpdate = useCallback(
     (breakTotals: Record<string, number>, log: BreakLogEntry[]) => {
       setBreakLog(log);
@@ -602,6 +560,25 @@ const EmployeeDashboard: React.FC = () => {
     []
   );
 
+  // ── Normalize breakState coming from the API (Map → plain object) ─────────
+  const normaliseBreakState = (raw: any): Record<string, ServerBreakSlotState> => {
+    const result: Record<string, ServerBreakSlotState> = {
+      morning: emptySlotState(), lunch: emptySlotState(), evening: emptySlotState(),
+    };
+    if (!raw) return result;
+    BREAK_SLOTS.forEach((slot) => {
+      const s = raw[slot.id];
+      if (s) {
+        result[slot.id] = {
+          runningStartIso: s.runningStartIso ?? null,
+          elapsedMs:       s.elapsedMs ?? 0,
+          sessions:        Array.isArray(s.sessions) ? s.sessions : [],
+        };
+      }
+    });
+    return result;
+  };
+
   // ── Fetchers ────────────────────────────────────────────────────────────────
   const fetchTodayTask = useCallback(async (empId: string) => {
     try {
@@ -610,6 +587,7 @@ const EmployeeDashboard: React.FC = () => {
       if (result.success && result.result?.tasks?.length > 0) {
         const task = result.result.tasks[0];
         setTodayTask(task);
+        setBreakState(normaliseBreakState(task.breakState));
         // Seed isOutDone from DB so freeze persists on reload
         setIsOutDone(task.isOutSubmitted ?? false);
         if (task.isOutSubmitted && task.outTime) {
@@ -630,6 +608,8 @@ const EmployeeDashboard: React.FC = () => {
         );
         setOverallHours(task.overallHours || 0);
         setOverallScore(task.overallScore  || "");
+      } else {
+        setBreakState({ morning: emptySlotState(), lunch: emptySlotState(), evening: emptySlotState() });
       }
     } catch (err) { console.error(err); }
   }, []);
@@ -659,6 +639,13 @@ const EmployeeDashboard: React.FC = () => {
     fetchPastTasks(emp.id);
     fetchLeaves(emp.id);
   }, [navigate, fetchTodayTask, fetchPastTasks, fetchLeaves]);
+
+  // Refresh just today's task (used after break start/stop) without
+  // disturbing other UI state like task form visibility etc.
+  const refreshBreakState = useCallback(async () => {
+    if (!employee) return;
+    await fetchTodayTask(employee.id);
+  }, [employee, fetchTodayTask]);
 
   // ── Step 1: Clock In ────────────────────────────────────────────────────────
   const handleClockIn = async () => {
@@ -829,9 +816,34 @@ const EmployeeDashboard: React.FC = () => {
   };
 
   // ── OUT handlers ────────────────────────────────────────────────────────────
+  // ✅ Auto-calculates actualHours from actualStart/actualEnd, and auto-sums
+  //    overallHours from every task's actualHours.
   const updateOutTask = (i: number, field: string, value: any) => {
-    const u = [...outTasks]; (u[i] as any)[field] = value; setOutTasks(u);
+    const u = [...outTasks];
+    (u[i] as any)[field] = value;
+
+    // Auto-calc actualHours from actualStart & actualEnd
+    if (field === "actualStart" || field === "actualEnd") {
+      const start = field === "actualStart" ? value : (u[i] as any).actualStart;
+      const end   = field === "actualEnd"   ? value : (u[i] as any).actualEnd;
+      if (start && end) {
+        const diffMins = toMinutes(end) - toMinutes(start);
+        if (diffMins > 0) {
+          const breakMins  = (u[i] as any).breakMinutes || 0;
+          const netMins    = Math.max(diffMins - breakMins, 0);
+          const roundedHrs = Math.round((netMins / 60) * 4) / 4;
+          u[i] = { ...u[i], actualHours: roundedHrs } as any;
+        }
+      }
+    }
+
+    setOutTasks(u);
+
+    // Auto-sum overallHours = sum of all tasks' actualHours
+    const total = u.reduce((sum, t) => sum + (t.actualHours || 0), 0);
+    setOverallHours(Math.round(total * 4) / 4);
   };
+
   const handleEditOUT = () => { setIsEditingOUT(true); setMessage({ text: "", type: "" }); };
   const handleCancelEditOUT = () => {
     if (!todayTask) return;
@@ -851,7 +863,7 @@ const EmployeeDashboard: React.FC = () => {
     setMessage({ text: "", type: "" });
   };
 
-  // ── Step 3: Submit OUT (with clock-out + auto overall hours) ────────────────
+  // ── Step 3: Submit OUT (with clock-out time) ─────────────────────────────────
   const handleOUTSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!todayTask) return;
@@ -860,22 +872,9 @@ const EmployeeDashboard: React.FC = () => {
 
     const isEditing = todayTask.isOutSubmitted && isEditingOUT;
 
-    // ── AUTO CALC: overallHours = (now − inTime) − totalBreakMins ────────────
-    // Only auto-calc on first submission, not on edit (preserve manual edits)
-    let computedOverallHours = overallHours;
-    if (!isEditing && todayTask.inTime) {
-      try {
-        const clockIn   = parseInTime(todayTask.inTime);
-        if (clockIn) {
-          const now        = new Date();
-          const totalMins  = Math.max((now.getTime() - clockIn.getTime()) / 60000, 0);
-          const breakMins  = breakLogRef.current.reduce((s, e) => s + e.totalMins, 0);
-          const netHours   = Math.round(Math.max(totalMins - breakMins, 0) / 60 * 4) / 4;
-          computedOverallHours = netHours;
-          setOverallHours(netHours);
-        }
-      } catch { /* keep existing value */ }
-    }
+    // overallHours is already kept in sync live via updateOutTask's auto-sum,
+    // so we just use the current state value here.
+    const computedOverallHours = overallHours;
 
     // ── Record clock-out time ─────────────────────────────────────────────────
     const nowFormatted = new Date().toLocaleTimeString("en-IN", {
@@ -1037,8 +1036,14 @@ const EmployeeDashboard: React.FC = () => {
         {/* ── TODAY TAB ── */}
         {activeTab === "today" && (
           <>
-            {/* Break tracker — locked once OUT is submitted */}
-            <BreakTracker onBreakUpdate={handleBreakUpdate} disabled={isOutDone} />
+            {/* Break tracker — server-authoritative, locked once OUT is submitted */}
+            <BreakTracker
+              employeeId={employee.id}
+              breakState={breakState}
+              onBreakUpdate={handleBreakUpdate}
+              onRefresh={refreshBreakState}
+              disabled={isOutDone}
+            />
 
             {/* STEP 1: CLOCK IN */}
             {!hasClockedIn && (
@@ -1555,9 +1560,11 @@ const EmployeeDashboard: React.FC = () => {
                                     onChange={(e) => updateOutTask(i, "actualEnd", e.target.value)} disabled={locked} />
                                 </div>
                                 <div className="input-group small">
-                                  <label>Act. hours</label>
+                                  <label>Act. hours <span style={{ fontSize: 9, color: "#9ca3af" }}>(auto)</span></label>
                                   <input type="number" min="0" step="0.25" value={task.actualHours}
-                                    onChange={(e) => updateOutTask(i, "actualHours", parseFloat(e.target.value))} disabled={locked} />
+                                    onChange={(e) => updateOutTask(i, "actualHours", parseFloat(e.target.value))} disabled={locked}
+                                    style={!locked ? { background: "#f0fdf4", color: "#15803d", fontWeight: 600 } : {}}
+                                  />
                                 </div>
                                 <div className="input-group small">
                                   <label>Completion %</label>
@@ -1594,7 +1601,7 @@ const EmployeeDashboard: React.FC = () => {
 
                     <div className="overall-row">
                       <div className="input-group small">
-                        <label>Overall hours {!isOutDone && <span style={{ fontSize: 10, color: "#9ca3af" }}>(auto on submit)</span>}</label>
+                        <label>Overall hours <span style={{ fontSize: 10, color: "#9ca3af" }}>(auto — sum of tasks)</span></label>
                         <input
                           type="number" min="0" step="0.25" value={overallHours}
                           onChange={(e) => setOverallHours(parseFloat(e.target.value))}
