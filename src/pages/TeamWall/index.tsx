@@ -1338,16 +1338,47 @@ const GlobalFont = createGlobalStyle`
 
 // Stacked container, bottom-right, newest toast at the bottom
 const ToastStack = styled.div`
-  position:fixed;bottom:18px;right:18px;z-index:9999;
-  display:flex;flex-direction:column;gap:10px;align-items:flex-end;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+  pointer-events: none;
 `;
 const Toast = styled.div`
-  width:180px;height:180px;background:#1e293b;color:#fff;cursor:pointer;
-  font-family:'Sora',sans-serif;font-size:13px;font-weight:500;
-  border-radius:14px;box-shadow:0 8px 28px rgba(0,0,0,0.22);animation:${slideUp} 0.25s ease both;
-  line-height:1.45;display:flex;align-items:center;justify-content:center;text-align:center;
-  padding:18px;overflow:hidden;
-  @media(max-width:480px){width:140px;height:140px;font-size:12px;}
+  pointer-events: all;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  min-width: 280px;
+  max-width: 340px;
+  background: #1e293b;
+  color: #fff;
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+  border-left: 4px solid #3b82f6;
+  cursor: pointer;
+  font-family: 'Sora', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+  animation: ${slideUp} 0.3s ease both;
+  transition: opacity 0.2s, transform 0.15s;
+
+  &:hover {
+    opacity: 0.92;
+    transform: translateX(-4px);
+  }
+
+  @media (max-width: 480px) {
+    min-width: 220px;
+    max-width: 280px;
+    font-size: 12px;
+  }
 `;
 const PageWrap = styled.div`
   min-height: 100vh;
@@ -1728,8 +1759,12 @@ const EmojiOpt      = styled.button<{ active: boolean }>`width:32px;height:32px;
 const ReplyToggle   = styled.button`font-size:12px;color:#6b7280;cursor:pointer;background:none;border:none;padding:2px 0;margin-bottom:4px;font-family:'Sora',sans-serif;transition:color 0.12s;&:hover{color:#111827;}`;
 const CommentThread = styled.div`display:flex;flex-direction:column;gap:6px;padding:8px 0 4px;border-left:2px solid #e5e7eb;padding-left:12px;margin-left:4px;`;
 const NoComments    = styled.p`font-size:12px;color:#9ca3af;font-style:italic;margin:0;`;
-const CommentRow    = styled.div<{ isMe: boolean }>`display:flex;gap:7px;align-items:flex-end;flex-direction:${p => p.isMe ? "row-reverse" : "row"};`;
-const CommentAvatar = styled.div<{ color: string }>`width:24px;height:24px;min-width:24px;border-radius:50%;background:${p => p.color};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;`;
+const CommentRow = styled.div<{ isMe: boolean }>`
+  display:flex;
+  gap:7px;
+  align-items:flex-start;  // ← FIXED
+  flex-direction:${p => p.isMe ? "row-reverse" : "row"};
+`;const CommentAvatar = styled.div<{ color: string }>`width:24px;height:24px;min-width:24px;border-radius:50%;background:${p => p.color};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;`;
 const CommentBubbleWrap = styled.div<{ isMe: boolean }>`display:flex;flex-direction:column;gap:2px;max-width:75%;align-items:${p => p.isMe ? "flex-end" : "flex-start"};`;
 const CommentMeta   = styled.div<{ isMe: boolean }>`display:flex;align-items:center;gap:5px;flex-direction:${p => p.isMe ? "row-reverse" : "row"};strong{font-size:11px;font-weight:600;color:#374151;}.ctime{font-size:10px;color:#9ca3af;}`;
 const CommentBubble = styled.div<{ isMe: boolean; isTemp?: boolean }>`background:${p => p.isMe ? "#dbeafe" : "#f3f4f6"};color:${p => p.isMe ? "#1e40af" : "#374151"};border-radius:${p => p.isMe ? "12px 12px 2px 12px" : "12px 12px 12px 2px"};padding:6px 10px;font-size:12px;line-height:1.45;word-break:break-word;opacity:${p => p.isTemp ? 0.6 : 1};`;
